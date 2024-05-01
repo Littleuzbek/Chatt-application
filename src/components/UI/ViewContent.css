@@ -1,0 +1,77 @@
+.ViewContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1000;
+}
+
+.ViewContent > .normalSize{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 50%;
+  max-height: 100%;
+}
+
+.ViewContent > .overSize{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 50%;
+  height: 100%;
+}
+
+.ViewContent > div > img {
+  max-width: 100%;
+  max-height: 100%; 
+}
+
+.zoomControl{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: black;
+  opacity: 1;
+  position: absolute;
+  z-index: 1001;
+  bottom: 20px;
+}
+
+.zoomControl > *{
+  opacity: 1;
+}
+
+.zoomControl > input{
+  width: 70%;
+}
+
+.zoomControl > input[type=range]::-webkit-slider-runnable-track{
+  background-color: white;
+  border-radius: 10px;
+  height: 10px;
+}
+
+.zoomControl > input[type=range]::-webkit-slider-thumb{
+  background-color: black;
+  color: black;
+  position: relative;
+  top: -2.5px;
+}
+
+.zoomIn{
+  font-size: 25px;
+  width: 15%;
+  color: white;
+}
+
+.zoomOut{
+  font-size: 25px;
+  width: 15%;
+  color: white;
+}

@@ -1,0 +1,50 @@
+.forwardList{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 100000000000000;
+}
+
+.forwardList > div{
+    width: 30%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    gap: 5px;
+    overflow-y: auto;
+}
+
+.forwardingUser{
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    transition: .5s;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.forwardingUser:hover{
+    background-color:#f1f1f1 ;
+}
+
+.forwardingUser > object {
+    width: 70px;
+    height: 60px;
+    border-radius: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin: 0 5px;
+}
+
+.forwardingName > p:nth-child(1){
+    font-size: 20px;
+    font-weight: 500;
+}

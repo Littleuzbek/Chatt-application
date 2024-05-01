@@ -1,0 +1,38 @@
+/*** <--- CIRCLE STYLES ---> ***/
+.wrap-circles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+.circle {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.circle .inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 55px;
+  height: 55px;
+  background: #000;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.xxx{
+  font-size: 40px;
+  transform: rotateZ(45deg);
+}
