@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../redux/authSlice";
+import { uiActions } from "../../redux/uiSlice";
 
 export default function Login({ onChange, onChangeValue }) {
   const existingEmail = useRef();
@@ -17,7 +18,10 @@ export default function Login({ onChange, onChangeValue }) {
   const signInUser = (email, password) => {
     if (email !== "" && password !== "") {
       signInWithEmailAndPassword(auth, email, password)
-        .then((response) => console.log(response))
+        .then((response) =>{
+          dispatch(uiActions.setCondition('Login success'))
+           console.log(response)
+          })
         .catch(() => setError('Email or password is wrong!'));
     }else{
       setError('Please enter requirements')

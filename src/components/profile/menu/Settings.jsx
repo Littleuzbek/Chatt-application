@@ -10,7 +10,9 @@ import {
   deleteUser,
   reauthenticateWithCredential,
 } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { auth, db } from "../../../firebase";
+import { uiActions } from "../../../redux/uiSlice";
+import { deleteDoc, doc } from "firebase/firestore";
 
 export default function Settings() {
   const settingsAnimation = useSelector(state=>state.menu.settingsAnimation);
@@ -26,16 +28,21 @@ export default function Settings() {
     }, 510);
   };
 
-  const DeleteCurrentUser = () => {
+  const DeleteCurrentUser = async() => {
     const credit = EmailAuthProvider.credential(
       currentUser.email,
       prompt("Please enter your password")
     );
 
     reauthenticateWithCredential(currentUser, credit)
-      .then((res) =>
+      .then(() =>
         deleteUser(currentUser)
-          .then(() => window.location.reload())
+          .then(async() => {
+            await deleteDoc(doc(db,'users',currentUser.uid)).catch(err=>console.log(err));
+            await deleteDoc(doc(db, "userChats", currentUser.uid)).catch(err=>console.log(err));
+            dispatch(uiActions.setCondition('Account deleted'));
+            window.location.reload()
+          })
           .catch((err) => console.log(err.value))
       )
       .catch((err) => console.log(err));

@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../../../firebase";
 import { useEffect, useRef } from "react";
 import { uiActions } from "../../../redux/uiSlice";
+import defaultUser from "../../../images/defaultUser.png";
 
 export default function Message({ message, onContextMenu }) {
   const user = useSelector((state) => state.chat.user);
@@ -35,8 +36,8 @@ export default function Message({ message, onContextMenu }) {
       <img
         src={
           message?.senderId === currentUser?.uid
-            ? currentUser?.photoURL
-            : user?.photoURL
+            ? (currentUser?.photoURL || defaultUser)
+            : (user?.photoURL || defaultUser)
         }
         alt=""
       />

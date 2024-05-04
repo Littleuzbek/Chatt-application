@@ -10,10 +10,12 @@ import { onAuthStateChanged } from "firebase/auth";
 import { authActions } from "./redux/authSlice";
 import { auth } from "./firebase";
 import {uiActions} from './redux/uiSlice'
+import Condition from "./components/UI/Condition";
 
 function App() {
   const userAuthorized = useSelector((state) => state.auth.authorized);
   const loader = useSelector((state) => state.ui.loader);
+  const condition = useSelector((state) => state.ui.condition);
   const dispatch = useDispatch();
 
 
@@ -30,6 +32,7 @@ function App() {
   return (
     <div className="App">
       {loader ? <Loader /> : userAuthorized ? <Profile /> : <Auth />}
+      {condition && <Condition />}
     </div>
   );
 }

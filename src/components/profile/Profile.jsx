@@ -13,8 +13,8 @@ export default function Profile() {
   const backDrop = useSelector((state) => state.ui.backDrop);
   const viewContnet = useSelector((state) => state.ui.viewContent);
   const forwardList = useSelector((state) => state.ui.forwardList);
-  const doubleDelete = useSelector(state=> state.ui.doubleDelete);
-  
+  const doubleDelete = useSelector((state) => state.ui.doubleDelete);
+
   return (
     <div className="mainPage">
       {backDrop && <Menu />}

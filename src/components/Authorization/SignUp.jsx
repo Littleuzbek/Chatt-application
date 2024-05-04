@@ -6,6 +6,7 @@ import { auth, db } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../redux/authSlice";
 import { doc, setDoc } from "firebase/firestore";
+import { uiActions } from "../../redux/uiSlice";
 
 export default function SignUp({ onChange, onChangeValue }) {
   const displayName = useRef();
@@ -34,7 +35,9 @@ export default function SignUp({ onChange, onChangeValue }) {
             username: ``,
           }).catch(err=>console.log(err));
           
-          await setDoc(doc(db,'userChats',res.user.uid),{ chats: []})
+          await setDoc(doc(db,'userChats',res.user.uid),{});
+
+          dispatch(uiActions.setCondition('SignUp success'))
         }
       )
       .catch(() => setError('Please enter valid email!'));

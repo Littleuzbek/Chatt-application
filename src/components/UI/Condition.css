@@ -1,0 +1,22 @@
+.conditionIndicator{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: auto;
+    height: 50px;
+    left: 45%;
+    bottom: 100px;
+    z-index: 2000000000000;
+    background-color: white;
+    border-radius: 30px;
+    overflow: hidden;
+    padding: 0 10px;
+    font-weight: 500;
+}
+
+.conditionIndicator > img{
+    width: 25px;
+    height: 25px;
+    margin: 0 5px;
+}

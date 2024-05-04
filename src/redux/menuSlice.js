@@ -6,6 +6,7 @@ const menuSlice = createSlice({
         toggleSettings: false,
         settingsAnimation: 'settings',
         toggleProfileEdit: false,
+        newProfileImg: false,
     },
     reducers:{
         onToggleSettings(state,action){
@@ -16,6 +17,11 @@ const menuSlice = createSlice({
         },
         onToggleProfileEdit(state,action){
             state.toggleProfileEdit = action.payload
+        },
+        onSetProfileImg(state,action){
+            let imgForProfile = URL.createObjectURL(action.payload)
+
+            state.newProfileImg = imgForProfile;
         }
     }
 })

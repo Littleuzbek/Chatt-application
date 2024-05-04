@@ -14,7 +14,7 @@ const uiSlice = createSlice({
         listClick: false,
         messageClick: false,
         doubleDelete: false,
-        passwordCondition: '',
+        condition: false,
     },
     reducers:{
         setLoader(state,action){
@@ -53,8 +53,8 @@ const uiSlice = createSlice({
         setDoubleDelete(state,action){
             state.doubleDelete = action.payload
         },
-        setPasswordCondition(state,action){
-            state.passwordCondition = action.payload
+        setCondition(state,action){
+            state.condition = action.payload;
         }
     }
 })

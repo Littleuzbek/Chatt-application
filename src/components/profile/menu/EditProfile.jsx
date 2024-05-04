@@ -2,16 +2,23 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import deafultUser from "../../../images/defaultUser.png";
 import { RiImageAddLine } from "react-icons/ri";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { menuActions } from "../../../redux/menuSlice";
 import { auth, db } from "../../../firebase";
-import { EmailAuthProvider, reauthenticateWithCredential, updatePassword, updateProfile } from "firebase/auth";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+  updateProfile,
+} from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { uiActions } from "../../../redux/uiSlice";
 
 export default function EditProfile() {
   const [oldData, setOldData] = useState();
   const [spinner, setSpinner] = useState(false);
+  const [img,setImg] = useState()
+  const newProfileImg = useSelector(state=>state.menu.newProfileImg);
   const name = useRef();
   const surname = useRef();
   const aboutYou = useRef();
@@ -20,13 +27,21 @@ export default function EditProfile() {
   const currentUser = auth.currentUser;
   const dispatch = useDispatch();
 
+  useEffect(()=>{
+    if(currentUser?.photoURL){
+      setImg(currentUser?.photoURL);
+    }else if(newProfileImg){
+      setImg(newProfileImg);
+    }
+  },[currentUser, newProfileImg])
+
   useEffect(() => {
     const fetchUserData = async () => {
       await getDoc(doc(db, "users", currentUser.uid)).then((res) =>
         setOldData(res.data())
       );
     };
-
+   
     return () => {
       fetchUserData();
     };
@@ -35,7 +50,7 @@ export default function EditProfile() {
   const CloseProfileEdit = () => {
     dispatch(menuActions.onToggleProfileEdit(false));
   };
-
+  console.log(oldData?.about)
   const SubmitChanges = async () => {
     setSpinner(true);
     const newName = name.current.value === "" && surname.current.value === ""? oldData?.displayName : name.current.value;
@@ -51,43 +66,61 @@ export default function EditProfile() {
       );
 
       reauthenticateWithCredential(currentUser, credit)
-      .then(async()=>{
-        await updatePassword(currentUser, password)
-        .catch(err=>console.log(err));
-        
-        await updateProfile(currentUser, {
-          displayName: `${newName} ${newSurname}`,
-        }).catch((err) => err);
-        
-          await updateDoc(doc(db, "users", currentUser.uid), {
-            uid: currentUser.uid,
-            email: currentUser.email,
-            displayName: `${newName} ${newSurname}`,
-            about: `${newAboutYou}`,
-            username: `${newUsername}`,
-            photoURL: "",
-          }).catch((err) => console.log(err));
-        }
-      )
-      .catch((err) => {
-        console.log(err.code)
-      });
+        .then(async () => {
+          await updatePassword(currentUser, password)
+            .then(async () => {
+              await updateProfile(currentUser, {
+                displayName: newName + newSurname,
+                photoURL: `${img? img : ''}`
+              }).catch((err) => console.log(err));
+
+              await updateDoc(doc(db, "users", currentUser.uid), {
+                displayName: newName + newSurname,
+                uid: currentUser.uid,
+                email: currentUser.email,
+                about: `${newAboutYou === undefined ? `Hi! Let's be friends` : newAboutYou}`,
+                username: `${newUsername === undefined ? '' : newUsername}`,
+                photoURL: `${img? img : ''}`,
+              }).catch((err) => console.log(err));
+
+              setSpinner(false);
+              dispatch(uiActions.setCondition("Changes saved"));
+            })
+            .catch((err) => {
+              if (err.code === "auth/weak-password") {
+                dispatch(uiActions.setCondition("Weak password"));
+              }
+              console.log(err.code);
+            });
+        })
+        .catch((err) => {
+          if (err.code === "auth/invalid-credential") {
+            dispatch(uiActions.setCondition("Incorrect password"));
+          }
+          console.log(err.code);
+        });
     } else {
+
       await updateProfile(currentUser, {
-        displayName: `${newName} ${newSurname}`,
+        displayName: newName + newSurname,
+        photoURL: `${img? img : ''}`
       }).catch((err) => console.log(err));
 
       await updateDoc(doc(db, "users", currentUser.uid), {
+        displayName: newName + newSurname,
         uid: currentUser.uid,
         email: currentUser.email,
-        displayName: `${newName} ${newSurname}`,
         about: `${newAboutYou}`,
         username: `${newUsername}`,
-        photoURL: "",
-      }).catch((err) => err);
+        photoURL: `${img? img : ''}`,
+      })
+        .then(() => {
+          dispatch(uiActions.setCondition("Changes saved"));
+          setSpinner(false);
+        })
+        .catch((err) => console.log(err));
     }
 
-    setSpinner(false);
     dispatch(menuActions.onToggleProfileEdit(false));
     dispatch(menuActions.onSettingsAnimation("settings"));
     dispatch(uiActions.setBackDrop(false));
@@ -100,8 +133,18 @@ export default function EditProfile() {
           className="backtomenu"
           onClick={() => CloseProfileEdit()}
         />
-        <img src={deafultUser} alt="" />
-        <RiImageAddLine className="editIcon" />
+        <img src={img? img : deafultUser} alt="" />
+        <input type="file" 
+        name="" 
+        id="receiveFile" 
+        accept="image/*"
+        onChange={(e) => {
+          dispatch(menuActions.onSetProfileImg(e.target.files[0]));
+        }}
+         />
+        <label htmlFor="receiveFile" className="labelForIcon">
+          <RiImageAddLine className="editIcon"  />
+        </label>
       </div>
       <div>
         <p>Name</p>
@@ -121,7 +164,7 @@ export default function EditProfile() {
       </div>
       <div>
         <p>New password</p>
-        <input type="text" id="" ref={newPassword} />
+        <input type="text" id="" ref={newPassword} pattern=".{8,}" />
       </div>
       {spinner || <button onClick={() => SubmitChanges()}>Save</button>}
       {spinner && <div className="loader"></div>}
