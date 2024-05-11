@@ -8,45 +8,51 @@ import { uiActions } from "../../redux/uiSlice";
 export default function Condition() {
   const condition = useSelector((state) => state.ui.condition);
   const [mark, setMark] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const timeOut = useCallback(()=>{
+  const TimeOut = useCallback(() => {
     setTimeout(() => {
-      dispatch(uiActions.setCondition(false))
+      dispatch(uiActions.setCondition(false));
     }, 2500);
-  },[dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
+    console.log(condition);
+    if (condition === "Please enter only image file") {
+      setMark(false);
+      TimeOut();
+    }
     if (condition === "SignUp success") {
       setMark(true);
-      timeOut();
-    }else if(condition === "Login success"){
-      setMark(true);
-      timeOut();
-    }else if(condition === "Account deleted"){
-      setMark(true);
-      timeOut();
-    }else if(condition === "Changes saved"){
-      setMark(true);
-      timeOut();
-    }else if(condition === "Incorrect password"){
-      setMark(false);
-      timeOut();
-    }else if(condition === "Weak password"){
-      setMark(false);
-      timeOut();
+      TimeOut();
     }
-  }, [condition,timeOut]);
+    if (condition === "Login success") {
+      setMark(true);
+      TimeOut();
+    }
+    if (condition === "Account deleted") {
+      setMark(true);
+      TimeOut();
+    }
+    if (condition === "Changes saved") {
+      setMark(true);
+      TimeOut();
+    }
+    if (condition === "Incorrect password") {
+      setMark(false);
+      TimeOut();
+    }
+    if (condition === "Weak password") {
+      setMark(false);
+      TimeOut();
+    }
+   
+  }, [condition, TimeOut]);
 
   return (
     <div className="conditionIndicator">
       {condition}
-      {
-        mark ? 
-        <img src={success} alt="" />
-        :
-        <img src={failed} alt="" />
-      }
+      {mark ? <img src={success} alt="" /> : <img src={failed} alt="" />}
     </div>
   );
 }

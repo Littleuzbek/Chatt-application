@@ -32,19 +32,15 @@ export default function Menu() {
       userData()
     }
     },[currentUser])
-
+    
   return (
     <Fragment>
       <Backdrop />
       <div className={toggleProfileEdit? 'menuu' : 'menu'}>
         <div className="userInfo">
-          <img src={currentUser.photoURL? currentUser.photoURL : defaultUser}  alt="" />
+          <img src={currentUser?.photoURL? currentUser.photoURL : defaultUser}  alt="" />
           <div>
-            <p className="userName">
-              {`Name: ${currentUser.displayName
-                ? currentUser.displayName
-                : currentUser.email}`}
-            </p>
+            <p className="userName">{`Name: ${currentUser?.displayName}`}</p>
             <p className="userName">
               {`About: ${userInfo?.about ? userInfo?.about : `Hi! Let's be friends`}`}
             </p>

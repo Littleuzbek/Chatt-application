@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useState } from "react";
+import React, {  lazy, useEffect, useState } from "react";
 import Message from "./Message";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -70,7 +70,6 @@ export default function Messages({ progressVal, onProgress }) {
           <ProgressBar progress={progressVal} />
         </div>
       )}
-      <Suspense fallback={<h1>Loading...</h1>}>
         {rightClick && (
           <MessageContext
             leftVal={position.x}
@@ -78,7 +77,6 @@ export default function Messages({ progressVal, onProgress }) {
             messagesId={messagesId}
           />
         )}
-      </Suspense>
     </div>
   );
 }

@@ -1,65 +1,123 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import deafultUser from "../../../images/defaultUser.png";
 import { RiImageAddLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { menuActions } from "../../../redux/menuSlice";
-import { auth, db } from "../../../firebase";
+import { auth, db, storage } from "../../../firebase";
 import {
   EmailAuthProvider,
   reauthenticateWithCredential,
   updatePassword,
   updateProfile,
 } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { uiActions } from "../../../redux/uiSlice";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { v4 as uuid } from "uuid";
 
 export default function EditProfile() {
-  const [oldData, setOldData] = useState();
   const [spinner, setSpinner] = useState(false);
-  const [img,setImg] = useState()
-  const newProfileImg = useSelector(state=>state.menu.newProfileImg);
+  const [img, setImg] = useState("");
+  const [imgFile, setImgFile] = useState("");
+  const newProfileImg = useSelector((state) => state.menu.newProfileImg);
   const name = useRef();
   const surname = useRef();
   const aboutYou = useRef();
   const username = useRef();
-  const newPassword = useRef();
+  const password = useRef();
   const currentUser = auth.currentUser;
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    if(currentUser?.photoURL){
-      setImg(currentUser?.photoURL);
-    }else if(newProfileImg){
-      setImg(newProfileImg);
-    }
-  },[currentUser, newProfileImg])
-
   useEffect(() => {
-    const fetchUserData = async () => {
-      await getDoc(doc(db, "users", currentUser.uid)).then((res) =>
-        setOldData(res.data())
-      );
-    };
-   
-    return () => {
-      fetchUserData();
-    };
-  }, [oldData, currentUser]);
+    if (newProfileImg) {
+      setImg(newProfileImg);
+    } else if (currentUser?.photoURL) {
+      setImg(currentUser?.photoURL);
+    } else {
+      setImg("");
+      setImgFile("");
+    }
+  }, [currentUser.photoURL, newProfileImg]);
 
-  const CloseProfileEdit = () => {
+  const CloseHandler = useCallback((condition)=>{
+    setSpinner(false);
+    dispatch(menuActions.onSetProfileImg(false));
     dispatch(menuActions.onToggleProfileEdit(false));
+    dispatch(menuActions.onSettingsAnimation("settings"));
+    dispatch(uiActions.setBackDrop(false));
+
+    if(condition === 'yes'){
+      dispatch(uiActions.setCondition("Changes saved"));
+    };
+  },[dispatch])
+  
+  
+  const UploadImg = useCallback(
+    (imgFile) => {
+        const storageRef = ref(storage, uuid());
+        uploadBytesResumable(storageRef, imgFile).then(async (snapshot) => {
+          await getDownloadURL(snapshot.ref).then(async (res) => {
+            await updateProfile(currentUser, {
+              photoURL: res,
+            })
+            .then(() => {
+              CloseHandler('yes')
+              })
+              .catch((err) => console.log(err));
+          });
+        });
+    },
+    [currentUser, CloseHandler]
+  );
+
+  const UpdateDocument = async () => {
+    try {
+      const path = doc(db, "users", currentUser.uid);
+
+      const newName = name.current.value.trim();
+      console.log(newName);
+      const newSurname = surname.current.value.trim();
+      console.log(newSurname);
+      const newAboutYou = aboutYou.current.value.trim();
+      console.log(newAboutYou);
+      const newUsername = username.current.value.trim();
+      console.log(newUsername);
+
+      if (newName !== "" || newSurname !== "") {
+        await updateProfile(currentUser, {
+          displayName: `${newName} ${newSurname}`,
+        })
+          .then(CloseHandler('yes'))
+          .catch((err) => console.log(err));
+
+        await updateDoc(path, {
+          displayName: newName,
+        }).then(CloseHandler('yes'));
+      }
+
+      if (newAboutYou !== "") {
+        await updateDoc(path, {
+          about: newAboutYou,
+        }).then(CloseHandler('yes'));
+      }
+
+      if (newUsername !== "") {
+        await updateDoc(path, {
+          username: newUsername,
+        }).then(CloseHandler('yes'));
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
-  console.log(oldData?.about)
+
   const SubmitChanges = async () => {
     setSpinner(true);
-    const newName = name.current.value === "" && surname.current.value === ""? oldData?.displayName : name.current.value;
-    const newSurname = surname.current.value === "" ? "" : surname?.current.value;
-    const newAboutYou = aboutYou.current.value === "" ? oldData?.about : aboutYou?.current.value;
-    const newUsername = username.current.value === "" ? oldData?.username : username?.current.value;
-    const password = newPassword?.current?.value;
 
-    if (newPassword.current.value !== "") {
+    const newPassword = password.current.value.trim();
+
+    if (newPassword !== "") {
       const credit = EmailAuthProvider.credential(
         currentUser.email,
         prompt("Please enter your password")
@@ -67,27 +125,17 @@ export default function EditProfile() {
 
       reauthenticateWithCredential(currentUser, credit)
         .then(async () => {
-          await updatePassword(currentUser, password)
+          await updatePassword(currentUser, newPassword)
             .then(async () => {
-              await updateProfile(currentUser, {
-                displayName: newName + newSurname,
-                photoURL: `${img? img : ''}`
-              }).catch((err) => console.log(err));
-
-              await updateDoc(doc(db, "users", currentUser.uid), {
-                displayName: newName + newSurname,
-                uid: currentUser.uid,
-                email: currentUser.email,
-                about: `${newAboutYou === undefined ? `Hi! Let's be friends` : newAboutYou}`,
-                username: `${newUsername === undefined ? '' : newUsername}`,
-                photoURL: `${img? img : ''}`,
-              }).catch((err) => console.log(err));
-
-              setSpinner(false);
-              dispatch(uiActions.setCondition("Changes saved"));
+              if(imgFile !== ''){
+                UploadImg(imgFile);
+              }
+              UpdateDocument();
+              CloseHandler('yes')
             })
             .catch((err) => {
               if (err.code === "auth/weak-password") {
+                CloseHandler()
                 dispatch(uiActions.setCondition("Weak password"));
               }
               console.log(err.code);
@@ -95,35 +143,17 @@ export default function EditProfile() {
         })
         .catch((err) => {
           if (err.code === "auth/invalid-credential") {
-            dispatch(uiActions.setCondition("Incorrect password"));
+              CloseHandler()
+              dispatch(uiActions.setCondition("Incorrect password"));
           }
           console.log(err.code);
         });
     } else {
-
-      await updateProfile(currentUser, {
-        displayName: newName + newSurname,
-        photoURL: `${img? img : ''}`
-      }).catch((err) => console.log(err));
-
-      await updateDoc(doc(db, "users", currentUser.uid), {
-        displayName: newName + newSurname,
-        uid: currentUser.uid,
-        email: currentUser.email,
-        about: `${newAboutYou}`,
-        username: `${newUsername}`,
-        photoURL: `${img? img : ''}`,
-      })
-        .then(() => {
-          dispatch(uiActions.setCondition("Changes saved"));
-          setSpinner(false);
-        })
-        .catch((err) => console.log(err));
+      if(imgFile !== ''){
+        UploadImg(imgFile);
+      } 
+      UpdateDocument();
     }
-
-    dispatch(menuActions.onToggleProfileEdit(false));
-    dispatch(menuActions.onSettingsAnimation("settings"));
-    dispatch(uiActions.setBackDrop(false));
   };
 
   return (
@@ -131,21 +161,38 @@ export default function EditProfile() {
       <div>
         <FaArrowLeft
           className="backtomenu"
-          onClick={() => CloseProfileEdit()}
+          onClick={() => dispatch(menuActions.onToggleProfileEdit(false))}
         />
-        <img src={img? img : deafultUser} alt="" />
-        <input type="file" 
-        name="" 
-        id="receiveFile" 
-        accept="image/*"
-        onChange={(e) => {
-          dispatch(menuActions.onSetProfileImg(e.target.files[0]));
-        }}
-         />
+        <img
+          src={
+            img !== "" ? img : `${newProfileImg ? newProfileImg : deafultUser}`
+          }
+          alt=""
+        />
+        <input
+          value={""}
+          type="file"
+          name=""
+          id="receiveFile"
+          accept="image/*"
+          onChange={(e) => {
+            if(e.target.files[0].type.split('/').at(0) !== 'image'){
+              dispatch(uiActions.setCondition("Please enter only image file"));
+            }else{
+              dispatch(menuActions.onSetProfileImg(e.target.files[0]));
+              setImgFile(e.target.files[0]);
+            }
+          }}
+        />
         <label htmlFor="receiveFile" className="labelForIcon">
-          <RiImageAddLine className="editIcon"  />
+          <RiImageAddLine className="editIcon" />
         </label>
       </div>
+      {newProfileImg && (
+        <button onClick={() => dispatch(menuActions.onSetProfileImg(false))}>
+          Don't save
+        </button>
+      )}
       <div>
         <p>Name</p>
         <input type="text" id="" ref={name} />
@@ -164,7 +211,7 @@ export default function EditProfile() {
       </div>
       <div>
         <p>New password</p>
-        <input type="text" id="" ref={newPassword} pattern=".{8,}" />
+        <input type="text" id="" pattern=".{8,}" ref={password} />
       </div>
       {spinner || <button onClick={() => SubmitChanges()}>Save</button>}
       {spinner && <div className="loader"></div>}

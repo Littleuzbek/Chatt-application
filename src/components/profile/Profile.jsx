@@ -7,6 +7,7 @@ import ViewContent from "../UI/ViewContent";
 import { useSelector } from "react-redux";
 import ForwardList from "../UI/ForwardList";
 import DoubleDelete from "../UI/DoubleDelete";
+import About from "../UI/About";
 // import Error from '../UI/Error'
 
 export default function Profile() {
@@ -14,16 +15,18 @@ export default function Profile() {
   const viewContnet = useSelector((state) => state.ui.viewContent);
   const forwardList = useSelector((state) => state.ui.forwardList);
   const doubleDelete = useSelector((state) => state.ui.doubleDelete);
+  const about = useSelector((state) => state.ui.about);
 
   return (
     <div className="mainPage">
       {backDrop && <Menu />}
       <ListSection />
       <ChatSection />
+      {about && <About />}
       {viewContnet && <ViewContent />}
-      {/* <Error /> */}
       {forwardList && <ForwardList />}
       {doubleDelete && <DoubleDelete />}
+      {/* <Error /> */}
     </div>
   );
 }

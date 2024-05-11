@@ -29,6 +29,7 @@ function App() {
       dispatch(uiActions.setLoader(false));
     }
   });
+
   return (
     <div className="App">
       {loader ? <Loader /> : userAuthorized ? <Profile /> : <Auth />}

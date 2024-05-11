@@ -19,9 +19,12 @@ const menuSlice = createSlice({
             state.toggleProfileEdit = action.payload
         },
         onSetProfileImg(state,action){
-            let imgForProfile = URL.createObjectURL(action.payload)
+            const newURL = action.payload === false?
+            false
+            :
+            URL.createObjectURL(action.payload);
 
-            state.newProfileImg = imgForProfile;
+            state.newProfileImg = newURL;
         }
     }
 })

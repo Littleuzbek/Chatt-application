@@ -15,6 +15,7 @@ const uiSlice = createSlice({
         messageClick: false,
         doubleDelete: false,
         condition: false,
+        about: false
     },
     reducers:{
         setLoader(state,action){
@@ -55,6 +56,9 @@ const uiSlice = createSlice({
         },
         setCondition(state,action){
             state.condition = action.payload;
+        },
+        setAbout(state,action){
+            state.about = action.payload
         }
     }
 })

@@ -14,7 +14,7 @@ export default function Backdrop() {
     dispatch(menuActions.onToggleSettings(false));
     dispatch(menuActions.onToggleProfileEdit(false))
     dispatch(menuActions.onSettingsAnimation('settings'));
-    dispatch(uiActions.setBackDrop(false))
+    dispatch(uiActions.setBackDrop(false));
   };
 
   return (

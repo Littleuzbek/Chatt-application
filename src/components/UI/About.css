@@ -1,0 +1,157 @@
+.aboutChosenUser {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    z-index: 10000000000;
+}
+
+.chosenUserInfo{
+    display: flex;
+    width: 50%;
+    height: 50%;
+    border-radius: 20px;
+    background-color: white;
+}
+
+.chosenUserInfo > div:nth-child(1){
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+    height: 100%;
+}
+
+.chosenUserInfo > div:nth-child(1) > img {
+    width: 75%;
+    height: 60%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.infO{
+    width: 54%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    animation: open .5s ease;
+}
+
+.mediA{
+    display: flex;
+    flex-direction: column;
+    width: 54%;
+    animation: close .5s ease;
+}
+
+.infO > div {
+    width: 90%;
+    max-height: 30%;
+    background-color: black;
+    border-radius: 10px;
+    color: white;
+    margin: 10px 0;
+    padding: 0 10px;
+    overflow-x: auto;
+}
+
+.infO > div > p:nth-child(odd){
+    font-size: 14px;
+}
+
+.infO > div > p:nth-child(even){
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.sectioN{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    height: 7%;
+    color: black;
+    border-bottom: 2px solid black;
+    margin: 0 0 5px 0;
+}
+
+.sectioN > div {
+    text-align: center;
+    width: 30%;
+}
+
+.sectioN > div:active {
+    border-bottom: 3px solid white;
+}
+
+.itemS{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    overflow-y: scroll;
+    margin: 0 0 10px 0;
+}
+
+.itemS > *{
+    width: 33%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.itemS::-webkit-scrollbar{
+    width: 10px;
+}
+
+.itemS::-webkit-scrollbar-track{
+    background: #e7e7e7; 
+}
+
+.itemS::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 10px;
+  }
+  
+.itemS::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+
+.toMedia {
+    font-size: 30px;
+    color: black;
+    width: 80%; 
+}
+
+.toInfo{
+    font-size: 40px;
+    color: black;
+    width: 100%;
+    transform: rotate(180deg);
+}
+
+.closeAbout{
+    font-size: 30px;
+    margin: 10px;
+}
+
+.closeAbout:hover {
+    cursor: pointer;
+}
+
+@keyframes close{
+    from{
+        transform: translateY(-100%);
+    }to{
+        transform: translateY(0%);
+    }
+}
+
+@keyframes open{
+    from{
+        transform: translateY(100%);
+    }to{
+        transform: translateY(0%);
+    }
+}

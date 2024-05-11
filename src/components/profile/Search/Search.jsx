@@ -27,7 +27,7 @@ export default function Search() {
   const handleSearch = async () => {
     const q = query(
       collection(db, "users"),
-      where("displayName", "==", username)
+      where("username", "==", username)
     );
 
     try {
