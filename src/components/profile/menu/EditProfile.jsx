@@ -54,10 +54,13 @@ export default function EditProfile() {
   
   
   const UploadImg = useCallback(
-    (imgFile) => {
+    async (imgFile) => {
         const storageRef = ref(storage, uuid());
-        uploadBytesResumable(storageRef, imgFile).then(async (snapshot) => {
+        await uploadBytesResumable(storageRef, imgFile).then(async (snapshot) => {
           await getDownloadURL(snapshot.ref).then(async (res) => {
+            await updateDoc(doc(db,'users',currentUser.uid),{
+              photoURL: res
+            }).then(CloseHandler('yes')).catch(err=>console.log(err));
             await updateProfile(currentUser, {
               photoURL: res,
             })
@@ -149,6 +152,7 @@ export default function EditProfile() {
           console.log(err.code);
         });
     } else {
+      console.log(imgFile);
       if(imgFile !== ''){
         UploadImg(imgFile);
       } 

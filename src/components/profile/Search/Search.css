@@ -53,6 +53,7 @@
   margin: 10px;
   border-radius: 50%;
   transition: .5s;
+  object-fit: cover;
 }
 
 .userFound:hover > img {
