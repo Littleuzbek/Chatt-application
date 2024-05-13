@@ -31,7 +31,7 @@ export default function About() {
       });
     };
 
-    return () => FetchUserData();
+    user?.uid && FetchUserData();
   }, [user, chatId]);
 
   return (

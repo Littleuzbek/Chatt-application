@@ -17,7 +17,6 @@ export default function Condition() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(condition);
     if (condition === "Please enter only image file") {
       setMark(false);
       TimeOut();
