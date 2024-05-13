@@ -17,7 +17,7 @@ export default function About() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.chat.user);
   const chatId = useSelector((state) => state.chat.chatId);
-
+console.log(user);
   useEffect(() => {
     const fetchUserData = async () => {
       await getDoc(doc(db, "users", user.uid)).then((res) =>
@@ -33,7 +33,8 @@ export default function About() {
       fetchUserData()
     };
   }, [user,chatId]);
-
+console.log(chosenUser);
+console.log(media);
   return (
     <Fragment>
       <Backdrop />

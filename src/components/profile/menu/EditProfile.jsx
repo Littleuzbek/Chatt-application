@@ -95,7 +95,7 @@ export default function EditProfile() {
           .catch((err) => console.log(err));
 
         await updateDoc(path, {
-          displayName: newName,
+          displayName: `${newName} ${newSurname}`,
         }).then(CloseHandler('yes'));
       }
 
