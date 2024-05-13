@@ -19,7 +19,7 @@ export default function About() {
   const chatId = useSelector((state) => state.chat.chatId);
   console.log(user);
 
-  useCallback(async()=>{
+  const FetchUserData =async ()=>{
     await getDoc(doc(db, "users", user.uid)).then((res) => {
       setChosenUser(res.data());
       console.log(res);
@@ -29,8 +29,9 @@ export default function About() {
       setMedia(res.data()?.messages);
       console.log(res.data()?.messages);
     });
+  }
 
-  },[user,chatId])
+
 
   // useEffect(() => {
   //   const FetchUserData = async () => {
@@ -53,7 +54,7 @@ export default function About() {
   // }, [user, chatId]);
 
   
-  
+  FetchUserData();
   return (
     <Fragment>
       <Backdrop />
