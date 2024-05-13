@@ -1,4 +1,4 @@
-import React, { useCallback,  useState } from "react";
+import React, {   useEffect,  useState } from "react";
 import { Fragment } from "react";
 import Backdrop from "./Backdrop";
 import "./About.css";
@@ -17,44 +17,23 @@ export default function About() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.chat.user);
   const chatId = useSelector((state) => state.chat.chatId);
-  console.log(user);
 
-  const FetchUserData =async ()=>{
-    await getDoc(doc(db, "users", user.uid)).then((res) => {
-      setChosenUser(res.data());
-      console.log(res);
-    });
+  useEffect(() => {
+    const FetchUserData = async () => {
+      await getDoc(doc(db, "users", user.uid)).then((res) => {
+        setChosenUser(res.data());
+        console.log(res);
+      });
 
-    await getDoc(doc(db, "chats", chatId)).then((res) => {
-      setMedia(res.data()?.messages);
-      console.log(res.data()?.messages);
-    });
-  }
+      await getDoc(doc(db, "chats", chatId)).then((res) => {
+        setMedia(res.data()?.messages);
+        console.log(res.data()?.messages);
+      });
+    };
 
+    return () => FetchUserData();
+  }, [user, chatId]);
 
-
-  // useEffect(() => {
-  //   const FetchUserData = async () => {
-  //     await getDoc(doc(db, "users", user.uid)).then((res) => {
-  //       setChosenUser(res.data());
-  //       console.log(res);
-  //     });
-  //   };
-  //   const SearchMedia = async () => {
-  //     await getDoc(doc(db, "chats", chatId)).then((res) => {
-  //       setMedia(res.data()?.messages);
-  //       console.log(res.data()?.messages);
-  //     });
-  //   };
-
-  //   return () => {
-  //     FetchUserData();
-  //     SearchMedia();
-  //   };
-  // }, [user, chatId]);
-
-  
-  FetchUserData();
   return (
     <Fragment>
       <Backdrop />
