@@ -20,12 +20,17 @@ export default function About() {
 console.log(user);
   useEffect(() => {
     const fetchUserData = async () => {
-      await getDoc(doc(db, "users", user.uid)).then((res) =>
-        setChosenUser(res.data())
+      await getDoc(doc(db, "users", user.uid)).then((res) =>{
+        setChosenUser(res.data());
+        console.log(res);
+      }
       );
     };
       const searchMedia = async() =>{
-        await getDoc(doc(db,'chats', chatId)).then(res=>setMedia(res.data()?.messages));
+        await getDoc(doc(db,'chats', chatId)).then(res=>{
+          setMedia(res.data()?.messages)
+          console.log(res.data()?.messages);
+        });
       }
 
     return () => {
@@ -50,7 +55,7 @@ console.log(media);
             <div className="infO">
               <div>
                 <p>Name</p>
-                <p>{chosenUser?.displayName ? chosenUser?.displayName : '...'}</p>
+                <p>{user?.displayName ? user?.displayName : '...'}</p>
               </div>
               <div>
                 <p>Username</p>
