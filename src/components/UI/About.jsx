@@ -22,12 +22,10 @@ export default function About() {
     const FetchUserData = async () => {
       await getDoc(doc(db, "users", user.uid)).then((res) => {
         setChosenUser(res.data());
-        console.log(res);
       });
 
       await getDoc(doc(db, "chats", chatId)).then((res) => {
         setMedia(res.data()?.messages);
-        console.log(res.data()?.messages);
       });
     };
 
