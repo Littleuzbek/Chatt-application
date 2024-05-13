@@ -2,7 +2,6 @@ import React, { Fragment, useState } from "react";
 import {
   deleteField,
   doc,
-  getDoc,
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
@@ -20,38 +19,27 @@ export default function DoubleDelete() {
   const dispatch = useDispatch();
 
   const DeleteChat = async () => {
+    const userUid = deletingUser[1]?.userInfo.uid;
+    const mutualChatId = deletingUser[0];
     dispatch(uiActions.setDoubleDelete(false));
     dispatch(chatActions.changeUser(false));
     dispatch(chatActions.setID("null"));
 
-    let userChat = await getDoc(
-      doc(db, "userChats", deletingUser[1]?.userInfo.uid),
-      { [deletingUser[0]]: deletingUser[0] }
-    );
-
-    if (checked) {
+      if (checked) {
       await updateDoc(doc(db, "userChats", currentUser.uid), {
-        [deletingUser[0]]: deleteField(deletingUser[0]),
+        [mutualChatId]: deleteField(mutualChatId),
       });
 
-      await updateDoc(doc(db, "userChats", deletingUser[1]?.userInfo.uid), {
-        [deletingUser[0]]: deleteField(deletingUser[0]),
+      await updateDoc(doc(db, "userChats", userUid), {
+        [mutualChatId]: deleteField(mutualChatId),
       });
 
-      await deleteDoc(doc(db, "chats", deletingUser[0]));
+      await deleteDoc(doc(db, "chats", mutualChatId));
       
     } else {
-      if (userChat?.get(deletingUser[0])) {
         await updateDoc(doc(db, "userChats", currentUser.uid), {
-          [deletingUser[0]]: deleteField(deletingUser[0]),
+          [mutualChatId]: deleteField(mutualChatId),
         });
-      } else {
-        await updateDoc(doc(db, "userChats", currentUser.uid), {
-          [deletingUser[0]]: deleteField(deletingUser[0]),
-        });
-      }
-
-      await deleteDoc(doc(db, "chats", deletingUser[0]));
     }
   };
 

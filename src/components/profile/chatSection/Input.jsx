@@ -98,7 +98,7 @@ export default function Input({ onProgress }) {
                   date: Timestamp.now(),
                   img: downloadURL,
                 }),
-              });
+              }).catch(err=>console.log(err));
             }
           );
           UpdateUserListMessage('Photo')
@@ -112,7 +112,7 @@ export default function Input({ onProgress }) {
           senderId: currentUser.uid,
           date: Timestamp.now(),
         }),
-      });
+      }).catch(err=>{console.log(err);});
       UpdateUserListMessage(text)
     }
     setText("");

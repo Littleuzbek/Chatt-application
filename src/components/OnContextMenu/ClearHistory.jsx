@@ -10,19 +10,28 @@ export default function ClearHistory({ selectedUser }) {
   const dispatch = useDispatch()
 
   const clearHistoryHandler = async () => {
+    const userUid = selectedUser[1]?.userInfo?.uid
+    const mutualChatId = selectedUser[0];
     dispatch(uiActions.setClickValue({
       type: 'ui',
       value: false
     }))
 
-    await updateDoc(doc(db, "chats", selectedUser[0]), {
+    await updateDoc(doc(db, "chats", mutualChatId), {
       messages: deleteField(),
     });
     await updateDoc(doc(db, "userChats", currentUser.uid), {
-      [selectedUser[0] + ".lastMessage"]: {
+      [mutualChatId + ".lastMessage"]: {
         text: "",
       },
-      [selectedUser[0] + ".date"]: "",
+      [mutualChatId + ".date"]: "",
+    });
+
+    await updateDoc(doc(db, "userChats", userUid), {
+      [mutualChatId + ".lastMessage"]: {
+        text: "",
+      },
+      [mutualChatId + ".date"]: "",
     });
   };
 
