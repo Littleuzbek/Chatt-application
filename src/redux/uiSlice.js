@@ -6,7 +6,6 @@ const uiSlice = createSlice({
         loader: true,
         unloaded: false,
         progress: null,
-        viewContentValue: '',
         viewContent: false,
         backDrop: false,
         forwardList: false,
@@ -26,9 +25,6 @@ const uiSlice = createSlice({
         },
         setProgress(state,action){
             state.progress = action.payload;
-        },
-        setViewContentValue(state,action){
-            state.viewContentValue = action.payload
         },
         setViewContent(state,action){
             state.viewContent = action.payload

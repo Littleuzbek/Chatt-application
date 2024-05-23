@@ -92,15 +92,18 @@
     margin: 5px 0 0 0;
 }
 
-.message > div > img {
+.message > div > img, 
+.message > div > video {
     border-radius: 10px;
+    overflow: hidden;
 }
 
 .owner {
     flex-direction: row;
 }
 
-.imgMessage {
+.message > div > img,
+.message > div > video{
     max-width: 400px;
     max-height: 400px;
 }
@@ -206,6 +209,17 @@
 }
 
 .beforeSendItem > img {
+    width: auto;
+    height: auto;
+    max-width: 90%;
+    max-height: 345px;
+    background-color: pink;
+    border-radius: 10px;
+    margin: 15px 0 10px 0;
+    border: 1px solid black;
+}
+
+.beforeSendItem > video {
     width: auto;
     height: auto;
     max-width: 90%;

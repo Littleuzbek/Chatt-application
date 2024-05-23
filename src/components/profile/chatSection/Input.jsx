@@ -19,7 +19,7 @@ export default function Input({ onProgress }) {
   const chatId = useSelector((state) => state.chat.chatId);
   const user = useSelector((state) => state.chat.user);
   const [text, setText] = useState("");
-  const [img, setImg] = useState(null);
+  const [media, setMedia] = useState(null);
   const [beforeSend, setBeforeSend] = useState(false);
 
   const currentUser = auth.currentUser;
@@ -46,7 +46,7 @@ export default function Input({ onProgress }) {
   }
 
   const handler = (e) => {
-    if (text !== "" || img) {
+    if (text !== "" || media) {
       if (e === "Enter" || e === "NumpadEnter" || e === "click") {
         handleSend();
       }
@@ -54,18 +54,19 @@ export default function Input({ onProgress }) {
   };
 
   useEffect(() => {
-    if (img) {
+    if (media) {
       setBeforeSend(true);
     }
-  }, [img]);
+  }, [media]);
 
   const handleSend = async () => {
+    const sourceType = media?.type.split('/');
     setText("");
 
-    if (img) {
+    if (media) {
       const storageRef = ref(storage, uuid());
-      const uploadTask = uploadBytesResumable(storageRef, img);
-      setImg(null);
+      const uploadTask = uploadBytesResumable(storageRef, media);
+      setMedia(null);
 
       uploadTask.on(
         "state_changed",
@@ -90,15 +91,28 @@ export default function Input({ onProgress }) {
         async () => {
           await getDownloadURL(uploadTask.snapshot.ref).then(
             async (downloadURL) => {
-              await updateDoc(doc(db, "chats", chatId), {
-                messages: arrayUnion({
-                  id: uuid(),
-                  text: "Photo",
-                  senderId: currentUser.uid,
-                  date: Timestamp.now(),
-                  img: downloadURL,
-                }),
-              }).catch(err=>console.log(err));
+              if(sourceType[0] === 'image'){
+                await updateDoc(doc(db, "chats", chatId), {
+                  messages: arrayUnion({
+                    id: uuid(),
+                    text: "Photo",
+                    senderId: currentUser.uid,
+                    date: Timestamp.now(),
+                    img: downloadURL,
+                  }),
+                }).catch(err=>console.log(err));
+              }
+              if(sourceType[0] === 'video'){
+                await updateDoc(doc(db, "chats", chatId), {
+                  messages: arrayUnion({
+                    id: uuid(),
+                    text: "Video",
+                    senderId: currentUser.uid,
+                    date: Timestamp.now(),
+                    video: downloadURL,
+                  }),
+                }).catch(err=>console.log(err));
+              }
             }
           );
           UpdateUserListMessage('Photo')
@@ -134,7 +148,7 @@ export default function Input({ onProgress }) {
             id="fileRecieve"
             style={{ display: "none" }}
             onChange={(e) => {
-              setImg(e.target.files[0]);
+              setMedia(e.target.files[0]);
             }}
             value={""}
             accept="image/*"
@@ -146,10 +160,10 @@ export default function Input({ onProgress }) {
         </div>
       {beforeSend && (
         <BeforeSend
-          beforeSendImg={img}
+          beforeSendValue={media}
           onSetBeforeSend={setBeforeSend}
           onSendImg={handleSend}
-          onClearBeforeSend={setImg}
+          onClearBeforeSendValue={setMedia}
         />
       )}
     </div>

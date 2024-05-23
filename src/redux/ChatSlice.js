@@ -7,7 +7,10 @@ const chatSlice = createSlice({
         chatId: 'null',
         user: false,
         forwardingMessage: '',
-        deletingUser: ''
+        deletingUser: '',
+        viewContentValue: '',
+        videoChangedProgress: 0,
+        contentType: ''
     },
     reducers:{
         changeUser(state,action){
@@ -28,6 +31,15 @@ const chatSlice = createSlice({
         },
         setDeletingUser(state,action){
             state.deletingUser = action.payload
+        },
+        setViewContentValue(state,action){
+            state.viewContentValue = action.payload
+        },
+        setChangedProgress(state,action){
+            state.mediaProgress = action.payload
+        },
+        setContentType(state,action){
+            state.contentType = action.payload
         }
     }
 })

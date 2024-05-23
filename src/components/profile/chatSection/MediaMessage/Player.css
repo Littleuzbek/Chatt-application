@@ -1,0 +1,160 @@
+.Layer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  z-index: 100;
+}
+
+.playeR{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 60%;
+    height: 95%;
+  }
+  
+  .playeR > video{
+    max-width: 100%;
+    max-height: 87%;
+    border-radius: 5px;
+    margin: 0 0 5px 0;
+  }
+
+  .playeR > video::-webkit-media-controls {
+    display:none !important;
+  }
+
+  .playeR > video::-webkit-slider-runnable-track{
+    display: none !important ;
+  }
+  
+  .controlRoom {
+    width: 50%;
+    height: 10%;
+    background-color: white;
+    border-radius: 10px;
+  }
+  
+  .controlRoom > div {
+    width: 100%;
+  }
+  
+  .controllers{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 60%;
+    padding: 5px 0 5px 0;
+  }
+  
+  .timeLine {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40%;
+  }
+  
+  .timeLine > p{
+    font-size: 12px;
+    margin: 0 5px;
+  }
+  
+  .timeLine > input{
+    width: 85%;
+  }
+  
+  .ctrlBtn{
+    width: 6%;
+    height: 90%;
+    margin: 0 10px;
+  }
+
+  .ctrlBtn:nth-of-type(1):active{
+    animation: spinBack .5s ease;
+  }
+
+  .ctrlBtn:nth-child(4):active{
+    animation: spinForward .5s ease;
+  }
+
+  .volume{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 25%;
+  }
+  
+  .volume > input {
+    width: 80%;
+    height: 10%;
+  }
+
+  .sideFn{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 25%;
+    height: 100%;
+  }
+
+  .sideBtn{
+    font-size: 20px;
+  }
+
+  .speedBtn{
+    position: absolute;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    bottom: 13%;
+    right: 35%;
+  }
+
+  .speedBtn > p{
+    padding: 5px;
+    text-align: center;
+  }
+
+  .speedBtn > p:hover{
+    background-color: rgb(211, 210, 210);
+  }
+
+  .hidePlayerCtrl{
+    width: 5%;
+    position: absolute;
+    left: 47.5%;
+    bottom: 68px;
+    background-color: white;
+    border-radius: 10px 10px 0 0;
+    z-index: 10000;
+  }
+
+  .showPlayerCtrl{
+    width: 5%;
+    position: absolute;
+    left: 47.5%;
+    bottom: 0;
+    background-color: white;
+    border-radius: 0 0 10px 10px ;
+    rotate: 180deg;
+  }
+  
+  @keyframes spinBack {
+    from{
+      rotate: 0deg;
+    }to{
+      rotate: -360deg;
+    }
+  }
+
+  @keyframes spinForward {
+    from{
+      rotate: 0deg;
+    }to{
+      rotate: 360deg;
+    }
+  }

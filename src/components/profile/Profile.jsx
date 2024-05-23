@@ -3,12 +3,11 @@ import "./Profile.css";
 import ListSection from "./listSection/ListSection";
 import ChatSection from "./chatSection/ChatSection";
 import Menu from "./menu/Menu";
-import ViewContent from "../UI/ViewContent";
+import ViewContent from "./chatSection/MediaMessage/ViewContent";
 import { useSelector } from "react-redux";
 import ForwardList from "../UI/ForwardList";
 import DoubleDelete from "../UI/DoubleDelete";
 import About from "../UI/About";
-// import Error from '../UI/Error'
 
 export default function Profile() {
   const backDrop = useSelector((state) => state.ui.backDrop);
@@ -26,7 +25,6 @@ export default function Profile() {
       {viewContnet && <ViewContent />}
       {forwardList && <ForwardList />}
       {doubleDelete && <DoubleDelete />}
-      {/* <Error /> */}
     </div>
   );
 }

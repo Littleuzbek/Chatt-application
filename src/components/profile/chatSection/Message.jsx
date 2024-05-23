@@ -1,15 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { auth } from "../../../firebase";
 import { useEffect, useRef } from "react";
-import { uiActions } from "../../../redux/uiSlice";
 import defaultUser from "../../../images/defaultUser.png";
+import Media from "./MediaMessage/Media";
 
 export default function Message({ message, onContextMenu }) {
   const user = useSelector((state) => state.chat.user);
   const currentUser = auth.currentUser;
   const owner = message.senderId === currentUser?.uid;
   const ref = useRef();
-  const dispatch = useDispatch();
 
   const style = owner
     ? {
@@ -23,14 +22,6 @@ export default function Message({ message, onContextMenu }) {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  const ViewContentHandler = (e) => {
-    dispatch(uiActions.setViewContentValue(e.target.currentSrc));
-    
-    setTimeout(() => {
-      dispatch(uiActions.setViewContent(true));
-    }, 100);
-  };
-
   return (
     <div className={`message ${owner && "owner"}`} ref={ref}>
       <img
@@ -42,14 +33,8 @@ export default function Message({ message, onContextMenu }) {
         alt=""
       />
       <div style={owner ? { flexDirection: "row" } : {}} onContextMenu={(e)=>onContextMenu(e, message)}>
-        {message?.img ? (
-          <img
-            src={message?.img}
-            alt=""
-            className="imgMessage"
-            onClick={(e) => ViewContentHandler(e)}
-            // onLoad={(e) => console.log(e)}
-          />
+        {(message?.img || message?.video) ? (
+          <Media src={message}/>
         ) : (
           <p style={style}>{message?.text}</p>
         )}

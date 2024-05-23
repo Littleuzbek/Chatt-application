@@ -4,11 +4,14 @@ import "./ChatSection.css";
 import BackDrop from '../../UI/Backdrop'
 
 export default function BeforeSend({
-  beforeSendImg,
+  beforeSendValue,
   onSetBeforeSend,
   onSendImg,
-  onClearBeforeSend
+  onClearBeforeSendValue
 }) {
+  const sourceType = beforeSendValue.type.split('/')
+
+  let source = URL.createObjectURL(beforeSendValue);
 
   const SendHandler = (e) => {
     if(e === 'yes'){
@@ -16,18 +19,17 @@ export default function BeforeSend({
       onSetBeforeSend(false);
     }else{
       onSetBeforeSend(false);
-      onClearBeforeSend(null);
+      onClearBeforeSendValue(null);
     }
   };
-
-  let image = URL.createObjectURL(beforeSendImg);
 
   const BeforeSend = () => {
     return (
       <div className="beforeSend">
         <BackDrop />
         <div className="beforeSendItem">
-          <img src={image} alt="" />
+          {sourceType[0] === 'image' ? <img src={source} alt="" /> : ''}
+          {sourceType[0] === 'video' ? <video src={source} ></video> : ''}
           <div className="btns">
             <button onClick={()=>SendHandler('no')}>Don't send</button>
             <button onClick={()=>SendHandler('yes')}>Send</button>

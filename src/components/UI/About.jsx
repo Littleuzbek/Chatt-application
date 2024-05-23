@@ -8,7 +8,7 @@ import { CgClose } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../redux/uiSlice";
 import { doc, getDoc } from "firebase/firestore";
-import Media from "./Media";
+import Media from "../profile/chatSection/MediaMessage/Media";
 
 export default function About() {
   const [chosenUser, setChosenUser] = useState();
@@ -76,7 +76,7 @@ export default function About() {
               </div>
               <div className="itemS">
                 {media?.map((m) => (
-                  <Media src={m} key={m?.id}/>
+                  <Media src={m}/>
                 ))}
               </div>
             </div>
