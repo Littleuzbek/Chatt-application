@@ -25,10 +25,7 @@ export default function Search() {
   const dispatch = useDispatch();
 
   const handleSearch = async () => {
-    const q = query(
-      collection(db, "users"),
-      where("username", "==", username)
-    );
+    const q = query(collection(db, "users"), where("username", "==", username));
 
     try {
       const querySnapshot = await getDocs(q);
@@ -45,34 +42,52 @@ export default function Search() {
   };
 
   const handleSelect = async () => {
-    const combinedId = currentUser?.uid > user?.uid ? currentUser?.uid + user?.uid : user?.uid + currentUser?.uid;
+    const combinedId =
+      currentUser?.uid > user?.uid
+        ? currentUser.uid + user.uid
+        : user.uid + currentUser.uid;
 
-        try {
-      const res = await getDoc(doc(db, "userChats", currentUser.uid));
-      const matchingId = Object.keys(res.data()).find(e=>e === combinedId);
-      
-      if (!matchingId) {
+    try {
+      const currentUserList = await getDoc(
+        doc(db, "userChats", currentUser.uid)
+      );
+      const otherUserList = await getDoc(doc(db, "userChats", user.uid));
+      const combinedChat = await getDoc(doc(db, "chats", combinedId));
+      const currentUserHasChatt = Object.keys(currentUserList.data()).find(
+        (e) => e === combinedId
+      );
+      const otherUserHasChatt = Object.keys(otherUserList.data()).find(
+        (e) => e === combinedId
+      );
+
+      if (!currentUserHasChatt) {
         //create a chat in chats collection
-        console.log('work');
-        await setDoc(doc(db, "chats", combinedId), { messages: [] });
+
+        // if mutual chat was not deleted, if it was create new one
+        if (!combinedChat) {
+          await setDoc(doc(db, "chats", combinedId), { messages: [] });
+        }
 
         await updateDoc(doc(db, "userChats", currentUser.uid), {
-            [combinedId + ".userInfo"]: {
-              uid: user.uid,
-              displayName: user.displayName,
-              photoURL: user.photoURL,
-            },
-            [combinedId + ".date"]: serverTimestamp(),
+          [combinedId + ".userInfo"]: {
+            uid: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+          },
+          [combinedId + ".date"]: serverTimestamp(),
         });
 
-        await updateDoc(doc(db, "userChats", user.uid), {
+        // if other userList has currentUser, if not create new one in list
+        if (!otherUserHasChatt) {
+          await updateDoc(doc(db, "userChats", user.uid), {
             [combinedId + ".userInfo"]: {
               uid: currentUser.uid,
               displayName: currentUser.displayName,
               photoURL: currentUser.photoURL,
             },
             [combinedId + ".date"]: serverTimestamp(),
-        });
+          });
+        }
       }
     } catch (err) {
       setError(err);
