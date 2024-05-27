@@ -34,14 +34,12 @@
     background-color:#f1f1f1 ;
 }
 
-.forwardingUser > object {
+.forwardingUser > img {
     width: 70px;
     height: 60px;
     border-radius: 50%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
     margin: 0 5px;
+    object-fit: cover;
 }
 
 .forwardingName > p:nth-child(1){

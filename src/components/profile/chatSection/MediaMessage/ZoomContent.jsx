@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { CgZoomIn } from "react-icons/cg";
 import { BiZoomOut } from "react-icons/bi";
+import Backdrop from "../../../UI/Backdrop";
 
 export default function ZoomContent() {
   const [scale, setScale] = useState(1);
@@ -104,6 +105,8 @@ export default function ZoomContent() {
   }, [imgRef, scale]);
 
   return (
+    <Fragment>
+      <Backdrop/>
     <div className={imgHeight ? "normalSize" : "overSize"}>
       <img
         src={viewContnetValue}
@@ -123,7 +126,7 @@ export default function ZoomContent() {
             setImgHeight(false);
           }
         }}
-      />
+        />
       <div onClick={(e) => e.stopPropagation()} className="zoomControl">
         <BiZoomOut className="zoomOut" onClick={() => ZoomControl("-")} />
         <input
@@ -135,9 +138,10 @@ export default function ZoomContent() {
           onChange={(e) => setScale(Number(e.target.value))}
           onClick={(e) => setScale(Number(e.target.value))}
           step={0.1}
-        />
+          />
         <CgZoomIn className="zoomIn" onClick={() => ZoomControl("+")} />
       </div>
     </div>
+          </Fragment>
   );
 }

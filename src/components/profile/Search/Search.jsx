@@ -48,9 +48,10 @@ export default function Search() {
     const combinedId = currentUser?.uid > user?.uid ? currentUser?.uid + user?.uid : user?.uid + currentUser?.uid;
 
         try {
-      const res = await getDoc(doc(db, "chats", combinedId));
-
-      if (!res.exists()) {
+      const res = await getDoc(doc(db, "userChats", currentUser.uid));
+      const matchingId = Object.keys(res.data()).find(e=>e === combinedId);
+      
+      if (!matchingId) {
         //create a chat in chats collection
         console.log('work');
         await setDoc(doc(db, "chats", combinedId), { messages: [] });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import rewind from "../../../../images/rewind.png";
 import rewindForward from "../../../../images/rewindforward.png";
 import { CiPause1 } from "react-icons/ci";
@@ -10,8 +10,9 @@ import { RxEnterFullScreen } from "react-icons/rx";
 import { RxExitFullScreen } from "react-icons/rx";
 import { CgMiniPlayer } from "react-icons/cg";
 import { SlSpeedometer } from "react-icons/sl";
-import { useDispatch } from "react-redux";
+import { useDispatch} from "react-redux";
 import { chatActions } from "../../../../redux/ChatSlice";
+import { uiActions } from "../../../../redux/uiSlice";
 
 export default function Controller({
   pausePlayVal,
@@ -59,41 +60,52 @@ export default function Controller({
 
   const SpeedHandler = (e) => {
     setShowSpeed(!showSpeed);
-try{
-  if (e === "0.5") {
-    videoRefVal.target.playbackRate = 0.5;
-    setShowSpeed(false);
-  }
-    if (e === "1") {
-      videoRefVal.target.playbackRate = 1;
-      setShowSpeed(false);
-    }
-    if (e === "1.25") {
-      videoRefVal.target.playbackRate = 1.25;
-      setShowSpeed(false);
-    }
-    if (e === "1.5") {
-      videoRefVal.target.playbackRate = 1.5;
-      setShowSpeed(false);
-    }
-    if (e === "2") {
-      videoRefVal.target.playbackRate = 2;
-      setShowSpeed(false);
-    }
-  }catch(err){console.log(err)}
-  };
-
-  const PictureInPicture = () => {
     try {
-      const playeR = document.querySelector(".viD");
-      playeR.requestPictureInPicture();
+      if (e === "0.5") {
+        videoRefVal.target.playbackRate = 0.5;
+        setShowSpeed(false);
+      }
+      if (e === "1") {
+        videoRefVal.target.playbackRate = 1;
+        setShowSpeed(false);
+      }
+      if (e === "1.25") {
+        videoRefVal.target.playbackRate = 1.25;
+        setShowSpeed(false);
+      }
+      if (e === "1.5") {
+        videoRefVal.target.playbackRate = 1.5;
+        setShowSpeed(false);
+      }
+      if (e === "2") {
+        videoRefVal.target.playbackRate = 2;
+        setShowSpeed(false);
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
+  const PictureInPicture = async () => {
+    try {
+      const playeR = document.querySelector(".viD");
+      playeR.requestPictureInPicture();
+      const layer = document.querySelector(".ViewContent");
+      const back = document.querySelector(".backDrop");
+      back.style.display = "none";
+      layer.style.display = "none";
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  document.addEventListener("leavepictureinpicture", () => {
+    dispatch(uiActions.setViewContent(false));
+  });
+
+
   return (
-    <div className="controllers" onClick={e=>e.stopPropagation()}>
+    <div className="controllers" onClick={(e) => e.stopPropagation()}>
       <div className="volume">
         {mute ? (
           <IoMdVolumeMute className="sideBtn" onClick={() => UnMute()} />
@@ -119,7 +131,7 @@ try{
       />
       {pausePlayVal ? (
         <CiPlay1 onClick={() => onPausPlay()} className={"ctrlBtn"} />
-        ) : (
+      ) : (
         <CiPause1 onClick={() => onPausPlay()} className={"ctrlBtn"} />
       )}
       <img

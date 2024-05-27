@@ -76,7 +76,7 @@ export default function About() {
               </div>
               <div className="itemS">
                 {media?.map((m) => (
-                  <Media src={m}/>
+                  <Media src={m} key={m?.id}/>
                 ))}
               </div>
             </div>

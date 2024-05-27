@@ -70,17 +70,9 @@ export default function ForwardList() {
                   ForwardHandler(chat?.[0]);
                 }}
               >
-                <object
-                  data=""
-                  style={{
-                    backgroundImage: `url(${
-                      chat[1]?.userInfo?.photoURL
+               <img src={chat[1]?.userInfo?.photoURL
                         ? chat[1]?.userInfo?.photoURL
-                        : defaultUser
-                    })`,
-                  }}
-                  aria-label="Alternative Text"
-                ></object>
+                        : defaultUser} alt="" />
                 <div className="forwardingName">
                   <p>{chat[1]?.userInfo?.displayName}</p>
                   <p>Online</p>

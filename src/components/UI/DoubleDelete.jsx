@@ -20,25 +20,25 @@ export default function DoubleDelete() {
 
   const DeleteChat = async () => {
     const userUid = deletingUser[1]?.userInfo.uid;
-    const mutualChatId = deletingUser[0];
+    const combinedId = deletingUser[0];
     dispatch(uiActions.setDoubleDelete(false));
     dispatch(chatActions.changeUser(false));
     dispatch(chatActions.setID("null"));
 
       if (checked) {
       await updateDoc(doc(db, "userChats", currentUser.uid), {
-        [mutualChatId]: deleteField(mutualChatId),
+        [combinedId]: deleteField(combinedId),
       });
 
       await updateDoc(doc(db, "userChats", userUid), {
-        [mutualChatId]: deleteField(mutualChatId),
+        [combinedId]: deleteField(combinedId),
       });
 
-      await deleteDoc(doc(db, "chats", mutualChatId));
+      await deleteDoc(doc(db, "chats", combinedId));
       
     } else {
         await updateDoc(doc(db, "userChats", currentUser.uid), {
-          [mutualChatId]: deleteField(mutualChatId),
+          [combinedId]: deleteField(combinedId),
         });
     }
   };

@@ -8,6 +8,11 @@ export default function Media({src}) {
 
   const ViewContentHandler = (e) => {
     dispatch(chatActions.setViewContentValue(e.target.currentSrc));
+    
+    if(document.pictureInPictureElement){
+      document?.exitPictureInPicture()
+      dispatch(uiActions.setViewContent(false));
+    }
 
     if(src?.img){
       dispatch(chatActions.setContentType('Image'))
@@ -20,13 +25,12 @@ export default function Media({src}) {
       dispatch(uiActions.setViewContent(true));
     }, 100);
   };
-
   return (
     <Fragment>
       {src?.img ? 
         <img src={src?.img} alt="" id={src?.id} onClick={(e)=>ViewContentHandler(e)}/>
         :
-          <video src={src?.video} id={src?.id} onClick={(e)=>ViewContentHandler(e)} muted autoPlay></video>
+        <video src={src?.video} id={src?.id} onClick={(e)=>ViewContentHandler(e)} muted autoPlay loop></video>
       }
     </Fragment>
   );

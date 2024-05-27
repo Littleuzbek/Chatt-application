@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import "./ViewContent.css";
-import Backdrop from "../../../UI/Backdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../../redux/uiSlice";
 import ZoomContent from "./ZoomContent";
@@ -23,7 +22,6 @@ export default function ViewContent() {
 
   return (
     <Fragment>
-      <Backdrop />
       <div
         className="ViewContent"
         onClick={() => {

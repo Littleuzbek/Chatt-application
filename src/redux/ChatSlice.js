@@ -10,7 +10,7 @@ const chatSlice = createSlice({
         deletingUser: '',
         viewContentValue: '',
         videoChangedProgress: 0,
-        contentType: ''
+        contentType: '',
     },
     reducers:{
         changeUser(state,action){
@@ -40,7 +40,7 @@ const chatSlice = createSlice({
         },
         setContentType(state,action){
             state.contentType = action.payload
-        }
+        },
     }
 })
 
