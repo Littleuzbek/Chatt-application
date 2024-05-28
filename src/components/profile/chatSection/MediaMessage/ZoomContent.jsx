@@ -6,17 +6,20 @@ import Backdrop from "../../../UI/Backdrop";
 
 export default function ZoomContent() {
   const [scale, setScale] = useState(1);
-  const [keyValue, setKeyValue] = useState();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [imgHeight, setImgHeight] = useState(false);
   const viewContnetValue = useSelector((state) => state.chat.viewContentValue);
   const imgRef = useRef(null);
 
   window.addEventListener("keydown", (e) => {
-    setKeyValue(e.code);
-  });
-  window.addEventListener("keyup", () => {
-    setKeyValue(null);
+    if (
+      e.code === "ControlLeft" ||
+      e.code === "ControlRight" ||
+      e.code === "ShiftLeft" ||
+      e.code === "ShiftRight"
+    ) {
+      return;
+    }
   });
 
   const ZoomInOut = (wheelValue) => {
@@ -24,28 +27,14 @@ export default function ZoomContent() {
     const zoomOutInt = (Math.round(scale * 100) / 100).toFixed(2);
 
     if (zoomInInt !== 7) {
-      if (
-        keyValue === "ControlLeft" ||
-        keyValue === "ControlRight" ||
-        keyValue === "ShiftLeft" ||
-        keyValue === "ShiftRight"
-      ) {
-        if (wheelValue.nativeEvent.wheelDelta > 0) {
-          setScale(scale + 0.1);
-        }
+      if (wheelValue.nativeEvent.wheelDelta > 0) {
+        setScale(scale + 0.1);
       }
     }
 
     if (zoomOutInt !== "0.50") {
-      if (
-        keyValue === "ControlLeft" ||
-        keyValue === "ControlRight" ||
-        keyValue === "ShiftLeft" ||
-        keyValue === "ShiftRight"
-      ) {
-        if (wheelValue.nativeEvent.wheelDelta < 0) {
-          setScale(scale - 0.1);
-        }
+      if (wheelValue.nativeEvent.wheelDelta < 0) {
+        setScale(scale - 0.1);
       }
     }
   };
@@ -59,7 +48,7 @@ export default function ZoomContent() {
         setScale(scale + 0.5);
       }
     }
-    if (zoomOutInt !== "0.50" && zoomOutInt > '0.50') {
+    if (zoomOutInt !== "0.50" && zoomOutInt > "0.50") {
       if (method === "-") {
         setScale(scale - 0.5);
       }
@@ -106,42 +95,42 @@ export default function ZoomContent() {
 
   return (
     <Fragment>
-      <Backdrop/>
-    <div className={imgHeight ? "normalSize" : "overSize"}>
-      <img
-        src={viewContnetValue}
-        alt=""
-        onClick={(e) => e.stopPropagation()}
-        onWheel={(wheelValue) => ZoomInOut(wheelValue)}
-        style={{
-          scale: `${scale}`,
-          transform: `translate(${position.x}px, ${position.y}px)`,
-        }}
-        ref={imgRef}
-        draggable={false}
-        onLoad={(e) => {
-          if (e.target.clientHeight >= 1024) {
-            setImgHeight(true);
-          } else {
-            setImgHeight(false);
-          }
-        }}
+      <Backdrop />
+      <div className={imgHeight ? "normalSize" : "overSize"}>
+        <img
+          src={viewContnetValue}
+          alt=""
+          onClick={(e) => e.stopPropagation()}
+          onWheel={(wheelValue) => ZoomInOut(wheelValue)}
+          style={{
+            scale: `${scale}`,
+            transform: `translate(${position.x}px, ${position.y}px)`,
+          }}
+          ref={imgRef}
+          draggable={false}
+          onLoad={(e) => {
+            if (e.target.clientHeight >= 1024) {
+              setImgHeight(true);
+            } else {
+              setImgHeight(false);
+            }
+          }}
         />
-      <div onClick={(e) => e.stopPropagation()} className="zoomControl">
-        <BiZoomOut className="zoomOut" onClick={() => ZoomControl("-")} />
-        <input
-          type="range"
-          id=""
-          min={0.5}
-          max={7}
-          value={Number(scale)}
-          onChange={(e) => setScale(Number(e.target.value))}
-          onClick={(e) => setScale(Number(e.target.value))}
-          step={0.1}
+        <div onClick={(e) => e.stopPropagation()} className="zoomControl">
+          <BiZoomOut className="zoomOut" onClick={() => ZoomControl("-")} />
+          <input
+            type="range"
+            id=""
+            min={0.5}
+            max={7}
+            value={Number(scale)}
+            onChange={(e) => setScale(Number(e.target.value))}
+            onClick={(e) => setScale(Number(e.target.value))}
+            step={0.1}
           />
-        <CgZoomIn className="zoomIn" onClick={() => ZoomControl("+")} />
+          <CgZoomIn className="zoomIn" onClick={() => ZoomControl("+")} />
+        </div>
       </div>
-    </div>
-          </Fragment>
+    </Fragment>
   );
 }
