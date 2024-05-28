@@ -3,6 +3,7 @@ import { auth } from "../../../firebase";
 import { useEffect, useRef } from "react";
 import defaultUser from "../../../images/defaultUser.png";
 import Media from "./MediaMessage/Media";
+import Files from "./MediaMessage/Files";
 
 export default function Message({ message, onContextMenu }) {
   const user = useSelector((state) => state.chat.user);
@@ -36,6 +37,9 @@ export default function Message({ message, onContextMenu }) {
         {(message?.img || message?.video) ? (
           <Media src={message}/>
         ) : (
+          message?.files?
+          <Files owner={owner} files={message?.files}/>
+          :
           <p style={style}>{message?.text}</p>
         )}
       </div>

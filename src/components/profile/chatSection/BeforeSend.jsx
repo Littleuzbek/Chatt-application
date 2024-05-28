@@ -1,23 +1,37 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import ReactDOM from "react-dom";
 import "./ChatSection.css";
-import BackDrop from '../../UI/Backdrop'
+import BackDrop from "../../UI/Backdrop";
+import { FiFile } from "react-icons/fi";
 
 export default function BeforeSend({
   beforeSendValue,
   onSetBeforeSend,
-  onSendImg,
-  onClearBeforeSendValue
+  onSend,
+  onClearBeforeSendValue,
 }) {
-  const sourceType = beforeSendValue.type.split('/')
+  const sourceType = beforeSendValue.type.split("/");
+
+  useEffect(()=>{
+    if(sourceType[0] === 'image'){
+      return
+    }else if(sourceType[0] === 'image'){
+      return
+    }else if(sourceType.at(-1) === "pdf"){
+      return
+    }else{
+      onSetBeforeSend(false);
+      onClearBeforeSendValue(null);
+    }
+  },[sourceType,onSetBeforeSend,onClearBeforeSendValue])
 
   let source = URL.createObjectURL(beforeSendValue);
 
   const SendHandler = (e) => {
-    if(e === 'yes'){
-      onSendImg();
+    if (e === "yes") {
+      onSend();
       onSetBeforeSend(false);
-    }else{
+    } else {
       onSetBeforeSend(false);
       onClearBeforeSendValue(null);
     }
@@ -28,11 +42,19 @@ export default function BeforeSend({
       <div className="beforeSend">
         <BackDrop />
         <div className="beforeSendItem">
-          {sourceType[0] === 'image' ? <img src={source} alt="" /> : ''}
-          {sourceType[0] === 'video' ? <video src={source} ></video> : ''}
+          {sourceType[0] === "image" ? <img src={source} alt="" /> : ""}
+          {sourceType[0] === "video" ? <video src={source}></video> : ""}
+          {sourceType.at(-1) === "pdf" ? (
+            <div className="pdfFile">
+              <p>{beforeSendValue?.name}</p>
+              <FiFile className="fileIcon" />
+            </div>
+          ) : (
+            ""
+          )}
           <div className="btns">
-            <button onClick={()=>SendHandler('no')}>Don't send</button>
-            <button onClick={()=>SendHandler('yes')}>Send</button>
+            <button onClick={() => SendHandler("no")}>Don't send</button>
+            <button onClick={() => SendHandler("yes")}>Send</button>
           </div>
         </div>
       </div>
@@ -41,10 +63,5 @@ export default function BeforeSend({
 
   const portal = document.getElementById("modal");
 
-
-  return( 
-    <Fragment>
-      {ReactDOM.createPortal(<BeforeSend />, portal)}
-    </Fragment>
-    )
+  return <Fragment>{ReactDOM.createPortal(<BeforeSend />, portal)}</Fragment>;
 }

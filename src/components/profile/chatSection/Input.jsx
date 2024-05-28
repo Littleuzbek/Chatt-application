@@ -100,7 +100,7 @@ export default function Input({ onProgress }) {
                     date: Timestamp.now(),
                     img: downloadURL,
                   }),
-                }).catch(err=>console.log(err));
+                }).then(()=>UpdateUserListMessage('Photo')).catch(err=>console.log(err));
               }
               if(sourceType[0] === 'video'){
                 await updateDoc(doc(db, "chats", chatId), {
@@ -111,7 +111,21 @@ export default function Input({ onProgress }) {
                     date: Timestamp.now(),
                     video: downloadURL,
                   }),
-                }).catch(err=>console.log(err));
+                }).then(()=>UpdateUserListMessage('Video')).catch(err=>console.log(err));
+              }
+              if(sourceType.at(-1) === "pdf"){
+                await updateDoc(doc(db, "chats", chatId), {
+                  messages: arrayUnion({
+                    id: uuid(),
+                    text: "PDF file",
+                    senderId: currentUser.uid,
+                    date: Timestamp.now(),
+                    files: {
+                      nameOf: media?.name,
+                      fileURL: downloadURL
+                    },
+                  }),
+                }).then(()=>UpdateUserListMessage('PDF file')).catch(err=>console.log(err));
               }
             }
           );
@@ -162,7 +176,7 @@ export default function Input({ onProgress }) {
         <BeforeSend
           beforeSendValue={media}
           onSetBeforeSend={setBeforeSend}
-          onSendImg={handleSend}
+          onSend={handleSend}
           onClearBeforeSendValue={setMedia}
         />
       )}
