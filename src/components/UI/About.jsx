@@ -53,8 +53,6 @@ export default function About() {
     }, 100);
   };
 
-  const style = "3px solid white";
-
   return (
     <Fragment>
       <div
