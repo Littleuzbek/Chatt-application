@@ -9,7 +9,6 @@ export default function Files({ owner, files }) {
     target="_blank"
     rel='noreferrer'
     className="pdfFile"
-    style={owner ? {} : { flexDirection: "row-reverse" }}
     >
       <p>{files?.nameOf}</p>
       <FaRegFilePdf className="fileIcon"/>

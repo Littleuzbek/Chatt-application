@@ -25,6 +25,7 @@ export default function Media({src}) {
       dispatch(uiActions.setViewContent(true));
     }, 100);
   };
+  
   return (
     <Fragment>
       {src?.img ? 

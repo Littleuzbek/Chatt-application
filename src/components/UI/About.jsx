@@ -1,6 +1,5 @@
-import React, {   useEffect,  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Fragment } from "react";
-import Backdrop from "./Backdrop";
 import "./About.css";
 import { db } from "../../firebase";
 import { FaAngleDown } from "react-icons/fa";
@@ -8,11 +7,13 @@ import { CgClose } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../redux/uiSlice";
 import { doc, getDoc } from "firebase/firestore";
-import Media from "../profile/chatSection/MediaMessage/Media";
+import Files from "../profile/chatSection/MediaMessage/Files";
+import { chatActions } from "../../redux/ChatSlice";
 
 export default function About() {
   const [chosenUser, setChosenUser] = useState();
   const [media, setMedia] = useState();
+  const [section, setSection] = useState("img");
   const [toggleSection, setToggleSection] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.chat.user);
@@ -32,9 +33,30 @@ export default function About() {
     user?.uid && FetchUserData();
   }, [user, chatId]);
 
+  const ViewContentHandler = (e, type) => {
+    dispatch(chatActions.setViewContentValue(e.target.currentSrc));
+
+    if (document.pictureInPictureElement) {
+      document?.exitPictureInPicture();
+      dispatch(uiActions.setViewContent(false));
+    }
+
+    if (type === "img") {
+      dispatch(chatActions.setContentType("Image"));
+    }
+    if (type === "video") {
+      dispatch(chatActions.setContentType("Video"));
+    }
+
+    setTimeout(() => {
+      dispatch(uiActions.setViewContent(true));
+    }, 100);
+  };
+
+  const style = "3px solid white";
+
   return (
     <Fragment>
-      <Backdrop />
       <div
         className="aboutChosenUser"
         onClick={() => dispatch(uiActions.setAbout(false))}
@@ -70,14 +92,68 @@ export default function About() {
                 onClick={() => setToggleSection(false)}
               />
               <div className="sectioN">
-                <div>Photo</div>
-                <div>Video</div>
-                <div>Files</div>
+                <div
+                  onClick={() => setSection("img")}
+                  style={
+                    section === "img"
+                      ? { backgroundColor: "black", color: "white" }
+                      : {}
+                  }
+                >
+                  Photos
+                </div>
+                <div
+                  onClick={() => setSection("video")}
+                  style={
+                    section === "video"
+                      ? { backgroundColor: "black", color: "white" }
+                      : {}
+                  }
+                >
+                  Videos
+                </div>
+                <div
+                  onClick={() => setSection("files")}
+                  style={
+                    section === "files"
+                      ? { backgroundColor: "black", color: "white" }
+                      : {}
+                  }
+                >
+                  Files
+                </div>
               </div>
               <div className="itemS">
-                {media?.map((m) => (
-                  <Media src={m} key={m?.id}/>
-                ))}
+                {section === "img"
+                  ? media?.map(
+                      (m) =>
+                        m?.img && (
+                          <img
+                            src={m?.img}
+                            alt=""
+                            id={m?.id}
+                            onClick={(e) => ViewContentHandler(e, "img")}
+                          />
+                        )
+                    )
+                  : ""}
+                {section === "video"
+                  ? media?.map(
+                      (m) =>
+                        m?.video && (
+                          <video
+                            src={m?.video}
+                            id={m?.id}
+                            onClick={(e) => ViewContentHandler(e, "video")}
+                          ></video>
+                        )
+                    )
+                  : ""}
+                {section === "files"
+                  ? media?.map(
+                      (m) => m?.files && <Files files={m?.files} id={m?.id} />
+                    )
+                  : ""}
               </div>
             </div>
           )}
