@@ -63,7 +63,11 @@ export default function Settings() {
         <LiaUserEditSolid />
         <p>Edit Profile</p>
       </div>
-      <div className="optionsInSettings">
+      <div className="optionsInSettings" onClick={()=>{
+        dispatch(menuActions.onSetChatTheme(true))
+        dispatch(uiActions.setBackDrop(false))
+        dispatch(menuActions.onToggleSettings(false))
+        }}>
         <ImImages />
         <p>Change Chat Theme</p>
       </div>

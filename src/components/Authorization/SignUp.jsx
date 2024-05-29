@@ -37,6 +37,8 @@ export default function SignUp({ onChange, onChangeValue }) {
           
           await setDoc(doc(db,'userChats',res.user.uid),{});
 
+          await setDoc(doc(db,'usersWallpapers', res.user.uid),{wallpapers: []})
+
           dispatch(uiActions.setCondition('SignUp success'))
         }
       )

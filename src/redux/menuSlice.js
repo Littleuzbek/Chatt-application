@@ -7,6 +7,8 @@ const menuSlice = createSlice({
         settingsAnimation: 'settings',
         toggleProfileEdit: false,
         newProfileImg: false,
+        chatThemeValue: '',
+        chatTheme: false
     },
     reducers:{
         onToggleSettings(state,action){
@@ -25,6 +27,12 @@ const menuSlice = createSlice({
             URL.createObjectURL(action.payload);
 
             state.newProfileImg = newURL;
+        },
+        onSetChatThemeValue(state,action){
+            state.chatThemeValue = action.payload
+        },
+        onSetChatTheme(state,action){
+                state.chatTheme = action.payload
         }
     }
 })

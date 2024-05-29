@@ -3,10 +3,10 @@
     flex-direction: column;
     width: 65%;
     height: 100%;
-    background-image: url('./sung-jin-woo-art-solo-leveling_bGtmZmqUmZqaraWkpJRqZmdlrWdtbWU-449135627.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
     overflow-y: hidden;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
 }
 
 .header {
