@@ -21,20 +21,30 @@ export default function About() {
 
   useEffect(() => {
     const FetchUserData = async () => {
-      await getDoc(doc(db, "users", user.uid)).then((res) => {
-        setChosenUser(res.data());
-      });
+      if(user.type === 'user'){
+        await getDoc(doc(db, "users", user.value.uid)).then((res) => {
+          setChosenUser(res.data());
+        });
+        
+        await getDoc(doc(db, "chats", chatId)).then((res) => {
+          setMedia(res.data()?.messages);
+        });
+      }
 
-      await getDoc(doc(db, "chats", chatId)).then((res) => {
-        setMedia(res.data()?.messages);
-      });
+      if(user.type === 'group'){
+        setChosenUser(user.value)
+      }
     };
 
-    user?.uid && FetchUserData();
+    user?.value.uid && FetchUserData();
   }, [user, chatId]);
 
-  const ViewContentHandler = (e, type) => {
-    dispatch(chatActions.setViewContentValue(e.target.currentSrc));
+  const ViewContentHandler = (e, type, header) => {
+    if (!header) {
+      dispatch(chatActions.setViewContentValue(e.target.currentSrc));
+    } else {
+      dispatch(chatActions.setViewContentValue(e));
+    }
 
     if (document.pictureInPictureElement) {
       document?.exitPictureInPicture();
@@ -61,22 +71,36 @@ export default function About() {
       >
         <div className="chosenUserInfo" onClick={(e) => e.stopPropagation()}>
           <div>
-            <img src={chosenUser?.photoURL} alt="" />
+            <img
+              src={chosenUser?.photoURL}
+              alt=""
+              onClick={() =>
+                ViewContentHandler(chosenUser?.photoURL, "img", "header")
+              }
+            />
           </div>
           {toggleSection || (
             <div className="infO">
               <div>
                 <p>Name</p>
-                <p>{user?.displayName ? user?.displayName : "..."}</p>
+                <p>{user?.value.displayName ? user?.value.displayName : "..."}</p>
               </div>
-              <div>
+              {user.type === 'group'?
+              ''
+              :
+                <div>
                 <p>Username</p>
                 <p>{chosenUser?.username ? chosenUser?.username : "..."}</p>
               </div>
+              }
+              {user.type === 'group'?
+              ''
+              :
               <div>
                 <p>About</p>
                 <p>{chosenUser?.about ? chosenUser?.about : "..."}</p>
               </div>
+              }
               <FaAngleDown
                 className="toMedia"
                 onClick={() => setToggleSection(true)}

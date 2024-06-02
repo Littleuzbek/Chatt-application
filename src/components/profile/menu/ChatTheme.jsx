@@ -12,24 +12,33 @@ export default function ChatTheme() {
   const chatThemeValue = useSelector((state) => state.menu.chatThemeValue);
   const [wallPapers, setWallPapers] = useState(false);
   const [newWallPaper, setNewWallPaper] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const currentUser = auth.currentUser;
 
   useEffect(() => {
-    const fetchWallPapers = async () => {
-      let arr = [];
+    try {
+      const fetchWallPapers = async () => {
+        let arr = [];
 
-      await getDoc(doc(db, "defaultData", "defaultWallpapers")).then((res) => {
-        arr.push(res.data()?.wallpapers)
-      });
+        await getDoc(doc(db, "defaultData", "defaultWallpapers")).then(
+          (res) => {
+            arr.push(res.data()?.wallpapers);
+          }
+        );
 
-      await getDoc(doc(db, "usersWallpapers", currentUser?.uid)).then((res) => {
-        arr.push(res.data()?.wallpapers)
-      });
+        await getDoc(doc(db, "usersWallpapers", currentUser?.uid)).then(
+          (res) => {
+            arr.push(res.data()?.wallpapers);
+          }
+        );
 
-      setWallPapers([...arr.at(0),...arr.at(1)])
-    };
-    currentUser?.uid && fetchWallPapers();
+        setWallPapers([...arr.at(0), ...arr.at(1)]);
+      };
+      currentUser?.uid && fetchWallPapers();
+    } catch (err) {
+      console.log(err);
+    }
   }, [currentUser]);
 
   const UploadWallpaper = async (e) => {
@@ -42,33 +51,40 @@ export default function ChatTheme() {
   };
 
   const SaveWallpaper = async () => {
-    if (newWallPaper) {
-      const storageRef = ref(storage, uuid());
-      await uploadBytesResumable(storageRef, newWallPaper)
-        .then(async (snapshot) => {
-          await getDownloadURL(snapshot.ref)
-            .then(async (res) => {
-              await updateDoc(doc(db, "usersWallpapers", currentUser?.uid), {
-                wallpapers: arrayUnion({
-                  id: uuid(),
-                  wallPaperURL: res,
-                }),
-                inUse: res,
+    try {
+      setLoading(true);
+      if (newWallPaper) {
+        const storageRef = ref(storage, uuid());
+        await uploadBytesResumable(storageRef, newWallPaper).then(
+          async (snapshot) => {
+            await getDownloadURL(snapshot.ref)
+              .then(async (res) => {
+                await updateDoc(doc(db, "usersWallpapers", currentUser?.uid), {
+                  wallpapers: arrayUnion({
+                    id: uuid(),
+                    wallPaperURL: res,
+                  }),
+                  inUse: res,
+                });
+              })
+              .then(() => {
+                dispatch(menuActions.onSetChatThemeValue(""));
+                setNewWallPaper(false);
+                setLoading(false);
               });
-            })
-            .then(() => {
-              dispatch(menuActions.onSetChatThemeValue(""));
-              setNewWallPaper(false);
-            });
-        })
-        .catch((err) => console.log(err));
-    } else {
-      await updateDoc(doc(db, "usersWallpapers", currentUser?.uid), {
-        inUse: chatThemeValue,
-      }).then(() => {
-        dispatch(menuActions.onSetChatThemeValue(""));
-        setNewWallPaper(false);
-      });
+          }
+        );
+      } else {
+        await updateDoc(doc(db, "usersWallpapers", currentUser?.uid), {
+          inUse: chatThemeValue,
+        }).then(() => {
+          dispatch(menuActions.onSetChatThemeValue(""));
+          setNewWallPaper(false);
+          setLoading(false);
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -101,6 +117,10 @@ export default function ChatTheme() {
           <p>Upload Wallpaper</p>
           <LuImagePlus className="themeIcon" />
         </label>
+      ) : loading ? (
+        <div className="saveORnot">
+          <div className="loader"></div>
+        </div>
       ) : (
         <div className="saveORnot">
           <button
@@ -121,7 +141,7 @@ export default function ChatTheme() {
             wallPapers?.map((wallPapers) => (
               <img
                 src={wallPapers?.wallPaperURL}
-                alt=""
+                alt="..."
                 key={wallPapers?.id}
                 onClick={() => {
                   setNewWallPaper(false);

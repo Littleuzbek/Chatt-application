@@ -21,28 +21,39 @@ export default function Input({ onProgress }) {
   const [text, setText] = useState("");
   const [media, setMedia] = useState(null);
   const [beforeSend, setBeforeSend] = useState(false);
-
   const currentUser = auth.currentUser;
+  const ID = user.type === 'user'? chatId : user.value.uid;
 
   const UpdateUserListMessage = async(text)=>{
-    await updateDoc(doc(db, "userChats", currentUser.uid), {
-      [chatId + ".lastMessage"]: {
+    if(user.type === 'user'){
+      await updateDoc(doc(db, 'userChats', currentUser.uid), {
+        [ID + ".lastMessage"]: {
         text,
       },
-      [chatId + ".date"]: serverTimestamp(),
+      [ID + ".date"]: serverTimestamp(),
     });
 
-    await updateDoc(doc(db, "userChats", user.uid), {
-      [chatId + ".lastMessage"]: {
+    await updateDoc(doc(db, 'userChats', user.value.uid), {
+      [ID + ".lastMessage"]: {
         text,
       },
-      [chatId + ".date"]: serverTimestamp(),
-      [chatId + ".userInfo"]: {
+      [ID + ".date"]: serverTimestamp(),
+      [ID + ".userInfo"]: {
         uid: currentUser.uid,
         displayName: currentUser.displayName,
         photoURL: currentUser.photoURL,
       },
     });
+  }
+
+  if(user.type === 'group'){
+      await updateDoc(doc(db, 'userGroups', currentUser.uid), {
+        [ID + ".lastMessage"]: {
+        text,
+      },
+      [ID + ".date"]: serverTimestamp(),
+    });
+  }
   }
 
   const handler = (e) => {
@@ -61,7 +72,8 @@ export default function Input({ onProgress }) {
 
   const handleSend = async () => {
     const sourceType = media?.type.split('/');
-    setText("");
+    setText('')
+
 
     if (media) {
       const storageRef = ref(storage, uuid());
@@ -92,7 +104,7 @@ export default function Input({ onProgress }) {
           await getDownloadURL(uploadTask.snapshot.ref).then(
             async (downloadURL) => {
               if(sourceType[0] === 'image'){
-                await updateDoc(doc(db, "chats", chatId), {
+                await updateDoc(doc(db, "chats", ID), {
                   messages: arrayUnion({
                     id: uuid(),
                     text: "Photo",
@@ -103,7 +115,7 @@ export default function Input({ onProgress }) {
                 }).then(()=>UpdateUserListMessage('Photo')).catch(err=>console.log(err));
               }
               if(sourceType[0] === 'video'){
-                await updateDoc(doc(db, "chats", chatId), {
+                await updateDoc(doc(db, "chats", ID), {
                   messages: arrayUnion({
                     id: uuid(),
                     text: "Video",
@@ -114,7 +126,7 @@ export default function Input({ onProgress }) {
                 }).then(()=>UpdateUserListMessage('Video')).catch(err=>console.log(err));
               }
               if(sourceType.at(-1) === "pdf"){
-                await updateDoc(doc(db, "chats", chatId), {
+                await updateDoc(doc(db, "chats", ID), {
                   messages: arrayUnion({
                     id: uuid(),
                     text: "PDF file",
@@ -133,7 +145,7 @@ export default function Input({ onProgress }) {
         }
       );
     } else {
-      await updateDoc(doc(db, "chats", chatId), {
+      await updateDoc(doc(db, "chats", ID), {
         messages: arrayUnion({
           id: uuid(),
           text,
@@ -143,8 +155,9 @@ export default function Input({ onProgress }) {
       }).catch(err=>{console.log(err);});
       UpdateUserListMessage(text)
     }
-    setText("");
+    setText('')
   };
+  
   return (
     <div className="sendMessage">
         <div>

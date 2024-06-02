@@ -52,7 +52,6 @@ export default function EditProfile() {
     };
   },[dispatch])
   
-  
   const UploadImg = useCallback(
     async (imgFile) => {
         const storageRef = ref(storage, uuid());
@@ -79,13 +78,9 @@ export default function EditProfile() {
       const path = doc(db, "users", currentUser.uid);
 
       const newName = name.current.value.trim();
-      console.log(newName);
       const newSurname = surname.current.value.trim();
-      console.log(newSurname);
       const newAboutYou = aboutYou.current.value.trim();
-      console.log(newAboutYou);
       const newUsername = username.current.value.trim();
-      console.log(newUsername);
 
       if (newName !== "" || newSurname !== "") {
         await updateProfile(currentUser, {
@@ -152,7 +147,6 @@ export default function EditProfile() {
           console.log(err.code);
         });
     } else {
-      console.log(imgFile);
       if(imgFile !== ''){
         UploadImg(imgFile);
       } 

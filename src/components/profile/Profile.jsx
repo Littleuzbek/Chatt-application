@@ -9,6 +9,7 @@ import ForwardList from "../UI/ForwardList";
 import DoubleDelete from "../UI/DoubleDelete";
 import About from "../UI/About";
 import ChatTheme from "./menu/ChatTheme";
+import NewGroup from './menu/NewGroup'
 
 export default function Profile() {
   const backDrop = useSelector((state) => state.ui.backDrop);
@@ -17,6 +18,7 @@ export default function Profile() {
   const doubleDelete = useSelector((state) => state.ui.doubleDelete);
   const about = useSelector((state) => state.ui.about);
   const chatTheme = useSelector(state=>state.menu.chatTheme)
+  const newGroup = useSelector(state=>state.menu.newGroup);
 
   return (
     <div className="mainPage">
@@ -28,6 +30,7 @@ export default function Profile() {
       {forwardList && <ForwardList />}
       {doubleDelete && <DoubleDelete />}
       {chatTheme && <ChatTheme />}
+      {newGroup && <NewGroup />}
     </div>
   );
 }

@@ -6,6 +6,7 @@ const chatSlice = createSlice({
     initialState: {
         chatId: 'null',
         user: false,
+        chatType: '',
         forwardingMessage: '',
         deletingUser: '',
         viewContentValue: '',
@@ -19,8 +20,8 @@ const chatSlice = createSlice({
               
               state.user = newUser;
               state.chatId = 
-              auth.currentUser.uid > newUser.uid? 
-              auth.currentUser.uid + newUser.uid : newUser.uid + auth.currentUser.uid 
+              auth.currentUser.uid > newUser.value.uid? 
+              auth.currentUser.uid + newUser.value.uid : newUser.value.uid + auth.currentUser.uid 
             }catch(err){console.log(err)}
         },
         setID(state,action){

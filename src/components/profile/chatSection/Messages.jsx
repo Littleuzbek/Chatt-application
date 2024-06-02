@@ -14,23 +14,24 @@ export default function Messages({ progressVal, onProgress }) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [messagesId, setMessagesId] = useState();
   const rightClick = useSelector(state=>state.ui.messageClick)
+  const user = useSelector((state) => state.chat.user);
   const chatId = useSelector((state) => state.chat.chatId);
   const dispatch = useDispatch()
 
   useEffect(() => {
+    const ID = user.type === 'user' ? chatId : user.value.uid;
     try {
-      const unSub = onSnapshot(doc(db, "chats", chatId), (doc) => {
-        doc.exists() && setMessages(doc.data().messages);
-        // console.log(doc.data()?.messages);
-      });
-
-      return () => {
-        unSub();
-      };
+        const unSub = onSnapshot(doc(db, "chats", ID), (doc) => {
+          doc.exists() && setMessages(doc.data().messages);
+        });
+        
+        return () => {
+          unSub();
+        };
     } catch (err) {
       console.log(err);
     }
-  }, [chatId]);
+  }, [chatId,user]);
 
   useEffect(() => {
     if (progressVal === 100) {

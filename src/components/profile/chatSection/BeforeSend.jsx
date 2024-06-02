@@ -15,7 +15,7 @@ export default function BeforeSend({
   useEffect(()=>{
     if(sourceType[0] === 'image'){
       return
-    }else if(sourceType[0] === 'image'){
+    }else if(sourceType[0] === 'video'){
       return
     }else if(sourceType.at(-1) === "pdf"){
       return

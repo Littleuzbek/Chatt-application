@@ -4,7 +4,7 @@ import Messages from "./Messages";
 import Header from "./Header";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { doc, getDoc } from "firebase/firestore";
+import { doc,  onSnapshot } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 
 export default function ChatSection() {
@@ -16,8 +16,7 @@ export default function ChatSection() {
 
   useEffect(()=>{
     const fetchWallPaperInUse = async() =>{
-      await getDoc(doc(db,'usersWallpapers',currentUser?.uid))
-      .then((res)=>setWallPaper(res?.data()))
+      onSnapshot(doc(db,'usersWallpapers',currentUser?.uid),(doc)=> doc.exists() && setWallPaper(doc?.data()))
     }
 
     currentUser.uid && fetchWallPaperInUse()

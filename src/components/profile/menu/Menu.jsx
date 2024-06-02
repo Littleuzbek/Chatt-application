@@ -47,7 +47,7 @@ export default function Menu() {
           </div>
         </div>
         <div className="options">
-          <div>
+          <div onClick={()=>dispatch(menuActions.onSetNewGroup(true))}>
             <MdGroup className="optionBtn" />
             <p>New Group</p>
           </div>

@@ -48,9 +48,7 @@ export default function Search() {
         : user.uid + currentUser.uid;
 
     try {
-      const currentUserList = await getDoc(
-        doc(db, "userChats", currentUser.uid)
-      );
+      const currentUserList = await getDoc(doc(db, "userChats", currentUser.uid));
       const otherUserList = await getDoc(doc(db, "userChats", user.uid));
       const combinedChat = await getDoc(doc(db, "chats", combinedId));
       const currentUserHasChatt = Object.keys(currentUserList.data()).find(
@@ -62,9 +60,8 @@ export default function Search() {
 
       if (!currentUserHasChatt) {
         //create a chat in chats collection
-
         // if mutual chat was not deleted, if it was create new one
-        if (!combinedChat) {
+        if (!combinedChat?.data()) {
           await setDoc(doc(db, "chats", combinedId), { messages: [] });
         }
 

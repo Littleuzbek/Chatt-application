@@ -29,7 +29,7 @@ export default function Message({ message, onContextMenu }) {
         src={
           message?.senderId === currentUser?.uid
             ? (currentUser?.photoURL || defaultUser)
-            : (user?.photoURL || defaultUser)
+            : (user?.value.photoURL || defaultUser)
         }
         alt=""
       />
