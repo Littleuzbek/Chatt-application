@@ -16,8 +16,6 @@ export default function Header() {
 
   useEffect(() => {
     const FetchUserData = async () => {
-      console.log(user.type);
-      console.log(user.value.uid);
       if(user.type === 'user'){
         await getDoc(doc(db, "users", user.value.uid)).then((res) => {
           setChosenUser(res.data());

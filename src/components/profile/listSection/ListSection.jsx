@@ -63,6 +63,7 @@ export default function ListSection() {
         chatActions.changeUser({
           value: user.groupInfo,
           type: "group",
+          members: user.members
         })
       );
     }

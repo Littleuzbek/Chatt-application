@@ -84,9 +84,7 @@ export default function ForwardList() {
               displayName: groupName,
               photoURL: res,
             },
-            [groupId + ".members"]: {
-              members: [...newMembers],
-            },
+            [groupId + ".members"]: [...newMembers],
             [groupId + ".messages"]: {
               messages: [],
             },
@@ -104,9 +102,7 @@ export default function ForwardList() {
                   displayName: groupName,
                   photoURL: res,
                 },
-                [groupId + ".members"]: {
-                  members: [...newMembers],
-                },
+                [groupId + ".members"]: [...newMembers],
                 [groupId + ".messages"]: {
                   messages: [],
                 },

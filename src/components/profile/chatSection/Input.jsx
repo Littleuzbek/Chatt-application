@@ -47,13 +47,23 @@ export default function Input({ onProgress }) {
   }
 
   if(user.type === 'group'){
-      await updateDoc(doc(db, 'userGroups', currentUser.uid), {
-        [ID + ".lastMessage"]: {
+    await updateDoc(doc(db, 'userGroups', currentUser.uid), {
+      [ID + ".lastMessage"]: {
         text,
       },
       [ID + ".date"]: serverTimestamp(),
     });
+
+    for(let i = 0; i < user.members.length; i++){
+      await updateDoc(doc(db, 'userGroups', user.members[i].uid), {
+        [ID + ".lastMessage"]: {
+          text,
+        },
+        [ID + ".date"]: serverTimestamp(),
+      });
+    }
   }
+  
   }
 
   const handler = (e) => {
