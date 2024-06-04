@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { auth } from "../../../firebase";
 import { useEffect, useRef } from "react";
 import defaultUser from "../../../images/defaultUser.png";
@@ -6,7 +5,6 @@ import Media from "./MediaMessage/Media";
 import Files from "./MediaMessage/Files";
 
 export default function Message({ message, onContextMenu }) {
-  const user = useSelector((state) => state.chat.user);
   const currentUser = auth.currentUser;
   const owner = message.senderId === currentUser?.uid;
   const ref = useRef();
@@ -29,7 +27,7 @@ export default function Message({ message, onContextMenu }) {
         src={
           message?.senderId === currentUser?.uid
             ? (currentUser?.photoURL || defaultUser)
-            : (user?.value.photoURL || defaultUser)
+            : (message?.senderPic || defaultUser)
         }
         alt=""
       />

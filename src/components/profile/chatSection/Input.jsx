@@ -22,49 +22,48 @@ export default function Input({ onProgress }) {
   const [media, setMedia] = useState(null);
   const [beforeSend, setBeforeSend] = useState(false);
   const currentUser = auth.currentUser;
-  const ID = user.type === 'user'? chatId : user.value.uid;
+  const ID = user.type === "user" ? chatId : user.value.uid;
 
-  const UpdateUserListMessage = async(text)=>{
-    if(user.type === 'user'){
-      await updateDoc(doc(db, 'userChats', currentUser.uid), {
-        [ID + ".lastMessage"]: {
-        text,
-      },
-      [ID + ".date"]: serverTimestamp(),
-    });
-
-    await updateDoc(doc(db, 'userChats', user.value.uid), {
-      [ID + ".lastMessage"]: {
-        text,
-      },
-      [ID + ".date"]: serverTimestamp(),
-      [ID + ".userInfo"]: {
-        uid: currentUser.uid,
-        displayName: currentUser.displayName,
-        photoURL: currentUser.photoURL,
-      },
-    });
-  }
-
-  if(user.type === 'group'){
-    await updateDoc(doc(db, 'userGroups', currentUser.uid), {
-      [ID + ".lastMessage"]: {
-        text,
-      },
-      [ID + ".date"]: serverTimestamp(),
-    });
-
-    for(let i = 0; i < user.members.length; i++){
-      await updateDoc(doc(db, 'userGroups', user.members[i].uid), {
+  const UpdateUserListMessage = async (text) => {
+    if (user.type === "user") {
+      await updateDoc(doc(db, "userChats", currentUser.uid), {
         [ID + ".lastMessage"]: {
           text,
         },
         [ID + ".date"]: serverTimestamp(),
       });
+
+      await updateDoc(doc(db, "userChats", user.value.uid), {
+        [ID + ".lastMessage"]: {
+          text,
+        },
+        [ID + ".date"]: serverTimestamp(),
+        [ID + ".userInfo"]: {
+          uid: currentUser.uid,
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL,
+        },
+      });
     }
-  }
-  
-  }
+
+    if (user.type === "group") {
+      await updateDoc(doc(db, "userGroups", currentUser.uid), {
+        [ID + ".lastMessage"]: {
+          text,
+        },
+        [ID + ".date"]: serverTimestamp(),
+      });
+
+      for (let i = 0; i < user.members.length; i++) {
+        await updateDoc(doc(db, "userGroups", user.members[i].uid), {
+          [ID + ".lastMessage"]: {
+            text,
+          },
+          [ID + ".date"]: serverTimestamp(),
+        });
+      }
+    }
+  };
 
   const handler = (e) => {
     if (text !== "" || media) {
@@ -81,9 +80,8 @@ export default function Input({ onProgress }) {
   }, [media]);
 
   const handleSend = async () => {
-    const sourceType = media?.type.split('/');
-    setText('')
-
+    const sourceType = media?.type.split("/");
+    setText("");
 
     if (media) {
       const storageRef = ref(storage, uuid());
@@ -113,45 +111,54 @@ export default function Input({ onProgress }) {
         async () => {
           await getDownloadURL(uploadTask.snapshot.ref).then(
             async (downloadURL) => {
-              if(sourceType[0] === 'image'){
+              if (sourceType[0] === "image") {
                 await updateDoc(doc(db, "chats", ID), {
                   messages: arrayUnion({
                     id: uuid(),
                     text: "Photo",
+                    senderPic: currentUser.photoURL,
                     senderId: currentUser.uid,
                     date: Timestamp.now(),
                     img: downloadURL,
                   }),
-                }).then(()=>UpdateUserListMessage('Photo')).catch(err=>console.log(err));
+                })
+                  .then(() => UpdateUserListMessage("Photo"))
+                  .catch((err) => console.log(err));
               }
-              if(sourceType[0] === 'video'){
+              if (sourceType[0] === "video") {
                 await updateDoc(doc(db, "chats", ID), {
                   messages: arrayUnion({
                     id: uuid(),
                     text: "Video",
+                    senderPic: currentUser.photoURL,
                     senderId: currentUser.uid,
                     date: Timestamp.now(),
                     video: downloadURL,
                   }),
-                }).then(()=>UpdateUserListMessage('Video')).catch(err=>console.log(err));
+                })
+                  .then(() => UpdateUserListMessage("Video"))
+                  .catch((err) => console.log(err));
               }
-              if(sourceType.at(-1) === "pdf"){
+              if (sourceType.at(-1) === "pdf") {
                 await updateDoc(doc(db, "chats", ID), {
                   messages: arrayUnion({
                     id: uuid(),
                     text: "PDF file",
+                    senderPic: currentUser.photoURL,
                     senderId: currentUser.uid,
                     date: Timestamp.now(),
                     files: {
                       nameOf: media?.name,
-                      fileURL: downloadURL
+                      fileURL: downloadURL,
                     },
                   }),
-                }).then(()=>UpdateUserListMessage('PDF file')).catch(err=>console.log(err));
+                })
+                  .then(() => UpdateUserListMessage("PDF file"))
+                  .catch((err) => console.log(err));
               }
             }
           );
-          UpdateUserListMessage('Photo')
+          UpdateUserListMessage("Photo");
         }
       );
     } else {
@@ -159,42 +166,45 @@ export default function Input({ onProgress }) {
         messages: arrayUnion({
           id: uuid(),
           text,
+          senderPic: currentUser.photoURL,
           senderId: currentUser.uid,
           date: Timestamp.now(),
         }),
-      }).catch(err=>{console.log(err);});
-      UpdateUserListMessage(text)
+      }).catch((err) => {
+        console.log(err);
+      });
+      UpdateUserListMessage(text);
     }
-    setText('')
+    setText("");
   };
-  
+
   return (
     <div className="sendMessage">
-        <div>
-          <GrEmoji className="emoji" />
-          <input
-            type="text"
-            placeholder="Message"
-            onChange={(e) => setText(e.target.value)}
-            value={text}
-            onKeyDown={(e) => handler(e.code)}
-          />
-          <input
-            type="file"
-            name=""
-            id="fileRecieve"
-            style={{ display: "none" }}
-            onChange={(e) => {
-              setMedia(e.target.files[0]);
-            }}
-            value={""}
-            accept="image/*"
-          />
-          <label htmlFor="fileRecieve">
-            <GoPaperclip className="clip" />
-          </label>
-          <IoSend className="send" onClick={(e) => handler(e.type)} />
-        </div>
+      <div>
+        <GrEmoji className="emoji" />
+        <input
+          type="text"
+          placeholder="Message"
+          onChange={(e) => setText(e.target.value)}
+          value={text}
+          onKeyDown={(e) => handler(e.code)}
+        />
+        <input
+          type="file"
+          name=""
+          id="fileRecieve"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            setMedia(e.target.files[0]);
+          }}
+          value={""}
+          accept="image/*"
+        />
+        <label htmlFor="fileRecieve">
+          <GoPaperclip className="clip" />
+        </label>
+        <IoSend className="send" onClick={(e) => handler(e.type)} />
+      </div>
       {beforeSend && (
         <BeforeSend
           beforeSendValue={media}
