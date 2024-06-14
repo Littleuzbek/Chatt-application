@@ -1,0 +1,226 @@
+.addMembers{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    z-index: 1;
+    gap: 5px;
+}
+
+
+.addMembers::before{
+    z-index: -1;
+    content: '';
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    position: absolute;
+}
+
+.addMembers > div:nth-child(1){
+    width: 30%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    gap: 5px;
+    overflow-y: auto;
+}
+
+.addingMember{
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    transition: .5s;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.addingMember::after{
+    content: '';
+    z-index: 1;
+    position: absolute;
+    height: 60px;
+    width: 29%;
+}
+
+.addingMember:hover{
+    background-color:#f1f1f1 ;
+}
+
+.addingMember > img {
+    width: 15%;
+    height: 100%;
+    border-radius: 50%;
+    margin: 0 5px;
+    object-fit: cover;
+}
+
+.addingMember > input{
+    size: 50px;
+}
+
+.addingMemberName{
+    width: 75%;
+}
+
+.addingMemberName > p:nth-child(1){
+    font-size: 20px;
+    font-weight: 500;
+}
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default checkbox */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background-color: black;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  .addMemberBtn{
+    background-color: white;
+    width: 30%;
+    height: 8%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 10px;
+  }
+
+  .addMemberBtn > button{
+    width: 30%;
+    height: 60%;
+    border-radius: 20px;
+    border: 0.5px solid black;
+    background-color: transparent;
+    transition: 0.5s;
+  }
+
+  .addMemberBtn > button:nth-child(1){
+    cursor: pointer;
+  }
+
+  .addMembers > .Loader {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    transform: rotateZ(45deg);
+    perspective: 1000px;
+    border-radius: 50%;
+    color: rgb(0, 0, 244);
+  }
+  
+  .addMembers > .Loader::before,
+  .addMembers > .Loader::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    border-radius: 50%;
+    transform: rotateX(70deg);
+    animation: 1s spin linear infinite;
+  }
+  
+  .addMembers > .Loader::after {
+    color: #ff3d00;
+    transform: rotateY(70deg);
+    animation-delay: 0.4s;
+  }
+
+  
+@keyframes spin {
+  0%,
+  100% {
+    box-shadow: 0.4em 0px 0 0px currentcolor;
+  }
+  12% {
+    box-shadow: 0.4em 0.2em 0 0 currentcolor;
+  }
+  25% {
+    box-shadow: 0 0.4em 0 0px currentcolor;
+  }
+  37% {
+    box-shadow: -0.4em 0.2em 0 0 currentcolor;
+  }
+  50% {
+    box-shadow: -0.4em 0 0 0 currentcolor;
+  }
+  62% {
+    box-shadow: -0.4em -0.2em 0 0 currentcolor;
+  }
+  75% {
+    box-shadow: 0px -0.2em 0 0 currentcolor;
+  }
+  87% {
+    box-shadow: 0.4em -0.2em 0 0 currentcolor;
+  }
+}

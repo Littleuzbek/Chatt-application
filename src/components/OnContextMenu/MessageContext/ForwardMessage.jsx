@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { chatActions } from "../../redux/ChatSlice";
-import { uiActions } from "../../redux/uiSlice";
+import { chatActions } from "../../../redux/ChatSlice";
+import { uiActions } from "../../../redux/uiSlice";
 
 export default function ForwardMessage({ message }) {
   const dispatch = useDispatch();

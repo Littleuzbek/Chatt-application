@@ -1,7 +1,7 @@
 import React from "react";
 import { FaRegFilePdf } from "react-icons/fa6";
 
-export default function Files({ owner, files }) {
+export default function Files({ files }) {
 
   return (
     <a 

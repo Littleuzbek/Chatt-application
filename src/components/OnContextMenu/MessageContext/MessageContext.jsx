@@ -1,7 +1,8 @@
 import React from "react";
-import DeleteMessage from '../OnContextMenu/DeleteMessage'
+import DeleteMessage from './DeleteMessage'
 import ForwardMessage from "./ForwardMessage";
-import Copy from "../UI/Copy";
+import Copy from "../../UI/Copy";
+import '../Oncontext.css'
 
 export default function MessageContext({ leftVal, topVal, messagesId }) {
   return (

@@ -4,26 +4,38 @@ import Messages from "./Messages";
 import Header from "./Header";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { doc,  onSnapshot } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 
 export default function ChatSection() {
   const [progress, setProgress] = useState(null);
-  const [wallPaper,setWallPaper] = useState()
+  const [wallPaper, setWallPaper] = useState();
   const currentUser = auth.currentUser;
   const user = useSelector((state) => state.chat.user);
-  const chatThemeValue = useSelector(state=>state.menu.chatThemeValue);
+  const chatThemeValue = useSelector((state) => state.menu.chatThemeValue);
 
-  useEffect(()=>{
-    const fetchWallPaperInUse = async() =>{
-      onSnapshot(doc(db,'usersWallpapers',currentUser?.uid),(doc)=> doc.exists() && setWallPaper(doc?.data()))
-    }
+  useEffect(() => {
+    const fetchWallPaperInUse = async () => {
+      await getDoc(
+        doc(db, "usersWallpapers", currentUser?.uid)).then((res) => {
+          if (res?.data()) {
+            setWallPaper(res?.data());
+          }
+        })
+    };
 
-    currentUser.uid && fetchWallPaperInUse()
-  },[chatThemeValue,currentUser.uid])
+    currentUser.uid && fetchWallPaperInUse();
+  }, [chatThemeValue, currentUser.uid]);
 
   return (
-    <div className="chatSection" style={{backgroundImage: `url(${chatThemeValue === '' ? wallPaper?.inUse : chatThemeValue})`}}>
+    <div
+      className="chatSection"
+      style={{
+        backgroundImage: `url(${
+          chatThemeValue === "" ? wallPaper?.inUse : chatThemeValue
+        })`,
+      }}
+    >
       {user && (
         <>
           <Header />

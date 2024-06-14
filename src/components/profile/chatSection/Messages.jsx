@@ -6,8 +6,10 @@ import { db } from "../../../firebase";
 import ProgressBar from "../../UI/ProgressBar";
 import SoloStatue from "../../../images/soloStatue.jpg";
 import { uiActions } from "../../../redux/uiSlice";
+import { chatActions } from "../../../redux/ChatSlice";
+// import { chatActions } from "../../../redux/ChatSlice";
 
-const MessageContext = lazy(() => import("../../OnContextMenu/MessageContext"));
+const MessageContext = lazy(() => import("../../OnContextMenu/MessageContext/MessageContext"));
 
 export default function Messages({ progressVal, onProgress }) {
   const [messages, setMessages] = useState([]);
@@ -23,6 +25,7 @@ export default function Messages({ progressVal, onProgress }) {
     try {
         const unSub = onSnapshot(doc(db, "chats", ID), (doc) => {
           doc.exists() && setMessages(doc.data().messages);
+          doc.exists() && dispatch(chatActions.setMessages(doc.data().messages))
         });
         
         return () => {
@@ -31,7 +34,7 @@ export default function Messages({ progressVal, onProgress }) {
     } catch (err) {
       console.log(err);
     }
-  }, [chatId,user]);
+  }, [chatId,user,dispatch]);
 
   useEffect(() => {
     if (progressVal === 100) {

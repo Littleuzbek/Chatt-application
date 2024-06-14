@@ -45,6 +45,14 @@ export default function Condition() {
       setMark(false);
       TimeOut();
     }
+    if(condition === 'Added successfully'){
+      setMark(true);
+      TimeOut();
+    }
+    if(condition === 'Something went wrong! Please try again later'){
+      setMark(false);
+      TimeOut();
+    }
    
   }, [condition, TimeOut]);
 

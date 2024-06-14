@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import "./Oncontext.css";
+import "../Oncontext.css";
 import { doc, updateDoc, arrayRemove, onSnapshot } from "firebase/firestore";
-import { auth, db } from "../../firebase";
+import { auth, db } from "../../../firebase";
 import { useSelector } from "react-redux";
 
 export default function DeleteMessage({ messageId }) {
-  const chatId = useSelector((state) => state.chat.chatId);
+  const userChatId = useSelector((state) => state.chat.chatId);
+  const user = useSelector((state) => state.chat.user);
   const [lastMessage, setLastMesssage] = useState([]);
   const currentUser = auth.currentUser;
+  const chatId = user.type === 'user'? userChatId : user.value.uid
 
   useEffect(() => {
     try {
@@ -45,7 +47,6 @@ export default function DeleteMessage({ messageId }) {
         [chatId + ".date"]: "",
       });
     }
-    // console.log(new Date(messageId.date.seconds * 1000).getDate())
   };
 
   return (

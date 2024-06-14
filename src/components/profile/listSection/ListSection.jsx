@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ListSection.css";
 import Search from "../Search/Search";
 import { auth, db } from "../../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
 import { chatActions } from "../../../redux/ChatSlice";
-import defaultUser from "../../../images/defaultUser.png";
-import ListContext from "../../OnContextMenu/ListContext";
+import ListContext from "../../OnContextMenu/ListContext/ListContext";
 import { uiActions } from "../../../redux/uiSlice";
+import User from "./User";
 
 export default function ListSection() {
   const [chats, setChats] = useState([]);
   const [groups,setGroups] = useState([])
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [selectedUser, setSelectedUser] = useState();
+  const [timeOff, setTimeOff] = useState(false);
   const rightClick = useSelector((state) => state.ui.listClick);
+  const triggerForChatDeleted = useSelector(state => state.chat.chatDeleted);
   const currentUser = auth.currentUser;
+  const timeOut = useRef();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -47,9 +50,9 @@ export default function ListSection() {
     } catch (err) {
       console.log(err);
     }
-  }, [currentUser.uid]);
+  }, [currentUser.uid,triggerForChatDeleted]);
 
-  const handleSelect = (user) => {
+  const selectHandler = (user)=>{
     if (user?.userInfo) {
       dispatch(
         chatActions.changeUser({
@@ -67,7 +70,7 @@ export default function ListSection() {
         })
       );
     }
-  };
+  }
 
   const getPositionHandler = (e, user) => {
     e.preventDefault();
@@ -82,14 +85,24 @@ export default function ListSection() {
     );
   };
 
-  document.onclick = () => {
-    dispatch(
-      uiActions.setClickValue({
-        type: "list",
-        value: false,
-      })
-    );
-  };
+  useEffect(() => {
+   
+    
+    if (!timeOff) {
+      timeOut.current = setTimeout(() => {
+        dispatch(
+          uiActions.setClickValue({
+            type: "list",
+            value: false,
+          })
+          );
+        }, 2000);
+      }
+
+      return ()=>{ clearTimeout(timeOut.current);}
+      
+  }, [dispatch,timeOff,rightClick]);
+
   try {
     return (
       <div className="List">
@@ -99,36 +112,18 @@ export default function ListSection() {
             leftVal={position.x}
             topVal={position.y}
             selectedUser={selectedUser}
+            onSetTimeOff={setTimeOff}
           />
         )}
         {Object.entries(Object.assign(chats,groups))
             ?.sort((a, b) => b[1].date - a[1].date)
             ?.map((chat) => (
-              <div
-                className="user"
-                key={chat[0]}
-                onClick={() => handleSelect(chat[1])}
-                onContextMenu={(e) => {
-                  getPositionHandler(e, chat);
-                }}
-              >
-                <img
-                  src={
-                    chat[1]?.userInfo?.photoURL || chat[1]?.groupInfo?.photoURL
-                      ? chat[1]?.userInfo?.photoURL ||
-                        chat[1]?.groupInfo?.photoURL
-                      : defaultUser
-                  }
-                  alt=""
-                />
-                <div className="textSection">
-                  <p className="nameOfChat">
-                    {chat[1]?.userInfo?.displayName ||
-                      chat[1]?.groupInfo?.displayName}
-                  </p>
-                  <p className="lastMessage">{chat[1]?.lastMessage?.text}</p>
-                </div>
-              </div>
+              <User 
+              chatVal={chat} 
+              onSelect={selectHandler}
+              onGetPosition={getPositionHandler}
+              key={chat[0]}
+              />
             ))}
       </div>
     );

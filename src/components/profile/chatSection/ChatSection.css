@@ -39,6 +39,19 @@
     font-size: 17.5px;
 }
 
+.header > input {
+    width: 20%;
+    padding: 3px 5px;
+    font-size: 18px;
+    border-radius: 20px;
+    border: .5px solid black;
+    animation: inp .3s ease;
+}
+
+.header > input:focus {
+    outline: none;
+}
+
 .btn {
     width: 4%;
     font-size: 27px;
@@ -281,4 +294,35 @@
 
 .fileIcon{
     font-size: 20px;
+}
+
+.headerOption{
+    position: absolute;
+    background-color: white;
+    right: 1%;
+    top: 6%;
+    padding: 10px;
+    border: .5px solid black;
+    border-radius: 10px;
+}
+
+.headerOption > div{
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.headerOption > div:nth-last-child(1){
+    color: red;
+}
+
+@keyframes inp {
+    from{
+        float: right;
+        width: 0%;
+    }to{
+        width: 20%;
+    }
 }

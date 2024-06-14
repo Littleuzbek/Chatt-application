@@ -83,34 +83,48 @@ export default function ForwardList() {
               uid: groupId,
               displayName: groupName,
               photoURL: res,
+              admin: currentUser.uid,
+              about: ''
             },
-            [groupId + ".members"]: [...newMembers],
-            [groupId + ".messages"]: {
-              messages: [],
-            },
+            [groupId + ".members"]: [
+              ...newMembers,
+              {
+                displayName: currentUser.displayName,
+                photoURL: currentUser.photoURL,
+                uid: currentUser.uid,
+                admin: currentUser.uid,
+              },
+            ],
             [groupId + ".lastMessage"]: {
               text: "",
             },
             [groupId + ".date"]: serverTimestamp(),
           }).then(async () => {
-            dispatch(menuActions.onSetNewGroup(false));
-
+            dispatch(menuActions.onSetNewGroup(false))
             for (let i = 0; i < newMembers.length; i++) {
               await updateDoc(doc(db, "userGroups", newMembers[i].uid), {
                 [groupId + ".groupInfo"]: {
                   uid: groupId,
                   displayName: groupName,
                   photoURL: res,
+                  admin: currentUser.uid,
+                  about: ''
                 },
-                [groupId + ".members"]: [...newMembers],
-                [groupId + ".messages"]: {
-                  messages: [],
-                },
+                [groupId + ".members"]: [
+                  ...newMembers,
+                  {
+                    displayName: currentUser.displayName,
+                    photoURL: currentUser.photoURL,
+                    uid: currentUser.uid,
+                    admin: currentUser.uid,
+                  },
+                ],
                 [groupId + ".lastMessage"]: {
                   text: "",
                 },
                 [groupId + ".date"]: serverTimestamp(),
-              }).catch((err) => console.log(err));
+              })
+                .catch((err) => console.log(err));
             }
           });
 
