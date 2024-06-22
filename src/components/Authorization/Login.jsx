@@ -13,43 +13,43 @@ export default function Login({ onChange, onChangeValue }) {
   const [togglePassword, setTogglePassword] = useState(true);
   const [error, setError] = useState();
   const passAttr = togglePassword ? "password" : "text";
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const signInUser = (email, password) => {
     if (email !== "" && password !== "") {
       signInWithEmailAndPassword(auth, email, password)
-        .then((response) =>{
-          dispatch(uiActions.setCondition('Login success'))
-           console.log(response)
-          })
-        .catch(() => setError('Email or password is wrong!'));
-    }else{
-      setError('Please enter requirements')
+        .then((response) => {
+          dispatch(uiActions.setCondition("Login success"));
+          console.log(response);
+        })
+        .catch(() => setError("Email or password is wrong!"));
+    } else {
+      setError("Please enter requirements");
     }
   };
 
-  const EnterHandler = (e) =>{
-    if(e === 'NumpadEnter' || e === 'Enter'){
-      signInUser(
-      existingEmail.current.value,
-      existingPassword.current.value
-      )  
-    }      
-  }
+  const EnterHandler = (e) => {
+    if (e === "NumpadEnter" || e === "Enter") {
+      signInUser(existingEmail.current.value, existingPassword.current.value);
+    }
+  };
 
   return (
-    <div className="login" onKeyDown={(e)=>EnterHandler(e.code)}>
+    <div className="login" onKeyDown={(e) => EnterHandler(e.code)}>
       <h1>Login</h1>
-      <input 
-      required
-      type="text" 
-      placeholder="Enter email" 
-      ref={existingEmail} />
+      <input
+        required
+        type="text"
+        placeholder="Enter email"
+        title="Enter your email"
+        ref={existingEmail}
+      />
       <div className="password">
         <input
           required
           type={passAttr}
           placeholder="Enter password"
+          title="Enter your password"
           ref={existingPassword}
         />
         {togglePassword ? (
@@ -78,9 +78,12 @@ export default function Login({ onChange, onChangeValue }) {
         <button onClick={() => onChange(!onChangeValue)}>Sign Up</button>
       </div>
       <p
-      onClick={()=>{dispatch(authActions.showForgotPasswordForm(false))}}
+        onClick={() => {
+          dispatch(authActions.showForgotPasswordForm(false));
+        }}
       >
-      Forgot Password?</p>
+        Forgot Password?
+      </p>
       <p>{error}</p>
     </div>
   );

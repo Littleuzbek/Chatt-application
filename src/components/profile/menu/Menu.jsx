@@ -51,7 +51,7 @@ export default function Menu() {
             <MdGroup className="optionBtn" />
             <p>New Group</p>
           </div>
-          <div>
+          <div onClick={()=>dispatch(menuActions.onSetNewChannel(true))}>
             <HiOutlineSpeakerphone className="optionBtn" />
             <p>New Chanel</p>
           </div>

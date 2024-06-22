@@ -18,12 +18,15 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 export default function ForwardList() {
   const [chats, setChats] = useState([]);
-  const [groupImg, setGroupImg] = useState(false);
+  const [channelImg, setChannelImg] = useState(false);
   const [imgFile, setImgFile] = useState();
-  const newGroupMembers = useSelector((state) => state.menu.newGroupMembers);
+  const newChannelMembers = useSelector(
+    (state) => state.menu.newChannelMembers
+  );
   const currentUser = auth.currentUser;
   const dispatch = useDispatch();
   const name = useRef();
+  const link = useRef();
 
   useEffect(() => {
     const getChats = () => {
@@ -44,7 +47,7 @@ export default function ForwardList() {
     try {
       if (type === "add") {
         dispatch(
-          menuActions.onSetNewGroupMembers({
+          menuActions.onSetNewChannelMembers({
             type: "add",
             value: e[1]?.userInfo,
           })
@@ -53,7 +56,7 @@ export default function ForwardList() {
 
       if (type === "remove") {
         dispatch(
-          menuActions.onSetNewGroupMembers({
+          menuActions.onSetNewChannelMembers({
             type: "remove",
             value: e,
           })
@@ -64,30 +67,31 @@ export default function ForwardList() {
     }
   };
 
-  const groupImgHandler = (e) => {
+  const channelImgHandler = (e) => {
     const imgURL = URL.createObjectURL(e);
 
     setImgFile(e);
-    setGroupImg(imgURL);
+    setChannelImg(imgURL);
   };
 
-  const createGroup = async () => {
-    const groupId = uuid();
-    const groupName = name.current.value;
+  const createChannel = async () => {
+    const channelId = uuid();
+    const channelName = name.current.value;
     const storageRef = ref(storage, uuid());
     try {
       await uploadBytesResumable(storageRef, imgFile).then(async (snapshot) => {
         await getDownloadURL(snapshot.ref).then(async (res) => {
-          await updateDoc(doc(db, "userGroups", currentUser.uid), {
-            [groupId + ".groupInfo"]: {
-              uid: groupId,
-              displayName: groupName,
+          await updateDoc(doc(db, "userChannels", currentUser.uid), {
+            [channelId + ".channelInfo"]: {
+              uid: channelId,
+              displayName: channelName,
               photoURL: res,
               admin: currentUser.uid,
-              about: ''
+              about: "",
+              linkName: link.current.value,
             },
-            [groupId + ".members"]: [
-              ...newGroupMembers,
+            [channelId + ".members"]: [
+              ...newChannelMembers,
               {
                 displayName: currentUser.displayName,
                 photoURL: currentUser.photoURL,
@@ -95,40 +99,43 @@ export default function ForwardList() {
                 admin: currentUser.uid,
               },
             ],
-            [groupId + ".lastMessage"]: {
+            [channelId + ".lastMessage"]: {
               text: "",
             },
-            [groupId + ".date"]: serverTimestamp(),
+            [channelId + ".date"]: serverTimestamp(),
           }).then(async () => {
-            dispatch(menuActions.onSetNewGroup(false))
-            for (let i = 0; i < newGroupMembers.length; i++) {
-              await updateDoc(doc(db, "userGroups", newGroupMembers[i].uid), {
-                [groupId + ".groupInfo"]: {
-                  uid: groupId,
-                  displayName: groupName,
-                  photoURL: res,
-                  admin: currentUser.uid,
-                  about: ''
-                },
-                [groupId + ".members"]: [
-                  ...newGroupMembers,
-                  {
-                    displayName: currentUser.displayName,
-                    photoURL: currentUser.photoURL,
-                    uid: currentUser.uid,
-                    admin: currentUser.uid,
+            dispatch(menuActions.onSetNewChannel(false));
+            for (let i = 0; i < newChannelMembers.length; i++) {
+              await updateDoc(
+                doc(db, "userChannels", newChannelMembers[i].uid),
+                {
+                  [channelId + ".channelInfo"]: {
+                    uid: channelId,
+                    displayName: channelName,
+                    photoURL: res,
+                    admin: [currentUser.uid],
+                    about: "",
+                    linkName: link.current.value,
                   },
-                ],
-                [groupId + ".lastMessage"]: {
-                  text: "",
-                },
-                [groupId + ".date"]: serverTimestamp(),
-              })
-                .catch((err) => console.log(err));
-            }
+                  [channelId + ".members"]: [
+                    ...newChannelMembers,
+                    {
+                      displayName: currentUser.displayName,
+                      photoURL: currentUser.photoURL,
+                      uid: currentUser.uid,
+                      admin: currentUser.uid,
+                    },
+                  ],
+                  [channelId + ".lastMessage"]: {
+                    text: "",
+                  },
+                  [channelId + ".date"]: serverTimestamp(),
+                }
+                ).catch((err) => console.log(err));
+              }
+              await setDoc(doc(db, "chats", channelId));
           });
 
-          await setDoc(doc(db, "chats", groupId), {});
         });
       });
     } catch (err) {
@@ -165,8 +172,8 @@ export default function ForwardList() {
         </div>
         <div className="chosenMembers">
           <p>Chosen Users</p>
-          {newGroupMembers !== "" &&
-            newGroupMembers.map((newMember) => (
+          {newChannelMembers !== "" &&
+            newChannelMembers.map((newMember) => (
               <div className="newGroupUser" key={newMember?.uid}>
                 <img
                   src={newMember?.photoURL ? newMember?.photoURL : defaultUser}
@@ -183,51 +190,79 @@ export default function ForwardList() {
               </div>
             ))}
         </div>
-        <div className="newGroupDetails">
+        <div className="newChannelDetails">
           <p>Details</p>
 
-          <div>
-            <p>Group picture</p>
-            <img src={groupImg ? groupImg : ""} alt="" />
+          <div className="newChannelPictureContainer">
+            <p>Channel picture</p>
+            <img src={channelImg ? channelImg : ""} alt="" accept="image/*" />
             <input
               type="file"
               name=""
-              id="newGroupImg"
-              onChange={(e) => groupImgHandler(e.target.files[0])}
+              id="newChannelImg"
+              onChange={(e) => {
+                if(e.target.files[0].type.split('/').at(0) === 'image'){
+                  channelImgHandler(e.target.files[0])
+                }
+              }}
             />
-            <label htmlFor="newGroupImg">
+            <label htmlFor="newChannelImg">
               Upload Picture
               <LuImagePlus />
             </label>
           </div>
 
-          <div>
-            <p>Group name</p>
-            <input type="text" name="" id="" ref={name} />
+          <div className="newChannelNaming">
+            <p>Channel Name</p>
+            <input
+              type="email"
+              name=""
+              id=""
+              ref={name}
+              required
+              title="Please fill out requirements"
+            />
+
+            <p>Channel Link Name</p>
+            <input
+              type="text"
+              name=""
+              id=""
+              ref={link}
+              placeholder='example: "Stars"'
+              required
+              title="Please fill out requirements"
+            />
           </div>
 
-          <button
-            style={
-              newGroupMembers.length === 0
-                ? { backgroundColor: "white" }
-                : {
-                    backgroundColor: "black",
-                    color: "white",
-                    cursor: "pointer",
-                  }
-            }
-            onClick={() => createGroup()}
-          >
-            Create
-          </button>
-          <button
-            onClick={() => {
-              dispatch(menuActions.onSetNewGroup(false));
-              dispatch(menuActions.onSetNewGroupMembers('clear'))
-            }}
-          >
-            Cancel
-          </button>
+          <div className="newChannelBtn">
+            <button
+              onClick={() => {
+                dispatch(menuActions.onSetNewChannel(false));
+                dispatch(menuActions.onSetNewChannelMembers("clear"));
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              style={
+                newChannelMembers.length === 0
+                  ? { backgroundColor: "white" }
+                  : {
+                      backgroundColor: "black",
+                      color: "white",
+                      cursor: "pointer",
+                    }
+              }
+              onClick={() => {
+                name.current.value !== "" &&
+                  link.current.value !== "" &&
+                  createChannel();
+              }}
+            >
+              Create
+            </button>
+          </div>
         </div>
       </div>
     </Fragment>

@@ -34,6 +34,10 @@ export default function Header() {
       if (user.type === "group") {
         setChosenUser(user.value);
       }
+
+      if (user.type === "channel") {
+        setChosenUser(user.value);
+      }
     };
     user?.value.uid && FetchUserData();
   }, [user, currentUser.uid]);
@@ -44,7 +48,7 @@ export default function Header() {
     if (!timeOff) {
       timeOut.current = setTimeout(() => {
         setOptions(false);
-      }, 2000);
+      }, 1000);
     }
   }, [options, timeOff]);
 
@@ -59,7 +63,6 @@ export default function Header() {
   } 
   
   const deleteHandler =()=>{
-    console.log(user.type );
     if(user.type === 'group'){
       dispatch(uiActions.setDoubleDelete(true))
     }

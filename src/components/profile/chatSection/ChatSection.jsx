@@ -16,12 +16,11 @@ export default function ChatSection() {
 
   useEffect(() => {
     const fetchWallPaperInUse = async () => {
-      await getDoc(
-        doc(db, "usersWallpapers", currentUser?.uid)).then((res) => {
-          if (res?.data()) {
-            setWallPaper(res?.data());
-          }
-        })
+      await getDoc(doc(db, "usersWallpapers", currentUser?.uid)).then((res) => {
+        if (res?.data()) {
+          setWallPaper(res?.data());
+        }
+      });
     };
 
     currentUser.uid && fetchWallPaperInUse();
@@ -42,7 +41,7 @@ export default function ChatSection() {
           <div className="body">
             <Messages progressVal={progress} onProgress={setProgress} />
           </div>
-          <Input onProgress={setProgress} />
+          {user?.type === 'channel' ? (user?.value?.admin === currentUser?.uid && <Input onProgress={setProgress} />) : <Input onProgress={setProgress} />}
         </>
       )}
     </div>

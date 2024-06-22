@@ -10,7 +10,8 @@ import DoubleDelete from "../UI/DoubleDelete";
 import About from "../UI/about/About";
 import ChatTheme from "./menu/ChatTheme";
 import NewGroup from './menu/NewGroup'
-import AddMembers from "../UI/AddMembers";
+import AddMembers from "../UI/newGroup/AddMembers";
+import NewChannel from './menu/newChannel'
 
 export default function Profile() {
   const backDrop = useSelector((state) => state.ui.backDrop);
@@ -20,6 +21,7 @@ export default function Profile() {
   const about = useSelector((state) => state.ui.about);
   const chatTheme = useSelector(state=>state.menu.chatTheme)
   const newGroup = useSelector(state=>state.menu.newGroup);
+  const newChannel = useSelector(state=>state.menu.newChannel);
   const addMembers = useSelector(state=>state.ui.addMembers);
 
   return (
@@ -34,6 +36,7 @@ export default function Profile() {
       {chatTheme && <ChatTheme />}
       {newGroup && <NewGroup />}
       {addMembers && <AddMembers />}
+      {newChannel && <NewChannel />}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import defaultUser from "../../images/defaultUser.png";
+import defaultUser from "../../../images/defaultUser.png";
 
 export default function AddingMembers({chat,onSelect}) {
   const [checked, setChecked] = useState(false);

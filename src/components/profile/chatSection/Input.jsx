@@ -1,7 +1,7 @@
 import { GrEmoji } from "react-icons/gr";
 import { GoPaperclip } from "react-icons/go";
 import { IoSend } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { auth, db, storage } from "../../../firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {
@@ -14,6 +14,8 @@ import {
 import { v4 as uuid } from "uuid";
 import { useSelector } from "react-redux";
 import BeforeSend from "./BeforeSend";
+import EmojiPicker from "emoji-picker-react";
+import { EmojiStyle } from "emoji-picker-react";
 
 export default function Input({ onProgress }) {
   const chatId = useSelector((state) => state.chat.chatId);
@@ -21,8 +23,10 @@ export default function Input({ onProgress }) {
   const [text, setText] = useState("");
   const [media, setMedia] = useState(null);
   const [beforeSend, setBeforeSend] = useState(false);
+  const [emojiBox, setEmojiBox] = useState(false);
   const currentUser = auth.currentUser;
   const ID = user.type === "user" ? chatId : user.value.uid;
+  const timeOff = useRef();
 
   const UpdateUserListMessage = async (text) => {
     if (user.type === "user") {
@@ -56,6 +60,24 @@ export default function Input({ onProgress }) {
 
       for (let i = 0; i < user.members.length; i++) {
         await updateDoc(doc(db, "userGroups", user.members[i].uid), {
+          [ID + ".lastMessage"]: {
+            text,
+          },
+          [ID + ".date"]: serverTimestamp(),
+        });
+      }
+    }
+
+    if (user.type === "channel") {
+      await updateDoc(doc(db, "userChannels", currentUser.uid), {
+        [ID + ".lastMessage"]: {
+          text,
+        },
+        [ID + ".date"]: serverTimestamp(),
+      });
+
+      for (let i = 0; i < user.members.length; i++) {
+        await updateDoc(doc(db, "userChannels", user.members[i].uid), {
           [ID + ".lastMessage"]: {
             text,
           },
@@ -178,10 +200,35 @@ export default function Input({ onProgress }) {
     setText("");
   };
 
+  const emojiHandler = (key) => {
+    setEmojiBox(true);
+    clearTimeout(timeOff.current);
+
+    if (key !== "on") {
+      if (key !== "mouseIn") {
+        timeOff.current = setTimeout(() => {
+          setEmojiBox(false);
+        }, 600);
+      }
+
+      if (key === "mouseOut") {
+        setEmojiBox(false);
+      }
+    }
+  };
+
   return (
     <div className="sendMessage">
       <div>
-        <GrEmoji className="emoji" />
+        <GrEmoji
+          className="emojI"
+          onMouseEnter={() => {
+            emojiHandler("on");
+          }}
+          onMouseLeave={() => {
+            emojiHandler('off');
+          }}
+        />
         <input
           type="text"
           placeholder="Message"
@@ -212,6 +259,23 @@ export default function Input({ onProgress }) {
           onSend={handleSend}
           onClearBeforeSendValue={setMedia}
         />
+      )}
+      {emojiBox && (
+        <div
+          className="emojiBox"
+          onMouseEnter={() => {
+            emojiHandler("mouseIn");
+          }}
+          onMouseLeave={() => {
+            emojiHandler("mouseOut");
+          }}
+        >
+          <EmojiPicker
+            height={350}
+            onEmojiClick={(e) => setText((prevEmoji) => prevEmoji + e?.emoji)}
+            emojiStyle={EmojiStyle.NATIVE}
+          />
+        </div>
       )}
     </div>
   );

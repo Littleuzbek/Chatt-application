@@ -12,8 +12,8 @@ export default function User({ chatVal, onSelect, onGetPosition }) {
     >
       <img
         src={
-          chatVal[1]?.userInfo?.photoURL || chatVal[1]?.groupInfo?.photoURL
-            ? chatVal[1]?.userInfo?.photoURL || chatVal[1]?.groupInfo?.photoURL
+          chatVal[1]?.userInfo?.photoURL || chatVal[1]?.groupInfo?.photoURL || chatVal[1]?.channelInfo?.photoURL
+            ? chatVal[1]?.userInfo?.photoURL || chatVal[1]?.groupInfo?.photoURL || chatVal[1]?.channelInfo?.photoURL
             : defaultUser
         }
         alt=""
@@ -21,7 +21,7 @@ export default function User({ chatVal, onSelect, onGetPosition }) {
       <div className="textSection">
         <p className="nameOfChat">
           {chatVal[1]?.userInfo?.displayName ||
-            chatVal[1]?.groupInfo?.displayName}
+            chatVal[1]?.groupInfo?.displayName || chatVal[1]?.channelInfo?.displayName}
         </p>
         <p className="lastMessage">{chatVal[1]?.lastMessage?.text}</p>
       </div>

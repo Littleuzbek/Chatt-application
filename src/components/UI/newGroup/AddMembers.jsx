@@ -2,11 +2,11 @@ import React from "react";
 import "./AddMembers.css";
 import { useEffect, useState } from "react";
 import { doc, getDoc, onSnapshot, serverTimestamp, updateDoc } from "firebase/firestore";
-import { auth, db } from "../../firebase";
+import { auth, db } from "../../../firebase";
 import AddingMembers from "./AddingMembers";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { uiActions } from "../../redux/uiSlice";
+import { uiActions } from "../../../redux/uiSlice";
 
 export default function AddMembers() {
   const [chats, setChats] = useState([]);

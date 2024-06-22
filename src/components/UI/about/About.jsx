@@ -12,6 +12,7 @@ import defaultUser from "../../../images/defaultUser.png";
 import { v4 as uuid } from "uuid";
 import "./About.css";
 import AboutGroup from "./AboutGroup";
+import AboutChannel from "./AboutChannel";
 import AboutUser from "./AboutUser";
 
 export default function About() {
@@ -23,9 +24,8 @@ export default function About() {
   const dispatch = useDispatch();
   const currentUser = auth.currentUser;
 
-    useEffect(() => {
+  useEffect(() => {
     const FetchUserData = () => {
-     
       const fetchUserData = onSnapshot(
         doc(db, "users", user?.value?.uid),
         (doc) => {
@@ -47,7 +47,24 @@ export default function About() {
         }
       );
 
-      return () => (user.type === "user" ? fetchUserData() : fetchGroupData());
+      const fetchChannelData = onSnapshot(
+        doc(db, "userChannels", currentUser.uid),
+        (doc) => {
+          if (doc.data()) {
+            const a = Object.entries(doc.data());
+            for (let i = 0; i < a.length; i++) {
+              a[i]?.[0] === user?.value?.uid && setChosenChat(a[i][1]);
+            }
+          }
+        }
+      );
+
+      return () =>
+        user.type === "user"
+          ? fetchUserData()
+          :( user.type !== "group"
+          ? fetchChannelData()
+          : fetchGroupData());
     };
     user?.value?.uid && FetchUserData();
   }, [user, currentUser.uid]);
@@ -89,12 +106,17 @@ export default function About() {
         >
           <div>
             <img
-              src={(chosenChat?.groupInfo?.photoURL || chosenChat?.photoURL) || defaultUser}
+              src={
+                chosenChat?.groupInfo?.photoURL ||
+                chosenChat?.channelInfo?.photoURL ||
+                chosenChat?.photoURL ||
+                defaultUser
+              }
               alt=""
               onClick={() =>
-                (chosenChat?.groupInfo?.photoURL || chosenChat?.photoURL) &&
+                (chosenChat?.groupInfo?.photoURL || chosenChat?.channelInfo?.photoURL || chosenChat?.photoURL) &&
                 ViewContentHandler(
-                  (chosenChat?.groupInfo?.photoURL || chosenChat?.photoURL),
+                  chosenChat?.groupInfo?.photoURL || chosenChat?.channelInfo?.photoURL || chosenChat?.photoURL,
                   "img",
                   "header"
                 )
@@ -103,13 +125,23 @@ export default function About() {
           </div>
           {section || (
             <div className="infO">
-              {user.type !== 'user' ?<AboutGroup
-                chosenUserVal={chosenChat}
-                onSetToggleMember={setToggleMember}
-                toggleMemberVal={toggleMember}
-              /> : 
-              <AboutUser chosenUserVal={chosenChat}/>
-              }
+              {user.type !== "user" ? (
+                user.type !== "group" ? (
+                  <AboutChannel 
+                  chosenUserVal={chosenChat}
+                  onSetToggleMember={setToggleMember}
+                  toggleMemberVal={toggleMember}
+                  />
+                ) : (
+                  <AboutGroup
+                    chosenUserVal={chosenChat}
+                    onSetToggleMember={setToggleMember}
+                    toggleMemberVal={toggleMember}
+                  />
+                )
+              ) : (
+                <AboutUser chosenUserVal={chosenChat} />
+              )}
               <FaAngleDown
                 className="toMedia"
                 onClick={() => {

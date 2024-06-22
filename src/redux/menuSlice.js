@@ -9,8 +9,10 @@ const menuSlice = createSlice({
     newProfileImg: false,
     chatThemeValue: "",
     chatTheme: false,
-    newMembers: [],
+    newGroupMembers: [],
+    newChannelMembers: [],
     newGroup: false,
+    newChannel: false,
   },
   reducers: {
     onToggleSettings(state, action) {
@@ -34,18 +36,18 @@ const menuSlice = createSlice({
     onSetChatTheme(state, action) {
       state.chatTheme = action.payload;
     },
-    onSetNewMembers(state, action) {
+    onSetNewGroupMembers(state, action) {
       try {
         const value = action.payload.value;
         const type = action.payload.type;
 
         if (type === "add") {
-          const memberExist = state.newMembers.find(
+          const memberExist = state.newGroupMembers.find(
             (member) => member?.uid === value.uid
           );
 
           if (!memberExist) {
-            state.newMembers.push({
+            state.newGroupMembers.push({
               displayName: value.displayName,
               photoURL: value.photoURL,
               uid: value.uid,
@@ -54,17 +56,56 @@ const menuSlice = createSlice({
         }
 
         if (type === "remove") {
-          state.newMembers = state.newMembers.filter(
+          state.newGroupMembers = state.newGroupMembers.filter(
             (member) => member.uid !== value.uid
           );
+        }
+
+        if(action.payload === 'clear'){
+          state.newGroupMembers = []
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    onSetNewChannelMembers(state, action) {
+      try {
+        const value = action.payload.value;
+        const type = action.payload.type;
+
+        if (type === "add") {
+          const memberExist = state.newChannelMembers.find(
+            (member) => member?.uid === value.uid
+          );
+
+          if (!memberExist) {
+            state.newChannelMembers.push({
+              displayName: value.displayName,
+              photoURL: value.photoURL,
+              uid: value.uid,
+            });
+          }
+        }
+
+        if (type === "remove") {
+          state.newChannelMembers = state.newChannelMembers.filter(
+            (member) => member.uid !== value.uid
+          );
+        }
+
+        if(action.payload === 'clear'){
+          state.newChannelMembers = []
         }
       } catch (err) {
         console.log(err);
       }
     },
     onSetNewGroup(state,action){
-      state.newGroup = action.payload
+      state.newGroup = action.payload;
     },
+    onSetNewChannel(state,action){
+      state.newChannel = action.payload;
+    }
   },
 });
 

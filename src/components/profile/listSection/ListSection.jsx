@@ -11,12 +11,13 @@ import User from "./User";
 
 export default function ListSection() {
   const [chats, setChats] = useState([]);
-  const [groups,setGroups] = useState([])
+  const [groups, setGroups] = useState([]);
+  const [channels, setChannels] = useState([]);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [selectedUser, setSelectedUser] = useState();
   const [timeOff, setTimeOff] = useState(false);
   const rightClick = useSelector((state) => state.ui.listClick);
-  const triggerForChatDeleted = useSelector(state => state.chat.chatDeleted);
+  const triggerForChatDeleted = useSelector((state) => state.chat.chatDeleted);
   const currentUser = auth.currentUser;
   const timeOut = useRef();
   const dispatch = useDispatch();
@@ -24,35 +25,45 @@ export default function ListSection() {
   useEffect(() => {
     try {
       const getChats = () => {
-        const unsub = onSnapshot(
+        const fetchUsers = onSnapshot(
           doc(db, "userChats", currentUser.uid),
           (doc) => {
             if (doc.data()) {
-              setChats(doc.data())
+              setChats(doc.data());
             }
           }
         );
 
-        const fetch = onSnapshot(
+        const fetchGroups = onSnapshot(
           doc(db, "userGroups", currentUser.uid),
           (doc) => {
             if (doc.data()) {
-              setGroups(doc.data())
+              setGroups(doc.data());
+            }
+          }
+        );
+
+        const fetchChannels = onSnapshot(
+          doc(db, "userChannels", currentUser.uid),
+          (doc) => {
+            if (doc.data()) {
+              setChannels(doc.data());
             }
           }
         );
         return () => {
-          unsub();
-          fetch();
+          fetchUsers();
+          fetchGroups();
+          fetchChannels();
         };
       };
       currentUser.uid && getChats();
     } catch (err) {
       console.log(err);
     }
-  }, [currentUser.uid,triggerForChatDeleted]);
+  }, [currentUser.uid, triggerForChatDeleted]);
 
-  const selectHandler = (user)=>{
+  const selectHandler = (user) => {
     if (user?.userInfo) {
       dispatch(
         chatActions.changeUser({
@@ -66,11 +77,21 @@ export default function ListSection() {
         chatActions.changeUser({
           value: user.groupInfo,
           type: "group",
-          members: user.members
+          members: user.members,
         })
       );
     }
-  }
+
+    if (user?.channelInfo) {
+      dispatch(
+        chatActions.changeUser({
+          value: user.channelInfo,
+          type: "channel",
+          members: user.members,
+        })
+      );
+    }
+  };
 
   const getPositionHandler = (e, user) => {
     e.preventDefault();
@@ -86,8 +107,6 @@ export default function ListSection() {
   };
 
   useEffect(() => {
-   
-    
     if (!timeOff) {
       timeOut.current = setTimeout(() => {
         dispatch(
@@ -95,13 +114,14 @@ export default function ListSection() {
             type: "list",
             value: false,
           })
-          );
-        }, 2000);
-      }
+        );
+      }, 2000);
+    }
 
-      return ()=>{ clearTimeout(timeOut.current);}
-      
-  }, [dispatch,timeOff,rightClick]);
+    return () => {
+      clearTimeout(timeOut.current);
+    };
+  }, [dispatch, timeOff, rightClick]);
 
   try {
     return (
@@ -115,16 +135,16 @@ export default function ListSection() {
             onSetTimeOff={setTimeOff}
           />
         )}
-        {Object.entries(Object.assign(chats,groups))
-            ?.sort((a, b) => b[1].date - a[1].date)
-            ?.map((chat) => (
-              <User 
-              chatVal={chat} 
+        {Object.entries(Object.assign(chats, groups, channels))
+          ?.sort((a, b) => b[1].date - a[1].date)
+          ?.map((chat) => (
+            <User
+              chatVal={chat}
               onSelect={selectHandler}
               onGetPosition={getPositionHandler}
               key={chat[0]}
-              />
-            ))}
+            />
+          ))}
       </div>
     );
   } catch (err) {

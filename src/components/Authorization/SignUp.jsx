@@ -37,7 +37,7 @@ export default function SignUp({ onChange, onChangeValue }) {
           
           await setDoc(doc(db,'userChats',res.user.uid),{});
           await setDoc(doc(db,'userGroups',res.user.uid),{})
-
+          await setDoc(doc(db,'userChannels',res.user.uid),{})
           await setDoc(doc(db,'usersWallpapers', res.user.uid),{
             inUse: '',
             wallpapers: []});
