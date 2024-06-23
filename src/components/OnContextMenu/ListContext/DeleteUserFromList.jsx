@@ -7,7 +7,7 @@ export default function DeleteUserFromList({ selectedUser }) {
   const dispatch = useDispatch();
   const DeleteChat = () => {
     dispatch(uiActions.setDoubleDelete(true))
-    dispatch(chatActions.setDeletingUser(selectedUser))
+    dispatch(chatActions.setDeletingChat(selectedUser))
   };
 
   return <div onClick={() => DeleteChat()}>Delete chat</div>;

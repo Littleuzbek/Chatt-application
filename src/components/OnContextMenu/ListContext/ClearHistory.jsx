@@ -11,10 +11,10 @@ export default function ClearHistory({ selectedUser }) {
 
   const clearHistoryHandler = async () => {
     try{
-      const chatType = selectedUser[1]?.userInfo ? 'user' : 'group'; 
-      const userID = selectedUser[1]?.userInfo?.uid
-      const members = selectedUser[1]?.members;
-      const mutualChatId = selectedUser[0];
+      const chatType = selectedUser?.type; 
+      const userID = selectedUser?.info?.uid
+      const members = selectedUser?.members;
+      const mutualChatId = selectedUser?.chatId;
 
       dispatch(uiActions.setClickValue({
       type: 'ui',
@@ -51,6 +51,24 @@ export default function ClearHistory({ selectedUser }) {
 
       for(let i = 0; i < members.length; i++){
         await updateDoc(doc(db, "userGroups", members[i].uid), {
+          [mutualChatId + ".lastMessage"]: {
+            text: "",
+          },
+          [mutualChatId + ".date"]: "",
+        });
+      }
+    }
+
+    if(chatType === 'channel'){
+      await updateDoc(doc(db, "userChannels", currentUser.uid), {
+        [mutualChatId + ".lastMessage"]: {
+          text: "",
+        },
+        [mutualChatId + ".date"]: "",
+      });
+
+      for(let i = 0; i < members.length; i++){
+        await updateDoc(doc(db, "userChannels", members[i].uid), {
           [mutualChatId + ".lastMessage"]: {
             text: "",
           },

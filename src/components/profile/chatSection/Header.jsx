@@ -17,7 +17,8 @@ export default function Header() {
   const [timeOff, setTimeOff] = useState(false);
   const [toggleSearche, setToggleSearche] = useState(false);
   const user = useSelector((state) => state.chat.user);
-  const messages = useSelector(state=>state.chat.messages);
+  const chatId = useSelector((state) => state.chat.chatId);
+  const messages = useSelector((state) => state.chat.messages);
   const currentUser = auth.currentUser;
   const displayName = user && user?.value.displayName;
   const timeOut = useRef();
@@ -48,26 +49,36 @@ export default function Header() {
     if (!timeOff) {
       timeOut.current = setTimeout(() => {
         setOptions(false);
-      }, 1000);
+      }, 600);
     }
   }, [options, timeOff]);
 
-  const SearcheHandler =(text)=>{
-   const a = messages.filter(m => m.text.toLowerCase() === text.toLowerCase())
-    dispatch(chatActions.setSearchResult(a))
-  }
+  const SearcheHandler = (text) => {
+    const a = messages.filter(
+      (m) => m.text.toLowerCase() === text.toLowerCase()
+    );
+    dispatch(chatActions.setSearchResult(a));
+  };
 
-  const addMemberHandler =()=>{
+  const addMemberHandler = () => {
     setOptions(false);
     dispatch(uiActions.setAddMembers(true));
-  } 
-  
-  const deleteHandler =()=>{
-    if(user.type === 'group'){
-      dispatch(uiActions.setDoubleDelete(true))
-    }
+  };
 
-  }
+  const deleteHandler = () => {
+    dispatch(
+      chatActions.setDeletingChat({
+        chatId:
+          (user.type === "user" && chatId) ||
+          (user.type === "group" && user.value.uid) ||
+          (user.type === "channel" && user.value.uid),
+        info: user.value,
+        members: user.members,
+        type: user.type,
+      })
+    );
+    dispatch(uiActions.setDoubleDelete(true));
+  };
 
   return (
     <Fragment>
@@ -79,32 +90,40 @@ export default function Header() {
           src={chosenUser?.photoURL ? chosenUser?.photoURL : defaultUser}
           alt=""
         />
-        <div style={toggleSearche ? {width: '60%'} : {}}>
+        <div style={toggleSearche ? { width: "60%" } : {}}>
           <p>{displayName}</p>
           <p>Online</p>
         </div>
         {toggleSearche ? (
           <Fragment>
-            <input onClick={(e) => e.stopPropagation()} onKeyUp={(e)=>SearcheHandler(e.target.value)}/>
-            <CgClose className="btn" 
-            onClick={(e)=>{
-              e.stopPropagation();
-              setToggleSearche(false)
-              dispatch(chatActions.setSearchResult(''));
-            }}/>
+            <input
+              onClick={(e) => e.stopPropagation()}
+              onKeyUp={(e) => SearcheHandler(e.target.value)}
+            />
+            <CgClose
+              className="btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                setToggleSearche(false);
+                dispatch(chatActions.setSearchResult(""));
+              }}
+            />
           </Fragment>
         ) : (
-          <IoMdSearch className="btn" onClick={(e)=>{
-            e.stopPropagation();
-            setToggleSearche(true)
-          }}/>
+          <IoMdSearch
+            className="btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              setToggleSearche(true);
+            }}
+          />
         )}
         <CiMenuKebab
           className="btn"
           onClick={(e) => {
             e.stopPropagation();
             setOptions(true);
-            dispatch(chatActions.setSearchResult(false))
+            dispatch(chatActions.setSearchResult(false));
           }}
         />
       </div>
@@ -117,15 +136,29 @@ export default function Header() {
             setTimeOff(false);
           }}
         >
-          {user.type === "group" && (
-            <div onClick={()=>{addMemberHandler()}}>
+          {(user.type === "group" || user.type === "channel") && (
+            <div
+              onClick={() => {
+                addMemberHandler();
+              }}
+            >
               <IoPersonAdd />
               <p>Add member</p>
             </div>
           )}
-          <div onClick={()=> {deleteHandler()}}>
+          <div
+            onClick={() => {
+              deleteHandler();
+            }}
+          >
             <AiOutlineDelete />
-            <p>{user.type === "user" ? "Delete Chat" : "Leave Group"}</p>
+            <p>
+              {user.type === "user"
+                ? "Delete Chat"
+                : user.type === "channel"
+                ? "Leave Channel"
+                : "Leave Group"}
+            </p>
           </div>
         </div>
       )}

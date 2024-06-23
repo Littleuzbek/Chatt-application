@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   deleteField,
   doc,
@@ -15,16 +15,29 @@ import { uiActions } from "../../redux/uiSlice";
 
 export default function DoubleDelete() {
   const [checked, setChecked] = useState(false);
-  const deletingChat = useSelector((state) => state.chat.deletingUser);
-  const chatType = deletingChat?.[1]?.userInfo ? 'user' : 'group';
+  const [newAdmin, setNewAdmin] = useState('');
+  const [stopLoop, setStop] = useState(true);
+  const deletingChat = useSelector((state) => state.chat.deletingChat);
   const currentUser = auth.currentUser;
   const dispatch = useDispatch();
 
-  const DeleteChat = async () => {
+  useEffect(() => {
+    if (stopLoop) {
+      if (deletingChat?.info?.admin === currentUser.uid) {
+        for (let i = 0; i < deletingChat?.members?.length; i++) {
+          if (deletingChat.members[i].uid !== currentUser.uid) {
+            setStop(false)
+            setNewAdmin(deletingChat.members[i].uid)
+          }
+        }
+      }
+    }
+  }, [deletingChat,stopLoop]);
 
-    if (chatType === "user") {
-      const userUid = deletingChat[1]?.userInfo.uid;
-      const combinedId = deletingChat[0];
+  const DeleteChat = async () => {
+    if (deletingChat.type === "user") {
+      const userId = deletingChat?.info?.uid;
+      const combinedId = deletingChat?.chatId;
       dispatch(uiActions.setDoubleDelete(false));
       dispatch(chatActions.changeUser(false));
 
@@ -33,7 +46,7 @@ export default function DoubleDelete() {
           [combinedId]: deleteField(combinedId),
         });
 
-        await updateDoc(doc(db, "userChats", userUid), {
+        await updateDoc(doc(db, "userChats", userId), {
           [combinedId]: deleteField(combinedId),
         });
 
@@ -43,15 +56,15 @@ export default function DoubleDelete() {
           [combinedId]: deleteField(combinedId),
         });
       }
-      dispatch(chatActions.setChatDeleted())
+      dispatch(chatActions.setChatDeleted());
     }
 
-    if (chatType === "group") {
-      const groupId = deletingChat?.[1]?.groupInfo?.uid;
-      const deletingMember = deletingChat?.[1]?.members;
+    if (deletingChat.type === "group") {
+      const groupId = deletingChat?.chatId
+      const deletingMember = deletingChat?.members;
+      const newAdmin = deletingChat.info.admin === currentUser.uid ? newAdmin : deletingChat.info.admin;
       dispatch(uiActions.setDoubleDelete(false));
       dispatch(chatActions.changeUser(false));
-      
       for (let i = 0; i < deletingMember?.length; i++) {
         if (deletingMember[i]?.uid !== currentUser.uid) {
           await updateDoc(doc(db, "userGroups", deletingMember[i]?.uid), {
@@ -60,6 +73,13 @@ export default function DoubleDelete() {
               photoURL: currentUser.photoURL,
               uid: currentUser.uid,
             }),
+            [groupId + '.groupInfo']: {
+              about: deletingChat.info.about,
+              admin: newAdmin,
+              displayName: deletingChat.info.displayName,
+              photoURL: deletingChat.info.photoURL,
+              uid: deletingChat.info.uid
+            }
           });
         } else {
           await updateDoc(doc(db, "userGroups", currentUser.uid), {
@@ -67,8 +87,35 @@ export default function DoubleDelete() {
           });
         }
       }
-      dispatch(chatActions.setChatDeleted())
+      dispatch(chatActions.setChatDeleted());
     }
+
+    if (deletingChat.type === "channel") {
+      const groupId = deletingChat?.chatId;
+      const deletingMember = deletingChat?.members;
+      dispatch(uiActions.setDoubleDelete(false));
+      dispatch(chatActions.changeUser(false));
+
+      for (let i = 0; i < deletingMember?.length; i++) {
+        if (deletingMember[i]?.uid !== currentUser.uid) {
+          await updateDoc(doc(db, "userChannels", deletingMember[i]?.uid), {
+            [groupId + ".members"]: arrayRemove({
+              displayName: currentUser.displayName,
+              photoURL: currentUser.photoURL,
+              uid: currentUser.uid,
+            }),
+          });
+        } else {
+          await updateDoc(doc(db, "userChannels", currentUser.uid), {
+            [groupId]: deleteField(groupId),
+          });
+        }
+      }
+      dispatch(chatActions.setChatDeleted());
+    }
+
+    setStop(true)
+    setNewAdmin('')
   };
 
   return (
@@ -77,10 +124,22 @@ export default function DoubleDelete() {
       <div className="doubleDelete">
         <div>
           <p>
-            You're going to delete everthing about this 
-            {chatType === "user" ? " user" : " group"}?
+            You're going to delete everthing about this
+            {deletingChat.type === "user"
+              ? " user"
+              : deletingChat.type === "channel"
+              ? " channel"
+              : " group"}
+            ?
           </p>
-          <div style={{ display: chatType === "group" && "none" }}>
+          <div
+            style={{
+              display:
+                (deletingChat.type === "group" ||
+                  deletingChat.type === "channel") &&
+                "none",
+            }}
+          >
             <input
               type="checkbox"
               onChange={(e) => setChecked(e.target.checked)}
@@ -95,7 +154,7 @@ export default function DoubleDelete() {
                 fontWeight: "500",
               }}
             >
-              {deletingChat?.[1]?.userInfo?.displayName}
+              {deletingChat?.info?.displayName}
             </p>
           </div>
           <div>

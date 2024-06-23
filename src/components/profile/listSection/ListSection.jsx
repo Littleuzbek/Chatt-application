@@ -96,7 +96,12 @@ export default function ListSection() {
   const getPositionHandler = (e, user) => {
     e.preventDefault();
 
-    setSelectedUser(user);
+    setSelectedUser({
+      chatId: user?.[0],
+      info: user?.[1]?.channelInfo || user?.[1]?.groupInfo ||  user?.[1]?.userInfo,
+      members: user?.[1]?.members,
+      type: (user?.[1]?.channelInfo && 'channel') || (user?.[1]?.groupInfo && 'group') || (user?.[1]?.userInfo && 'user')
+    });
     setPosition(() => ({ x: e.clientX, y: e.clientY }));
     dispatch(
       uiActions.setClickValue({
@@ -115,7 +120,7 @@ export default function ListSection() {
             value: false,
           })
         );
-      }, 2000);
+      }, 1000);
     }
 
     return () => {

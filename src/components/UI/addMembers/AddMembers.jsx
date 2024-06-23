@@ -10,6 +10,7 @@ import { uiActions } from "../../../redux/uiSlice";
 
 export default function AddMembers() {
   const [chats, setChats] = useState([]);
+  const [lastMessage,setLastMessage] = useState('')
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [spinner, setSpinner] = useState(false);
   const user = useSelector((state) => state.chat.user);
@@ -18,29 +19,58 @@ export default function AddMembers() {
 
   useEffect(() => {
     const getChats = async () => {
-      onSnapshot(doc(db, 'userGroups', currentUser.uid), async(res)=>{
-        const groups = Object.entries(res.data());
+      if(user.type === 'group'){
+        onSnapshot(doc(db, 'userGroups', currentUser.uid), async(res)=>{
+          const groups = Object.entries(res.data());
         for (let i = 0; i < groups.length; i++) {
           if(user.value.uid === groups[i][0]){
-
+            setLastMessage(groups[i]?.[1]?.lastMessage.text);
+            // getting users from my list from server
             await getDoc(doc(db, "userChats", currentUser.uid)).then((doc) => {
               if (doc.data()) {
           const userList = Object.entries(doc.data());
-          // removing existing members from user list
+          // removing existing members from list
           const groupMemberIds = new Set(
             groups[i][1].members.map((member) => member.uid)
-          );
-          const nonMembers = userList.filter(
-            (user) => !groupMemberIds.has(user?.[1]?.userInfo?.uid)
             );
-            
-            // setting filtered list
-            setChats(nonMembers);
-          }
-        });
+            const nonMembers = userList.filter(
+              (user) => !groupMemberIds.has(user?.[1]?.userInfo?.uid)
+              );
+              // setting filtered list
+              setChats(nonMembers);
+            }
+          });
+        }
       }
+    })
+  }
+
+  if(user.type === 'channel'){
+    onSnapshot(doc(db, 'userChannels', currentUser.uid), async(res)=>{
+      const channels = Object.entries(res.data());
+    for (let i = 0; i < channels.length; i++) {
+      if(user.value.uid === channels[i][0]){
+        setLastMessage(channels[i]?.[1]?.lastMessage.text);
+        // getting users from my list from server
+        await getDoc(doc(db, "userChats", currentUser.uid)).then((doc) => {
+          if (doc.data()) {
+      const userList = Object.entries(doc.data());
+      // removing existing members from list
+      const channelMemberIds = new Set(
+        channels[i][1].members.map((member) => member.uid)
+        );
+        const nonMembers = userList.filter(
+          (user) => !channelMemberIds.has(user?.[1]?.userInfo?.uid)
+          );
+          // setting filtered list
+          setChats(nonMembers);
+        }
+      });
     }
-      })
+  }
+})
+}
+
     };
     currentUser.uid && getChats();
   }, [currentUser.uid, user]);
@@ -61,26 +91,28 @@ export default function AddMembers() {
     }
   };
 
-  const addToGroupMembers = async () => {
+  const addToMembers = async () => {
     try {
       setSpinner(true);
-      const groupId = user.value.uid;
-      const groupMembers = [...user.members, ...selectedUsers];
+      const ID = user.value.uid;
+      const Members = [...user?.members, ...selectedUsers];
+      const collestion = user.type === 'group' ? 'userGroups' : 'userChannels';
+      const infoType = user.type === 'group' ? 'groupInfo' : 'channelInfo';
 
-      for (let i = 0; i < groupMembers.length; i++) {
-        await updateDoc(doc(db, "userGroups", groupMembers[i].uid), {
-          [groupId + ".groupInfo"]: {
-            uid: groupId,
+      for (let i = 0; i < Members.length; i++) {
+        await updateDoc(doc(db, collestion, Members[i].uid), {
+          [ID + `.${infoType}`]: {
+            uid: ID,
             displayName: user.value.displayName,
             photoURL: user.value.photoURL,
             admin: user?.value?.admin,
-            about: "",
+            about: user?.value?.about || '',
           },
-          [groupId + ".members"]: [...groupMembers],
-          [groupId + ".lastMessage"]: {
-            text: "",
+          [ID + ".members"]: [...Members],
+          [ID + ".lastMessage"]: {
+            text: lastMessage,
           },
-          [groupId + ".date"]: serverTimestamp(),
+          [ID + ".date"]: serverTimestamp(),
         }).then(() => {
           setSpinner(false);
           setChats([]);
@@ -104,17 +136,10 @@ export default function AddMembers() {
   return (
     <div className="addMembers">
       <div>
-        {chats.length === 0 ? (
-          <p style={{ textAlign: "center" }}>
-            oops there are no friends left add
-          </p>
-        ) : (
-          ""
-        )}
         {chats
           ?.sort((a, b) => b[1].date - a[1].date)
           ?.map((chat) => (
-            <AddingMembers chat={chat} onSelect={selectHandler} key={chat[0]} />
+            chat?.[1]?.userInfo && <AddingMembers chat={chat} onSelect={selectHandler} key={chat[0]} />
           ))}
       </div>
       <div className="addMemberBtn">
@@ -134,7 +159,7 @@ export default function AddMembers() {
               : {}
           }
           onClick={() => {
-            return selectedUsers.length !== 0 ? addToGroupMembers() : "";
+            return selectedUsers.length !== 0 ? addToMembers() : "";
           }}
         >
           add

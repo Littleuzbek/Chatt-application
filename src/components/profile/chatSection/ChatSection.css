@@ -66,6 +66,7 @@
   height: 90%;
   padding: 0 2%;
   overflow-y: scroll;
+  transition: 0.5s;
 }
 
 .message {
@@ -76,13 +77,6 @@
   margin: 5px 0;
 }
 
-.message > div:nth-child(1) {
-  display: flex;
-  width: 40%;
-  border-radius: 10px;
-  margin: 5px 0;
-}
-
 .message > img {
   width: 5%;
   height: 40px;
@@ -90,12 +84,18 @@
   margin: 0 5px;
   object-fit: cover;
 }
+.message > div{
+  max-width: 50%;
+  word-break: break-word;
+  white-space: pre-wrap;
+  line-height: 1.325;
+}
 
 .message > div > p {
   background-color: white;
   padding: 1px 6px;
   margin: 5px 0 0 0;
-  font-size: 18px;
+  font-size: 19px;
 }
 
 .message > div > img,

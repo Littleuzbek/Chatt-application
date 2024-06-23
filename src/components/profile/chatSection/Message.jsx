@@ -13,11 +13,11 @@ export default function Message({ message, onContextMenu }) {
 
   const style = owner
     ? {
-        borderRadius: "10px 10px 10px 0px",
+        borderRadius: "0px 10px 10px 10px",
         backgroundColor: "grey",
         color: "white",
       }
-    : { borderRadius: "10px 10px 0px 10px" };
+    : { borderRadius: "10px 0px 10px 10px" };
 
   useEffect(() => {
     const text = document.getElementsByName(searchResult[0]?.text);

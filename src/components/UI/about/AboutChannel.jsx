@@ -84,9 +84,10 @@ export default function AboutChannel({
             displayName: deletingUser.displayName,
             photoURL: deletingUser.photoURL,
             uid: deletingUser.uid,
-          }),
+          })
         });
       } else {
+        console.log('no');
         await updateDoc(doc(db, "userChannels", user?.members[i]?.uid), {
           [channelId]: deleteField(channelId),
         });

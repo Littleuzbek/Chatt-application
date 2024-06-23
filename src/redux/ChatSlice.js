@@ -8,7 +8,7 @@ const chatSlice = createSlice({
     user: false,
     chatType: "",
     forwardingMessage: "",
-    deletingUser: "",
+    deletingChat: "",
     viewContentValue: "",
     videoChangedProgress: 0,
     contentType: "",
@@ -37,8 +37,8 @@ const chatSlice = createSlice({
     setForwardingMessage(state, action) {
       state.forwardingMessage = action.payload;
     },
-    setDeletingUser(state, action) {
-      state.deletingUser = action.payload;
+    setDeletingChat(state, action) {
+      state.deletingChat = action.payload;
     },
     setViewContentValue(state, action) {
       state.viewContentValue = action.payload;

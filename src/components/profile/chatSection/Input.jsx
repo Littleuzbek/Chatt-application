@@ -208,7 +208,7 @@ export default function Input({ onProgress }) {
       if (key !== "mouseIn") {
         timeOff.current = setTimeout(() => {
           setEmojiBox(false);
-        }, 600);
+        }, 300);
       }
 
       if (key === "mouseOut") {

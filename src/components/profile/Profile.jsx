@@ -10,7 +10,7 @@ import DoubleDelete from "../UI/DoubleDelete";
 import About from "../UI/about/About";
 import ChatTheme from "./menu/ChatTheme";
 import NewGroup from './menu/NewGroup'
-import AddMembers from "../UI/newGroup/AddMembers";
+import AddMembers from "../UI/addMembers/AddMembers";
 import NewChannel from './menu/newChannel'
 
 export default function Profile() {

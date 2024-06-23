@@ -34,11 +34,8 @@ export default function ListContext({
         );
       }}
     >
-      <ClearHistory selectedUser={selectedUser} onSetTimeOff={onSetTimeOff} />
-      <DeleteUserFromList
-        selectedUser={selectedUser}
-        onSetTimeOff={onSetTimeOff}
-      />
+      <ClearHistory selectedUser={selectedUser} />
+      <DeleteUserFromList selectedUser={selectedUser}/>
     </div>
   );
 }
