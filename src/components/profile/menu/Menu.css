@@ -5,7 +5,6 @@
   position: absolute;
   background-color: white;
   z-index: 99;
-  overflow: hidden;
   animation: openAnimation 0.8s ease forwards;
 }
 
@@ -54,6 +53,8 @@
 .userName {
   width: 100%;
   font-size: 15px;
+  word-break: break-word;
+  padding: 0 10px 0 0;
 }
 
 .options > div {
@@ -90,7 +91,7 @@
   overflow: hidden;
   background-color: white;
   z-index: 2;
-  animation: settings 0.5s ease forwards;
+  animation: settings 0.5s ease forwards !important;
 }
 
 .optionsInSettings {
@@ -125,7 +126,7 @@
   overflow: hidden;
   background-color: white;
   z-index: 2;
-  animation: quitSettings 0.5s ease forwards;
+  animation: quitSettings 0.5s ease forwards !important;
 }
 
 .editProfile {
@@ -140,7 +141,7 @@
   background-color: white;
   border-radius: 20px;
   z-index: 2;
-  animation: settings 0.5s ease forwards;
+  animation: settings 0.5s ease forwards !important;
 }
 
 .editProfile > div:nth-child(1) {
@@ -622,6 +623,7 @@
     height: 5%;
     border-radius: 20px;
     background-color: white;
+    overflow: hidden;
   }
   50% {
     left: 40%;
@@ -630,6 +632,7 @@
     width: 5%;
     height: 5%;
     background-color: white;
+    overflow: hidden;
   }
   90% {
     left: 40%;
@@ -638,16 +641,17 @@
     width: 25%;
     height: 5%;
     background-color: white;
+    overflow: hidden;
   }
   100% {
     left: 40%;
     top: 15%;
     max-width: 25%;
-    max-height: auto;
+    max-height: 85%;
     width: 25%;
-    height: auto;
     border-radius: 20px;
     background-color: white;
+    overflow-y: auto;
   }
 }
 @keyframes oppa {

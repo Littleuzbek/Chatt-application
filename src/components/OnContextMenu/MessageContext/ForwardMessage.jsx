@@ -1,8 +1,9 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { chatActions } from "../../../redux/ChatSlice";
 import { uiActions } from "../../../redux/uiSlice";
 
 export default function ForwardMessage({ message }) {
+  const user = useSelector((state) => state.chat.user);
   const dispatch = useDispatch();
 
   const ForwardHandler = async () => {
@@ -10,5 +11,5 @@ export default function ForwardMessage({ message }) {
     dispatch(chatActions.setForwardingMessage(message));
   };
 
-  return <div onClick={() => ForwardHandler()}>Forward Message</div>;
+  return <div onClick={() => ForwardHandler()} style={user?.type === 'channel' ? {color: 'black'} : {}} >Forward Message</div>;
 }

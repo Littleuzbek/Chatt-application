@@ -1,20 +1,19 @@
 import React, { Fragment, useRef, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
-import { GiQueenCrown } from "react-icons/gi";
-import defaultUser from "../../../images/defaultUser.png";
 import { FaSortUp } from "react-icons/fa6";
 import { FaSortDown } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { GrStatusGood } from "react-icons/gr";
-import { FiMinusCircle } from "react-icons/fi";
 import { useSelector } from "react-redux";
-import { arrayRemove, deleteField, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
+import AboutMembers from "./AboutMembers";
 
-export default function AboutChannel({
+export default function AboutGroup({
   toggleMemberVal,
   onSetToggleMember,
   chosenUserVal,
+  existingMembers,
 }) {
   const [changeName, setChangeName] = useState(false);
   const [changeAbout, setChangeAbout] = useState(false);
@@ -24,21 +23,26 @@ export default function AboutChannel({
   const nameText = useRef();
   const aboutText = useRef();
   const currentUser = auth.currentUser;
-  const areYouAdmin = chosenUserVal?.channelInfo?.admin === currentUser.uid;
+  const areYouAdmin =
+    (chosenUserVal?.groupInfo?.admin || chosenUserVal?.channelInfo?.admin) ===
+    currentUser.uid;
 
   const aboutChangeHandler = async () => {
-    const channelId = user.value.uid;
+    const documentID = user.value.uid;
+    const members = existingMembers ? existingMembers : user.members;
+    const collection = user.type === "group" ? "userGroups" : "userChannels";
+    const infoType = user.type === "group" ? "groupInfo" : "channelInfo";
 
     if (aboutText?.current?.value !== "") {
       setLoadingAbout(true);
-      for (let i = 0; i < user.members.length; i++) {
-        await updateDoc(doc(db, "userChannels", user.members[i].uid), {
-          [channelId + ".channelInfo"]: {
+      for (let i = 0; i < members.length; i++) {
+        await updateDoc(doc(db, collection, members[i].uid), {
+          [documentID + `.${infoType}`]: {
             about: aboutText?.current?.value,
             admin: user.value.admin,
             displayName: user.value.displayName,
             photoURL: user.value.photoURL,
-            uid: channelId,
+            uid: documentID,
           },
         });
       }
@@ -51,18 +55,21 @@ export default function AboutChannel({
   };
 
   const nameChangeHandler = async () => {
-    const channelId = user.value.uid;
+    const documentID = user.value.uid;
+    const members = existingMembers ? existingMembers : user.members;
+    const collection = user.type === "group" ? "userGroups" : "userChannels";
+    const infoType = user.type === "group" ? "groupInfo" : "channelInfo";
 
     if (nameText?.current?.value !== "") {
       setLoadingName(true);
-      for (let i = 0; i < user.members.length; i++) {
-        await updateDoc(doc(db, "userChannels", user.members[i].uid), {
-          [channelId + ".channelInfo"]: {
+      for (let i = 0; i < members.length; i++) {
+        await updateDoc(doc(db, collection, members[i].uid), {
+          [documentID + `.${infoType}`]: {
             about: user.value.about,
             admin: user.value.admin,
             displayName: nameText?.current?.value,
             photoURL: user.value.photoURL,
-            uid: channelId,
+            uid: documentID,
           },
         });
       }
@@ -71,27 +78,6 @@ export default function AboutChannel({
       setChangeName(false);
     } else {
       setChangeName(false);
-    }
-  };
-
-  const deleteFromMembers = async (deletingUser) => {
-    const channelId = user?.value?.uid;
-
-    for (let i = 0; i < user?.members?.length; i++) {
-      if (deletingUser?.uid !== user?.members[i]?.uid) {
-        await updateDoc(doc(db, "userChannels", user?.members[i]?.uid), {
-          [channelId + ".members"]: arrayRemove({
-            displayName: deletingUser.displayName,
-            photoURL: deletingUser.photoURL,
-            uid: deletingUser.uid,
-          })
-        });
-      } else {
-        console.log('no');
-        await updateDoc(doc(db, "userChannels", user?.members[i]?.uid), {
-          [channelId]: deleteField(channelId),
-        });
-      }
     }
   };
 
@@ -104,8 +90,10 @@ export default function AboutChannel({
             <input type="text" ref={nameText} />
           ) : (
             <p>
-              {chosenUserVal?.channelInfo?.displayName
-                ? chosenUserVal?.channelInfo?.displayName
+              {chosenUserVal?.groupInfo?.displayName ||
+              chosenUserVal?.channelInfo?.displayName
+                ? chosenUserVal?.groupInfo?.displayName ||
+                  chosenUserVal?.channelInfo?.displayName
                 : user.value.displayName}
             </p>
           )}
@@ -131,9 +119,7 @@ export default function AboutChannel({
         <div>
           <p>Members</p>
           <p>
-            {chosenUserVal?.members
-              ? chosenUserVal?.members?.length
-              : user.members.length}
+            {existingMembers ? existingMembers?.length : user?.members?.length}
           </p>
         </div>
         {toggleMemberVal ? (
@@ -148,26 +134,7 @@ export default function AboutChannel({
       {toggleMemberVal && (
         <div className="membersList">
           {(chosenUserVal || user)?.members.map((member) => (
-            <div className="member" key={member?.uid}>
-              <img
-                src={member?.photoURL ? member?.photoURL : defaultUser}
-                alt=""
-              />
-              {user?.value?.admin === member?.uid ? (
-                <p>
-                  {member?.displayName}
-                  <GiQueenCrown className="actioN" />
-                </p>
-              ) : (
-                <p>
-                  {member?.displayName}
-                  {areYouAdmin && <FiMinusCircle
-                    className="actioN"
-                    onClick={() => deleteFromMembers(member)}
-                  />}
-                </p>
-              )}
-            </div>
+            <AboutMembers member={member} existingMembers={existingMembers} areYouAdmin={areYouAdmin} key={member?.uid}/>
           ))}
         </div>
       )}
@@ -178,9 +145,11 @@ export default function AboutChannel({
             <input type="text" ref={aboutText} />
           ) : (
             <p>
-              {chosenUserVal?.channelInfo?.about
-                ? chosenUserVal?.channelInfo?.about
-                : "..."}{" "}
+              {chosenUserVal?.groupInfo?.about ||
+              chosenUserVal?.channelInfo?.about
+                ? chosenUserVal?.groupInfo?.about ||
+                  chosenUserVal?.channelInfo?.about
+                : "..."}
             </p>
           )}
         </div>

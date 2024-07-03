@@ -1,4 +1,6 @@
 import "./ChatSection.css";
+import "./ChatSectionNight.css";
+import './ChatSectionMini.css'
 import Input from "./Input";
 import Messages from "./Messages";
 import Header from "./Header";
@@ -41,7 +43,13 @@ export default function ChatSection() {
           <div className="body">
             <Messages progressVal={progress} onProgress={setProgress} />
           </div>
-          {user?.type === 'channel' ? (user?.value?.admin === currentUser?.uid && <Input onProgress={setProgress} />) : <Input onProgress={setProgress} />}
+          {user?.type === "channel" ? (
+            user?.value?.admin === currentUser?.uid && (
+              <Input onProgress={setProgress} />
+            )
+          ) : (
+            <Input onProgress={setProgress} />
+          )}
         </>
       )}
     </div>

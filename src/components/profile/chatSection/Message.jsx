@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 export default function Message({ message, onContextMenu }) {
   const currentUser = auth.currentUser;
   const owner = message.senderId === currentUser?.uid;
+  const user = useSelector((state) => state.chat.user);
   const searchResult = useSelector((state) => state.chat.searchResult);
   const ref = useRef();
 
@@ -39,15 +40,16 @@ export default function Message({ message, onContextMenu }) {
 
   return (
     <div
-      className={`message ${owner && "owner"}`}
+      className={user.type === 'channel' ? 'message owner' : `message ${ owner && "owner"}`}
       ref={ref}
       name={message?.text}
     >
       <img
         src={
-          message?.senderId === currentUser?.uid
+          user.type === 'channel' ? user?.value?.photoURL :
+          (message?.senderId === currentUser?.uid
             ? currentUser?.photoURL || defaultUser
-            : message?.senderPic || defaultUser
+            : message?.senderPic || defaultUser)
         }
         alt=""
       />

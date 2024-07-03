@@ -13,6 +13,7 @@ const menuSlice = createSlice({
     newChannelMembers: [],
     newGroup: false,
     newChannel: false,
+    nightMode: false
   },
   reducers: {
     onToggleSettings(state, action) {
@@ -105,6 +106,9 @@ const menuSlice = createSlice({
     },
     onSetNewChannel(state,action){
       state.newChannel = action.payload;
+    },
+    onSetNightMode(state){
+      state.nightMode = !state.nightMode
     }
   },
 });

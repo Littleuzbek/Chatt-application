@@ -10,10 +10,12 @@ export default function AboutMedia({
   onViewContentHandler,
 }) {
   const messages = useSelector((state) => state.chat.messages);
+  const nightMode = useSelector(state => state.menu.nightMode);
+
   return (
     <Fragment>
       <FaAngleDown className="toInfo" onClick={() => onSetSection(false)} />
-      <div className="sectioN">
+      <div className={nightMode ? 'sectioNNight' : "sectioN"}>
         <div
           onClick={() => onSetCatogry("img")}
           style={

@@ -14,13 +14,14 @@ import { MdOutlineMenu } from "react-icons/md";
 import "./Search.css";
 import { useState } from "react";
 import defaultUser from "../../../images/defaultUser.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../redux/uiSlice";
 
 export default function Search() {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
   const [error, setError] = useState(false);
+  const nightMode = useSelector(state => state.menu.nightMode);
   const currentUser = auth.currentUser;
   const dispatch = useDispatch();
 
@@ -96,7 +97,7 @@ export default function Search() {
 
   return (
     <div className="searchSection">
-      <div className="search">
+      <div className={nightMode ? 'searchNight' : "search"}>
         <div
           className="menuBtn"
           onClick={() => dispatch(uiActions.setBackDrop(true))}

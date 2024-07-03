@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./ListSection.css";
+import "./ListSectionNight.css";
+import './ListSectionMini.css'
 import Search from "../Search/Search";
 import { auth, db } from "../../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -18,79 +20,62 @@ export default function ListSection() {
   const [timeOff, setTimeOff] = useState(false);
   const rightClick = useSelector((state) => state.ui.listClick);
   const triggerForChatDeleted = useSelector((state) => state.chat.chatDeleted);
+  const nightMode = useSelector(state => state.menu.nightMode);
+  const user = useSelector((state) => state.chat.user);
   const currentUser = auth.currentUser;
   const timeOut = useRef();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    try {
-      const getChats = () => {
-        const fetchUsers = onSnapshot(
-          doc(db, "userChats", currentUser.uid),
-          (doc) => {
-            if (doc.data()) {
-              setChats(doc.data());
-            }
+    const getChats = () => {
+      const fetchUsers = onSnapshot(
+        doc(db, "userChats", currentUser.uid),
+        (doc) => {
+          if (doc.data()) {
+            setChats(doc.data());
           }
-        );
+        }
+      );
 
-        const fetchGroups = onSnapshot(
-          doc(db, "userGroups", currentUser.uid),
-          (doc) => {
-            if (doc.data()) {
-              setGroups(doc.data());
-            }
+      const fetchGroups = onSnapshot(
+        doc(db, "userGroups", currentUser.uid),
+        (doc) => {
+          const arrr = Object.entries(doc.data());
+          if (arrr.length !== 0) {
+            setGroups(doc.data());
+          } else {
+            setGroups([]);
           }
-        );
+        }
+      );
 
-        const fetchChannels = onSnapshot(
-          doc(db, "userChannels", currentUser.uid),
-          (doc) => {
-            if (doc.data()) {
-              setChannels(doc.data());
-            }
+      const fetchChannels = onSnapshot(
+        doc(db, "userChannels", currentUser.uid),
+        (doc) => {
+          if (doc.data()) {
+            setChannels(doc.data());
           }
-        );
-        return () => {
-          fetchUsers();
-          fetchGroups();
-          fetchChannels();
-        };
+        }
+      );
+      return () => {
+        fetchUsers();
+        fetchGroups();
+        fetchChannels();
       };
-      currentUser.uid && getChats();
-    } catch (err) {
-      console.log(err);
-    }
+    };
+    currentUser.uid && getChats();
   }, [currentUser.uid, triggerForChatDeleted]);
 
   const selectHandler = (user) => {
-    if (user?.userInfo) {
-      dispatch(
-        chatActions.changeUser({
-          value: user.userInfo,
-          type: "user",
-        })
-      );
-    }
-    if (user?.groupInfo) {
-      dispatch(
-        chatActions.changeUser({
-          value: user.groupInfo,
-          type: "group",
-          members: user.members,
-        })
-      );
-    }
-
-    if (user?.channelInfo) {
-      dispatch(
-        chatActions.changeUser({
-          value: user.channelInfo,
-          type: "channel",
-          members: user.members,
-        })
-      );
-    }
+    dispatch(
+      chatActions.changeUser({
+        value: user.userInfo || user.groupInfo || user.channelInfo,
+        type:
+          (user.userInfo && "user") ||
+          (user.groupInfo && "group") ||
+          (user.channelInfo && "channel"),
+      })
+    );
   };
 
   const getPositionHandler = (e, user) => {
@@ -98,9 +83,13 @@ export default function ListSection() {
 
     setSelectedUser({
       chatId: user?.[0],
-      info: user?.[1]?.channelInfo || user?.[1]?.groupInfo ||  user?.[1]?.userInfo,
+      info:
+        user?.[1]?.channelInfo || user?.[1]?.groupInfo || user?.[1]?.userInfo,
       members: user?.[1]?.members,
-      type: (user?.[1]?.channelInfo && 'channel') || (user?.[1]?.groupInfo && 'group') || (user?.[1]?.userInfo && 'user')
+      type:
+        (user?.[1]?.channelInfo && "channel") ||
+        (user?.[1]?.groupInfo && "group") ||
+        (user?.[1]?.userInfo && "user"),
     });
     setPosition(() => ({ x: e.clientX, y: e.clientY }));
     dispatch(
@@ -128,31 +117,55 @@ export default function ListSection() {
     };
   }, [dispatch, timeOff, rightClick]);
 
-  try {
-    return (
-      <div className="List">
-        <Search />
-        {rightClick && (
-          <ListContext
-            leftVal={position.x}
-            topVal={position.y}
-            selectedUser={selectedUser}
-            onSetTimeOff={setTimeOff}
-          />
+  const all = Object.entries({
+    ...chats,
+    ...groups,
+    ...channels,
+  });
+
+  useEffect(() => {
+      if (user?.value?.uid) {
+        if(all){
+          const selectedChat = all?.find(
+            (use) =>
+            (use?.[1]?.userInfo?.uid ||
+              use?.[1]?.groupInfo?.uid ||
+              use?.[1]?.channelInfo?.uid ) === user?.value?.uid
+              );
+
+              if (!selectedChat) {
+                dispatch(chatActions.changeUser(false));
+          }
+      }
+    }
+  }, [user?.value, dispatch,all]);
+
+  return (
+    <div className={nightMode? 'ListNight' : "List"}>
+      <Search />
+      {rightClick && (
+        <ListContext
+          leftVal={position.x}
+          topVal={position.y}
+          selectedUser={selectedUser}
+          onSetTimeOff={setTimeOff}
+        />
+      )}
+      {all
+        ?.sort((a, b) => b[1].date - a[1].date)
+        ?.map(
+          (chat) =>
+            (chat?.[1]?.userInfo ||
+              chat?.[1]?.groupInfo ||
+              chat?.[1]?.channelInfo) && (
+              <User
+                chatVal={chat}
+                onSelect={selectHandler}
+                onGetPosition={getPositionHandler}
+                key={chat[0]}
+              />
+            )
         )}
-        {Object.entries(Object.assign(chats, groups, channels))
-          ?.sort((a, b) => b[1].date - a[1].date)
-          ?.map((chat) => (
-            <User
-              chatVal={chat}
-              onSelect={selectHandler}
-              onGetPosition={getPositionHandler}
-              key={chat[0]}
-            />
-          ))}
-      </div>
-    );
-  } catch (err) {
-    console.log(err);
-  }
+    </div>
+  );
 }

@@ -1,0 +1,45 @@
+.headerNight {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 8%;
+    background-color: rgb(55, 54, 54);
+    color: white;
+  }
+  
+  .headerNight > img {
+    width: 5.5%;
+    height: 90%;
+    border-radius: 50%;
+    margin: 0 0 0 4%;
+    cursor: pointer;
+    object-fit: cover;
+  }
+  
+  .headerNight > div {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 0 0 0 1%;
+    cursor: pointer;
+  }
+  
+  .headerNight > div > p:nth-child(1) {
+    font-weight: bolder;
+    font-size: 17.5px;
+  }
+  
+  .headerNight > input {
+    width: 20%;
+    padding: 3px 5px;
+    font-size: 18px;
+    border-radius: 20px;
+    color: white;
+    background-color: rgb(55, 54, 54);
+    border: 0.5px solid white;
+    animation: inp 0.3s ease;
+  }
+  
+  .headerNight > input:focus {
+    outline: none;
+  }

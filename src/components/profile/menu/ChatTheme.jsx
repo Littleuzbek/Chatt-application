@@ -10,6 +10,7 @@ import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 
 export default function ChatTheme() {
   const chatThemeValue = useSelector((state) => state.menu.chatThemeValue);
+  const nightMode = useSelector(state => state.menu.nightMode);
   const [wallPapers, setWallPapers] = useState(false);
   const [newWallPaper, setNewWallPaper] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -89,7 +90,7 @@ export default function ChatTheme() {
   };
 
   return (
-    <div className="chatTheme">
+    <div className={nightMode? "chatThemeNight" : "chatTheme"}>
       <div>
         <p>Chat Wallpapers</p>
         <CgClose

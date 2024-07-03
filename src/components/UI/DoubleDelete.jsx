@@ -32,7 +32,7 @@ export default function DoubleDelete() {
         }
       }
     }
-  }, [deletingChat,stopLoop]);
+  }, [deletingChat,stopLoop,currentUser.uid]);
 
   const DeleteChat = async () => {
     if (deletingChat.type === "user") {
@@ -59,60 +59,40 @@ export default function DoubleDelete() {
       dispatch(chatActions.setChatDeleted());
     }
 
-    if (deletingChat.type === "group") {
+    if (deletingChat.type === "group" || deletingChat.type === "channel") {
       const groupId = deletingChat?.chatId
       const deletingMember = deletingChat?.members;
-      const newAdmin = deletingChat.info.admin === currentUser.uid ? newAdmin : deletingChat.info.admin;
-      dispatch(uiActions.setDoubleDelete(false));
-      dispatch(chatActions.changeUser(false));
+      const admin = deletingChat.info.admin === currentUser.uid ? newAdmin : deletingChat.info.admin;
+      const collection = deletingChat.type === 'group' ? 'userGroups': 'userChannels';
+      const infoType = deletingChat.type === 'group' ? 'groupInfo': 'channelInfo';
+      
       for (let i = 0; i < deletingMember?.length; i++) {
         if (deletingMember[i]?.uid !== currentUser.uid) {
-          await updateDoc(doc(db, "userGroups", deletingMember[i]?.uid), {
+          await updateDoc(doc(db, collection, deletingMember[i]?.uid), {
             [groupId + ".members"]: arrayRemove({
               displayName: currentUser.displayName,
               photoURL: currentUser.photoURL,
               uid: currentUser.uid,
             }),
-            [groupId + '.groupInfo']: {
+            [groupId + `.${infoType}`]: {
               about: deletingChat.info.about,
-              admin: newAdmin,
+              admin: admin,
               displayName: deletingChat.info.displayName,
               photoURL: deletingChat.info.photoURL,
               uid: deletingChat.info.uid
             }
           });
         } else {
-          await updateDoc(doc(db, "userGroups", currentUser.uid), {
+          await updateDoc(doc(db, collection, currentUser.uid), {
             [groupId]: deleteField(groupId),
           });
         }
       }
-      dispatch(chatActions.setChatDeleted());
-    }
-
-    if (deletingChat.type === "channel") {
-      const groupId = deletingChat?.chatId;
-      const deletingMember = deletingChat?.members;
       dispatch(uiActions.setDoubleDelete(false));
       dispatch(chatActions.changeUser(false));
-
-      for (let i = 0; i < deletingMember?.length; i++) {
-        if (deletingMember[i]?.uid !== currentUser.uid) {
-          await updateDoc(doc(db, "userChannels", deletingMember[i]?.uid), {
-            [groupId + ".members"]: arrayRemove({
-              displayName: currentUser.displayName,
-              photoURL: currentUser.photoURL,
-              uid: currentUser.uid,
-            }),
-          });
-        } else {
-          await updateDoc(doc(db, "userChannels", currentUser.uid), {
-            [groupId]: deleteField(groupId),
-          });
-        }
-      }
       dispatch(chatActions.setChatDeleted());
     }
+
 
     setStop(true)
     setNewAdmin('')

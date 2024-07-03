@@ -19,6 +19,7 @@ export default function Header() {
   const user = useSelector((state) => state.chat.user);
   const chatId = useSelector((state) => state.chat.chatId);
   const messages = useSelector((state) => state.chat.messages);
+  const nightMode = useSelector(state => state.menu.nightMode);
   const currentUser = auth.currentUser;
   const displayName = user && user?.value.displayName;
   const timeOut = useRef();
@@ -83,7 +84,7 @@ export default function Header() {
   return (
     <Fragment>
       <div
-        className="header"
+        className={nightMode ? "headerNight" : "header"}
         onClick={() => dispatch(uiActions.setAbout(true))}
       >
         <img

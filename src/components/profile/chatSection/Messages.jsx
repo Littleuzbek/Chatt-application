@@ -1,5 +1,4 @@
 import React, {  Suspense, lazy, useEffect, useState } from "react";
-import Message from "./Message";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
@@ -7,9 +6,9 @@ import ProgressBar from "../../UI/ProgressBar";
 import SoloStatue from "../../../images/soloStatue.jpg";
 import { uiActions } from "../../../redux/uiSlice";
 import { chatActions } from "../../../redux/ChatSlice";
-// import { chatActions } from "../../../redux/ChatSlice";
+import MessageContext from "../../OnContextMenu/MessageContext/MessageContext";
 
-const MessageContext = lazy(() => import("../../OnContextMenu/MessageContext/MessageContext"));
+const Message = lazy(()=> import('./Message'))
 
 export default function Messages({ progressVal, onProgress }) {
   const [messages, setMessages] = useState([]);
@@ -65,7 +64,9 @@ export default function Messages({ progressVal, onProgress }) {
   return (
     <div className="messages">
       {messages?.map((m) => (
+        <Suspense fallback={'...'} key={m?.id}>
         <Message message={m} key={m?.id} onContextMenu={getPositionHandler} />
+        </Suspense>
       ))}
       {progressVal && (
         <div className="unloaded">
@@ -74,7 +75,6 @@ export default function Messages({ progressVal, onProgress }) {
           <ProgressBar progress={progressVal} />
         </div>
       )}
-      <Suspense>
         {rightClick && (
           <MessageContext
           leftVal={position.x}
@@ -82,7 +82,6 @@ export default function Messages({ progressVal, onProgress }) {
           messagesId={messagesId}
           />
           )}
-      </Suspense>
     </div>
   );
 }

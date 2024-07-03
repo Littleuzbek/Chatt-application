@@ -29,7 +29,7 @@ export default function Input({ onProgress }) {
   const timeOff = useRef();
 
   const UpdateUserListMessage = async (text) => {
-    if (user.type === "user") {
+    if (user?.type === "user") {
       await updateDoc(doc(db, "userChats", currentUser.uid), {
         [ID + ".lastMessage"]: {
           text,
@@ -37,7 +37,7 @@ export default function Input({ onProgress }) {
         [ID + ".date"]: serverTimestamp(),
       });
 
-      await updateDoc(doc(db, "userChats", user.value.uid), {
+      await updateDoc(doc(db, "userChats", user?.value?.uid), {
         [ID + ".lastMessage"]: {
           text,
         },
@@ -58,7 +58,7 @@ export default function Input({ onProgress }) {
         [ID + ".date"]: serverTimestamp(),
       });
 
-      for (let i = 0; i < user.members.length; i++) {
+      for (let i = 0; i < user?.members?.length; i++) {
         await updateDoc(doc(db, "userGroups", user.members[i].uid), {
           [ID + ".lastMessage"]: {
             text,
@@ -216,6 +216,52 @@ export default function Input({ onProgress }) {
       }
     }
   };
+
+  // const uploadPic = async()=>{
+  //   const sourceType = media?.type.split("/");
+  //   const storageRef = ref(storage, uuid());
+  //     const uploadTask = uploadBytesResumable(storageRef, media);
+  //     setMedia(null);
+
+  //     uploadTask.on(
+  //       "state_changed",
+  //       (snapshot) => {
+  //         const progress =
+  //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //         onProgress(progress);
+  //         switch (snapshot.state) {
+  //           case "paused":
+  //             console.log("Upload is paused");
+  //             break;
+  //           case "running":
+  //             console.log("Upload is running");
+  //             break;
+
+  //           default:
+  //         }
+  //       },
+  //       (error) => {
+  //         console.log(error);
+  //       },
+  //       async () => {
+  //         await getDownloadURL(uploadTask.snapshot.ref).then(
+  //           async (downloadURL) => {
+  //             if (sourceType[0] === "image") {
+  //               console.log(downloadURL);
+  //               console.log(sourceType[0]);
+  //               await updateDoc(doc(db, "defaultData", 'defaultWallpapers'), {
+  //                 wallpapers: arrayUnion({
+  //                   id: uuid(),
+  //                   wallPaperURL: downloadURL,
+  //                 }),
+  //               })
+  //                 .catch((err) => console.log(err));
+  //               }
+  //             }
+  //           );
+  //         }
+  //       );
+  // }
 
   return (
     <div className="sendMessage">

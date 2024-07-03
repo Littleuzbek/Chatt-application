@@ -11,8 +11,8 @@ import AboutMedia from "./AboutMedia";
 import defaultUser from "../../../images/defaultUser.png";
 import { v4 as uuid } from "uuid";
 import "./About.css";
-import AboutGroup from "./AboutGroup";
-import AboutChannel from "./AboutChannel";
+import "./AboutNight.css";
+import AboutsGroupAndChannel from "./AboutsGroupAndChannel";
 import AboutUser from "./AboutUser";
 
 export default function About() {
@@ -21,6 +21,7 @@ export default function About() {
   const [section, setSection] = useState(false);
   const [toggleMember, setToggleMember] = useState(false);
   const user = useSelector((state) => state.chat.user);
+  const nightMode = useSelector(state => state.menu.nightMode);
   const dispatch = useDispatch();
   const currentUser = auth.currentUser;
 
@@ -100,7 +101,7 @@ export default function About() {
         onClick={() => dispatch(uiActions.setAbout(false))}
       >
         <div
-          className="chosenUserInfo"
+          className={nightMode? 'chosenUserInfoNight' : "chosenUserInfo"}
           onClick={(e) => e.stopPropagation()}
           style={toggleMember ? { height: "90%" } : {}}
         >
@@ -124,21 +125,14 @@ export default function About() {
             />
           </div>
           {section || (
-            <div className="infO">
+            <div className={nightMode? 'infONight' : "infO"}>
               {user.type !== "user" ? (
-                user.type !== "group" ? (
-                  <AboutChannel 
-                  chosenUserVal={chosenChat}
-                  onSetToggleMember={setToggleMember}
-                  toggleMemberVal={toggleMember}
-                  />
-                ) : (
-                  <AboutGroup
+                  <AboutsGroupAndChannel
                     chosenUserVal={chosenChat}
                     onSetToggleMember={setToggleMember}
                     toggleMemberVal={toggleMember}
+                    existingMembers={chosenChat?.members}
                   />
-                )
               ) : (
                 <AboutUser chosenUserVal={chosenChat} />
               )}
