@@ -12,6 +12,7 @@ import defaultUser from "../../../images/defaultUser.png";
 import { v4 as uuid } from "uuid";
 import "./About.css";
 import "./AboutNight.css";
+import './AboutMini.css'
 import AboutsGroupAndChannel from "./AboutsGroupAndChannel";
 import AboutUser from "./AboutUser";
 

@@ -10,17 +10,40 @@
     height: 10%;
   }
   .header > img {
-    width: 13%;
+    width: 17%;
     margin: 0 0 0 1%;
   }
   .header > div {
-    width: 70%;
+    width: 60%;
   }
   .backToChat {
     width: 10%;
     font-size: 25px;
   }
-  .btn:nth-of-type(2){
+  .btn:nth-of-type(2) {
     display: none;
   }
+  .btn:nth-last-of-type(1) {
+    font-size: 30px !important;
+    width: 10%;
+  }
+  .message > img {
+    width: 13%;
+  }
+  .message > div > img,
+  .message > div > video {
+    max-width: 100%;
+  }
+  .message > div > p {
+    font-size: 16px;
+  }
+.sendMessage > div {
+  width: 95%;
+}
+.sendMessage > div > input {
+  padding: 10px;
+}
+.emojI {
+  display: none;
+}
 }

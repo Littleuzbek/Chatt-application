@@ -10,29 +10,39 @@
 }
 
 @keyframes openAnimationMini {
-    from {
-      left: 0;
-      top: 15%;
-      width: 10%;
-      height: 10%;
-      border-radius: 20px;
-      background-color: white;
-      overflow: hidden;
-    }
-    to {
-      left: 5%;
-      top: 15%;
-      max-height: 85%;
-      width: 90%;
-      height: 50%;
-      border-radius: 20px;
-      background-color: white;
-      overflow-y: auto;
-    }
+  0% {
+    left: 0;
+    top: 15%;
+    width: 10%;
+    height: 10%;
+    border-radius: 20px;
+    background-color:  white;
+    overflow: hidden;
+  }
+  99% {
+    left: 5%;
+    top: 15%;
+    max-height: 85%;
+    width: 90%;
+    height: 50%;
+    border-radius: 20px;
+    background-color:  white;
+    color: white;
+  }
+  100%{
+    left: 5%;
+    top: 15%;
+    max-height: 85%;
+    width: 90%;
+    height: auto;
+    border-radius: 20px;
+    background-color:  white;
+    overflow-y: auto;
+  }
   }
 
   @keyframes openAnimationMiniNight {
-    from {
+    0% {
       left: 0;
       top: 15%;
       width: 10%;
@@ -41,12 +51,22 @@
       background-color:  rgb(55, 54, 54);
       overflow: hidden;
     }
-    to {
+    99% {
       left: 5%;
       top: 15%;
       max-height: 85%;
       width: 90%;
       height: 50%;
+      border-radius: 20px;
+      background-color:  rgb(55, 54, 54);
+      color: white;
+    }
+    100%{
+      left: 5%;
+      top: 15%;
+      max-height: 85%;
+      width: 90%;
+      height: auto;
       border-radius: 20px;
       background-color:  rgb(55, 54, 54);
       color: white;
