@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import "./Auth.css";
+import "./AuthMini.css"
 import { CiCirclePlus } from "react-icons/ci";
 import { useState } from "react";
 import Login from "./Login";
