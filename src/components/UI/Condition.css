@@ -5,7 +5,7 @@
     position: absolute;
     width: auto;
     height: 50px;
-    left: 45%;
+        justify-self: center;
     bottom: 100px;
     z-index: 2000000000000;
     background-color: white;

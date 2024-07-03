@@ -76,6 +76,7 @@ export default function ListSection() {
           (user.channelInfo && "channel"),
       })
     );
+    dispatch(chatActions.setSelected(true))
   };
 
   const getPositionHandler = (e, user) => {

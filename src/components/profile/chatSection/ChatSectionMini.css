@@ -1,5 +1,26 @@
 @media only screen and (max-width: 425px) {
-    .chatSection{
-        display: none;
-    }
+  .chatSection {
+    width: 100%;
+    position: absolute;
+  }
+  .noChatSection {
+    display: none;
+  }
+  .header {
+    height: 10%;
+  }
+  .header > img {
+    width: 13%;
+    margin: 0 0 0 1%;
+  }
+  .header > div {
+    width: 70%;
+  }
+  .backToChat {
+    width: 10%;
+    font-size: 25px;
+  }
+  .btn:nth-of-type(2){
+    display: none;
+  }
 }

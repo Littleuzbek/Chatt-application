@@ -9,6 +9,17 @@
   background-position: center;
 }
 
+.noChatSection{
+  display: flex;
+  flex-direction: column;
+  width: 65%;
+  height: 100%;
+  overflow-y: hidden;
+  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+}
+
 .header {
   display: flex;
   align-items: center;

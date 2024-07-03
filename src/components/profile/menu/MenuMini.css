@@ -3,6 +3,10 @@
         width: 100%;
         animation: openAnimationMini .8s ease forwards;
     }
+    .menuNight{
+      width: 100%;
+      animation: openAnimationMiniNight .8s ease forwards;
+    }
 }
 
 @keyframes openAnimationMini {
@@ -23,6 +27,29 @@
       height: 50%;
       border-radius: 20px;
       background-color: white;
+      overflow-y: auto;
+    }
+  }
+
+  @keyframes openAnimationMiniNight {
+    from {
+      left: 0;
+      top: 15%;
+      width: 10%;
+      height: 10%;
+      border-radius: 20px;
+      background-color:  rgb(55, 54, 54);
+      overflow: hidden;
+    }
+    to {
+      left: 5%;
+      top: 15%;
+      max-height: 85%;
+      width: 90%;
+      height: 50%;
+      border-radius: 20px;
+      background-color:  rgb(55, 54, 54);
+      color: white;
       overflow-y: auto;
     }
   }

@@ -9,6 +9,7 @@ import { auth, db } from "../../../firebase";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IoPersonAdd } from "react-icons/io5";
 import { CgClose } from "react-icons/cg";
+import { FaArrowLeft } from "react-icons/fa6";
 import { chatActions } from "../../../redux/ChatSlice";
 
 export default function Header() {
@@ -19,7 +20,7 @@ export default function Header() {
   const user = useSelector((state) => state.chat.user);
   const chatId = useSelector((state) => state.chat.chatId);
   const messages = useSelector((state) => state.chat.messages);
-  const nightMode = useSelector(state => state.menu.nightMode);
+  const nightMode = useSelector((state) => state.menu.nightMode);
   const currentUser = auth.currentUser;
   const displayName = user && user?.value.displayName;
   const timeOut = useRef();
@@ -87,6 +88,14 @@ export default function Header() {
         className={nightMode ? "headerNight" : "header"}
         onClick={() => dispatch(uiActions.setAbout(true))}
       >
+        <FaArrowLeft
+          className="backToChat"
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch(chatActions.changeUser(false));
+            dispatch(chatActions.setSelected(false));
+          }}
+        />
         <img
           src={chosenUser?.photoURL ? chosenUser?.photoURL : defaultUser}
           alt=""

@@ -1,6 +1,6 @@
 import "./ChatSection.css";
 import "./ChatSectionNight.css";
-import './ChatSectionMini.css'
+import "./ChatSectionMini.css";
 import Input from "./Input";
 import Messages from "./Messages";
 import Header from "./Header";
@@ -15,6 +15,7 @@ export default function ChatSection() {
   const currentUser = auth.currentUser;
   const user = useSelector((state) => state.chat.user);
   const chatThemeValue = useSelector((state) => state.menu.chatThemeValue);
+  const selected = useSelector((state) => state.chat.selected);
 
   useEffect(() => {
     const fetchWallPaperInUse = async () => {
@@ -30,7 +31,7 @@ export default function ChatSection() {
 
   return (
     <div
-      className="chatSection"
+      className={selected? 'chatSection' : "noChatSection"}
       style={{
         backgroundImage: `url(${
           chatThemeValue === "" ? wallPaper?.inUse : chatThemeValue

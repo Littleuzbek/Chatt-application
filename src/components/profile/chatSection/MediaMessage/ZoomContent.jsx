@@ -4,23 +4,13 @@ import { CgZoomIn } from "react-icons/cg";
 import { BiZoomOut } from "react-icons/bi";
 import Backdrop from "../../../UI/Backdrop";
 
+
 export default function ZoomContent() {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [imgHeight, setImgHeight] = useState(false);
   const viewContnetValue = useSelector((state) => state.chat.viewContentValue);
   const imgRef = useRef(null);
-
-  window.addEventListener("keydown", (e) => {
-    if (
-      e.code === "ControlLeft" ||
-      e.code === "ControlRight" ||
-      e.code === "ShiftLeft" ||
-      e.code === "ShiftRight"
-    ) {
-      return;
-    }
-  });
 
   const ZoomInOut = (wheelValue) => {
     const zoomInInt = Math.trunc(scale);

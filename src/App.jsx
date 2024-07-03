@@ -1,7 +1,5 @@
 import React from "react";
 import "./App.css";
-// import { useMutation } from '@tanstack/react-query';
-// import {sendData} from './http-events'
 import Auth from "./components/Authorization/Auth";
 import Profile from "./components/profile/Profile";
 import { useDispatch, useSelector } from "react-redux";

@@ -90,3 +90,13 @@
   width: 15%;
   color: white;
 }
+
+@media only screen and (max-width: 425px) {
+  .ViewContent > .normalSize{
+    max-width: 70%;
+  }
+  
+  .ViewContent > .overSize{
+    max-width: 70%;
+  }
+}
