@@ -106,9 +106,9 @@ export default function About() {
           onClick={(e) => e.stopPropagation()}
           style={toggleMember ? { height: "100%"} : {}}
         >
-          <div className={section ? 'noImg' : (toggleMember && "smallContainer")}>
+          <div className={section ? 'noImg' : `${toggleMember ? "smallContainer" : ''}`}>
             <img
-            className={toggleMember && "smallImg"}
+            className={toggleMember ? "smallImg" : ''}
               src={
                 chosenChat?.groupInfo?.photoURL ||
                 chosenChat?.channelInfo?.photoURL ||

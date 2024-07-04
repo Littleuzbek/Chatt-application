@@ -2,7 +2,6 @@
   .chatSection {
     width: 100%;
     position: absolute;
-    z-index: 2;
   }
   .noChatSection {
     display: none;
