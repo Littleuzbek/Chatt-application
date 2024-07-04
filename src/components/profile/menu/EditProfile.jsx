@@ -21,6 +21,7 @@ export default function EditProfile() {
   const [img, setImg] = useState("");
   const [imgFile, setImgFile] = useState("");
   const newProfileImg = useSelector((state) => state.menu.newProfileImg);
+  const nightMode = useSelector(state=>state.menu.nightMode);
   const name = useRef();
   const surname = useRef();
   const aboutYou = useRef();
@@ -155,7 +156,7 @@ export default function EditProfile() {
   };
 
   return (
-    <div className="editProfile">
+    <div className={nightMode? 'editProfileNight' : "editProfile"}>
       <div>
         <FaArrowLeft
           className="backtomenu"

@@ -1,0 +1,11 @@
+@media only screen and (max-width: 425px) {
+  .addMembers > div:nth-child(1) {
+    width: 90%;
+  }
+.addingMember > img {
+    width: 18%;
+}
+.addMemberBtn{
+    width: 90%;
+}
+}

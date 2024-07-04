@@ -129,7 +129,7 @@
     animation: quitSettings 0.5s ease forwards !important;
   }
   
-  .editProfile {
+  .editProfileNight {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -145,7 +145,7 @@
     animation: settings 0.5s ease forwards !important;
   }
   
-  .editProfile > div:nth-child(1) {
+  .editProfileNight > div:nth-child(1) {
     display: flex;
     align-items: center;
     width: 100%;
@@ -172,7 +172,7 @@
     cursor: pointer;
   }
   
-  .editProfile > div:nth-child(1) > img {
+  .editProfileNight > div:nth-child(1) > img {
     width: 30%;
     height: 100%;
     border-radius: 50%;
@@ -185,13 +185,13 @@
     background-color: white;
   }
   
-  .editProfile > div {
+  .editProfileNight > div {
     width: 100%;
     height: 12%;
     padding: 0 10%;
   }
   
-  .editProfile > div > input {
+  .editProfileNight > div > input {
     width: 100%;
     height: 60%;
     border-radius: 10px;
@@ -201,11 +201,11 @@
     outline: 1px solid rgb(158, 156, 156);
   }
   
-  .editProfile > div > input:focus {
+  .editProfileNight > div > input:focus {
     box-shadow: 0 0 10px black;
   }
   
-  .editProfile > button {
+  .editProfileNight > button {
     width: 25%;
     height: 7%;
     font-size: 16px;
@@ -216,11 +216,11 @@
     transition: 0.2s;
   }
   
-  .editProfile > button:hover {
+  .editProfileNight > button:hover {
     box-shadow: 0 0 10px rgb(158, 156, 156);
   }
   
-  .editProfile > .loader {
+  .editProfileNight > .loader {
     position: absolute;
     width: 100px;
     height: 100px;
@@ -230,8 +230,8 @@
     color: rgb(0, 0, 244);
   }
   
-  .editProfile > .loader:before,
-  .editProfile > .loader:after {
+  .editProfileNight > .loader:before,
+  .editProfileNight > .loader:after {
     content: "";
     display: block;
     position: absolute;
@@ -243,7 +243,7 @@
     transform: rotateX(70deg);
     animation: 1s spin linear infinite;
   }
-  .editProfile > .loader:after {
+  .editProfileNight > .loader:after {
     color: #ff3d00;
     transform: rotateY(70deg);
     animation-delay: 0.4s;

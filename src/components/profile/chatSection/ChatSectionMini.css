@@ -2,6 +2,7 @@
   .chatSection {
     width: 100%;
     position: absolute;
+    z-index: 2;
   }
   .noChatSection {
     display: none;
@@ -37,13 +38,22 @@
   .message > div > p {
     font-size: 16px;
   }
-.sendMessage > div {
-  width: 95%;
-}
-.sendMessage > div > input {
-  padding: 10px;
-}
-.emojI {
-  display: none;
-}
+  .sendMessage {
+    height: 12%;
+  }
+  .sendMessage > div {
+    width: 95%;
+  }
+  .sendMessage > div > input {
+    padding: 10px;
+  }
+  .emojI {
+    display: none;
+  }
+  .beforeSendItem {
+    width: 95%;
+  }
+  .beforeSendItem > .btns > button:hover {
+    border-radius: 0px;
+  }
 }

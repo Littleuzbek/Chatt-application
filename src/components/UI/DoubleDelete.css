@@ -55,3 +55,9 @@
 .doubleDelete > div > div:nth-last-child(1) > button:nth-of-type(2):hover {
     background-color: #ffa2a2;
 }
+
+@media only screen and (max-width: 425px) {
+.doubleDelete > div {
+    width: 70%;
+}
+}

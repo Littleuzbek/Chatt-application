@@ -1,5 +1,6 @@
 import React from "react";
 import "./AddMembers.css";
+import "./AddMembersMini.css";
 import { useEffect, useState } from "react";
 import {
   doc,

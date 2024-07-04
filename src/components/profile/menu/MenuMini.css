@@ -1,12 +1,55 @@
 @media only screen and (max-width: 425px) {
-    .menu{
-        width: 100%;
-        animation: openAnimationMini .8s ease forwards;
-    }
-    .menuNight{
-      width: 100%;
-      animation: openAnimationMiniNight .8s ease forwards;
-    }
+  .menu {
+    width: 100%;
+    animation: openAnimationMini 0.8s ease forwards;
+  }
+  .menuNight {
+    width: 100%;
+    animation: openAnimationMiniNight 0.8s ease forwards;
+  }
+  .menuu {
+    width: 90%;
+    max-width: 100%;
+    left: 5%;
+    top: 15%;
+  }
+  .menuuNight {
+    width: 90%;
+    max-width: 100%;
+    left: 5%;
+    top: 15%;
+  }
+  .options > div:hover {
+    background-color: transparent;
+  }
+  .optionsNight > div:hover {
+    background-color: transparent;
+  }
+  .chatTheme{
+    width: 100%;
+  }
+  .tryWallpaper{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+  }
+  .tryWallpaper > button{
+    width: 30%;
+    height: 5%;
+    border-radius: 20px;
+    font-weight: bold;
+    margin: 10px;
+  }
+  .noWallpaper{
+    display: none;
+  }
 }
 
 @keyframes openAnimationMini {
@@ -16,7 +59,7 @@
     width: 10%;
     height: 10%;
     border-radius: 20px;
-    background-color:  white;
+    background-color: white;
     overflow: hidden;
   }
   99% {
@@ -26,50 +69,50 @@
     width: 90%;
     height: 50%;
     border-radius: 20px;
-    background-color:  white;
+    background-color: white;
     color: white;
   }
-  100%{
+  100% {
     left: 5%;
     top: 15%;
     max-height: 85%;
     width: 90%;
     height: auto;
     border-radius: 20px;
-    background-color:  white;
+    background-color: white;
     overflow-y: auto;
   }
-  }
+}
 
-  @keyframes openAnimationMiniNight {
-    0% {
-      left: 0;
-      top: 15%;
-      width: 10%;
-      height: 10%;
-      border-radius: 20px;
-      background-color:  rgb(55, 54, 54);
-      overflow: hidden;
-    }
-    99% {
-      left: 5%;
-      top: 15%;
-      max-height: 85%;
-      width: 90%;
-      height: 50%;
-      border-radius: 20px;
-      background-color:  rgb(55, 54, 54);
-      color: white;
-    }
-    100%{
-      left: 5%;
-      top: 15%;
-      max-height: 85%;
-      width: 90%;
-      height: auto;
-      border-radius: 20px;
-      background-color:  rgb(55, 54, 54);
-      color: white;
-      overflow-y: auto;
-    }
+@keyframes openAnimationMiniNight {
+  0% {
+    left: 0;
+    top: 15%;
+    width: 10%;
+    height: 10%;
+    border-radius: 20px;
+    background-color: rgb(55, 54, 54);
+    overflow: hidden;
   }
+  99% {
+    left: 5%;
+    top: 15%;
+    max-height: 85%;
+    width: 90%;
+    height: 50%;
+    border-radius: 20px;
+    background-color: rgb(55, 54, 54);
+    color: white;
+  }
+  100% {
+    left: 5%;
+    top: 15%;
+    max-height: 85%;
+    width: 90%;
+    height: auto;
+    border-radius: 20px;
+    background-color: rgb(55, 54, 54);
+    color: white;
+    overflow-y: auto;
+  }
+}

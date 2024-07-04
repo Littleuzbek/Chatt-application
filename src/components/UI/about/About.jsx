@@ -104,10 +104,11 @@ export default function About() {
         <div
           className={nightMode? 'chosenUserInfoNight' : "chosenUserInfo"}
           onClick={(e) => e.stopPropagation()}
-          style={toggleMember ? { height: "90%" } : {}}
+          style={toggleMember ? { height: "100%"} : {}}
         >
-          <div>
+          <div className={section ? 'noImg' : (toggleMember && "smallContainer")}>
             <img
+            className={toggleMember && "smallImg"}
               src={
                 chosenChat?.groupInfo?.photoURL ||
                 chosenChat?.channelInfo?.photoURL ||
@@ -124,6 +125,10 @@ export default function About() {
                 )
               }
             />
+          <CgClose
+            className={toggleMember? "closeAboutt relocation" : 'closeAboutt'}
+            onClick={() => dispatch(uiActions.setAbout(false))}
+          />
           </div>
           {section || (
             <div className={nightMode? 'infONight' : "infO"}>

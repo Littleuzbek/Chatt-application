@@ -29,60 +29,48 @@ export default function Input({ onProgress }) {
   const timeOff = useRef();
 
   const UpdateUserListMessage = async (text) => {
-    if (user?.type === "user") {
-      await updateDoc(doc(db, "userChats", currentUser.uid), {
-        [ID + ".lastMessage"]: {
-          text,
-        },
-        [ID + ".date"]: serverTimestamp(),
-      });
+      const collection = user?.type === 'group' ? 'userGroups' : 'userChannels';
+      
+      if (user?.type === "user") {
+        await updateDoc(doc(db, "userChats", currentUser.uid), {
+          [ID + ".lastMessage"]: {
+            text,
+          },
+          [ID + ".date"]: serverTimestamp(),
+        });
 
-      await updateDoc(doc(db, "userChats", user?.value?.uid), {
-        [ID + ".lastMessage"]: {
-          text,
-        },
-        [ID + ".date"]: serverTimestamp(),
-        [ID + ".userInfo"]: {
-          uid: currentUser.uid,
-          displayName: currentUser.displayName,
-          photoURL: currentUser.photoURL,
-        },
-      });
+        await updateDoc(doc(db, "userChats", user?.value?.uid), {
+          [ID + ".lastMessage"]: {
+            text,
+          },
+          [ID + ".date"]: serverTimestamp(),
+          [ID + ".userInfo"]: {
+            uid: currentUser.uid,
+            displayName: currentUser.displayName,
+            photoURL: currentUser.photoURL,
+          },
+        });
     }
-
-    if (user.type === "group") {
-      await updateDoc(doc(db, "userGroups", currentUser.uid), {
+    
+    if (user.type === "group" || user.type === 'channel') {
+      await updateDoc(doc(db, collection, currentUser.uid), {
         [ID + ".lastMessage"]: {
           text,
         },
         [ID + ".date"]: serverTimestamp(),
       });
-
+      
       for (let i = 0; i < user?.members?.length; i++) {
-        await updateDoc(doc(db, "userGroups", user.members[i].uid), {
-          [ID + ".lastMessage"]: {
-            text,
-          },
-          [ID + ".date"]: serverTimestamp(),
-        });
+        try{
+          await updateDoc(doc(db, collection, user.members[i].uid), {
+            [ID + ".lastMessage"]: {
+              text,
+            },
+            [ID + ".date"]: serverTimestamp(),
+          });
+        }catch(err){
+          console.log();
       }
-    }
-
-    if (user.type === "channel") {
-      await updateDoc(doc(db, "userChannels", currentUser.uid), {
-        [ID + ".lastMessage"]: {
-          text,
-        },
-        [ID + ".date"]: serverTimestamp(),
-      });
-
-      for (let i = 0; i < user.members.length; i++) {
-        await updateDoc(doc(db, "userChannels", user.members[i].uid), {
-          [ID + ".lastMessage"]: {
-            text,
-          },
-          [ID + ".date"]: serverTimestamp(),
-        });
       }
     }
   };

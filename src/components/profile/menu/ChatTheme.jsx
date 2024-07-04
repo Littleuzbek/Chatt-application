@@ -7,6 +7,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuid } from "uuid";
 import { auth, db, storage } from "../../../firebase";
 import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import { uiActions } from "../../../redux/uiSlice";
 
 export default function ChatTheme() {
   const chatThemeValue = useSelector((state) => state.menu.chatThemeValue);
@@ -88,7 +89,7 @@ export default function ChatTheme() {
       console.log(err);
     }
   };
-
+console.log(chatThemeValue);
   return (
     <div className={nightMode? "chatThemeNight" : "chatTheme"}>
       <div>
@@ -108,9 +109,12 @@ export default function ChatTheme() {
         value={""}
         id="addWallpaper"
         onChange={(e) => {
+          if(e.target.files[0].type.split('/').at(0) !== 'image'){
+            dispatch(uiActions.setCondition("Please enter only image file"));
+          }else{
           setNewWallPaper(e.target.files[0]);
           UploadWallpaper(e.target.files[0]);
-        }}
+        }}}
       />
 
       {chatThemeValue === "" ? (
@@ -145,6 +149,7 @@ export default function ChatTheme() {
                 alt="..."
                 key={wallPapers?.id}
                 onClick={() => {
+                  console.log('hello');
                   setNewWallPaper(false);
                   dispatch(
                     menuActions.onSetChatThemeValue(wallPapers?.wallPaperURL)
@@ -153,6 +158,17 @@ export default function ChatTheme() {
               />
             ))}
         </div>
+      </div>
+      <div className={chatThemeValue !== ''? 'tryWallpaper' : "noWallpaper"} style={{backgroundImage: `url(${chatThemeValue})`}}>
+      <button
+            onClick={() => {
+              setNewWallPaper(false);
+              dispatch(menuActions.onSetChatThemeValue(""));
+            }}
+          >
+            Remove
+          </button>
+          <button onClick={() => SaveWallpaper()}>Save</button>
       </div>
     </div>
   );
