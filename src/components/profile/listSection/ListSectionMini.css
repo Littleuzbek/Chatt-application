@@ -5,4 +5,7 @@
     .ListNight{
         width: 100%;
     }
+    .user:hover{
+        background-color: none;
+    }
 }
