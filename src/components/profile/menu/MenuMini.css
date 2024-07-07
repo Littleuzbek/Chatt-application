@@ -1,4 +1,4 @@
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 450px) {
   .menu {
     width: 100%;
     animation: openAnimationMini 0.6s ease forwards;
