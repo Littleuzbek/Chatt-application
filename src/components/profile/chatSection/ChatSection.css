@@ -96,8 +96,14 @@
   height: 40px;
   border-radius: 50%;
   margin: 0 5px;
-  object-fit: cover;
+  -webkit-user-drag: none;
 }
+/* .message > img::after {
+  position: absolute;
+  width: 5%;
+  height: ;
+  background-color: black;
+} */
 .message > div{
   max-width: 50%;
   word-break: break-word;

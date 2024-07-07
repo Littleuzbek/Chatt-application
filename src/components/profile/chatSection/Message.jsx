@@ -37,16 +37,16 @@ export default function Message({ message, onContextMenu }) {
       behavior: "smooth",
     });
   }, [ref]);
-
+  
   return (
     <div
-      className={
-        user.type === "channel"
-          ? "message owner"
-          : `message ${owner && "owner"}`
-      }
-      ref={ref}
-      name={message?.text}
+    className={
+      user.type === "channel"
+      ? "message owner"
+      : `message ${owner && "owner"}`
+    }
+    ref={ref}
+    name={message?.text}
     >
       <img
         src={
