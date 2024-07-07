@@ -40,6 +40,7 @@ export default function DoubleDelete() {
       const combinedId = deletingChat?.chatId;
       dispatch(uiActions.setDoubleDelete(false));
       dispatch(chatActions.changeUser(false));
+      dispatch(chatActions.setSelected(false));
 
       if (checked) {
         await updateDoc(doc(db, "userChats", currentUser.uid), {
@@ -56,26 +57,29 @@ export default function DoubleDelete() {
           [combinedId]: deleteField(combinedId),
         });
       }
-      dispatch(chatActions.setChatDeleted());
     }
 
     if (deletingChat.type === "group" || deletingChat.type === "channel") {
-      const groupId = deletingChat?.chatId
+      const chatID = deletingChat?.chatId
       const deletingMember = deletingChat?.members;
       const admin = deletingChat.info.admin === currentUser.uid ? newAdmin : deletingChat.info.admin;
       const collection = deletingChat.type === 'group' ? 'userGroups': 'userChannels';
       const infoType = deletingChat.type === 'group' ? 'groupInfo': 'channelInfo';
-      
+      const linkOrAbout = deletingChat.type === 'group' ? 'about' : 'linkName';
+      dispatch(uiActions.setDoubleDelete(false));
+      dispatch(chatActions.changeUser(false));
+      dispatch(chatActions.setSelected(false));
+
       for (let i = 0; i < deletingMember?.length; i++) {
         if (deletingMember[i]?.uid !== currentUser.uid) {
           await updateDoc(doc(db, collection, deletingMember[i]?.uid), {
-            [groupId + ".members"]: arrayRemove({
+            [chatID + ".members"]: arrayRemove({
               displayName: currentUser.displayName,
               photoURL: currentUser.photoURL,
               uid: currentUser.uid,
             }),
-            [groupId + `.${infoType}`]: {
-              about: deletingChat.info.about,
+            [chatID + `.${infoType}`]: {
+              [linkOrAbout]: deletingChat.info.about || deletingChat.info.linkName,
               admin: admin,
               displayName: deletingChat.info.displayName,
               photoURL: deletingChat.info.photoURL,
@@ -84,13 +88,11 @@ export default function DoubleDelete() {
           });
         } else {
           await updateDoc(doc(db, collection, currentUser.uid), {
-            [groupId]: deleteField(groupId),
+            [chatID]: deleteField(chatID),
           });
         }
       }
-      dispatch(uiActions.setDoubleDelete(false));
-      dispatch(chatActions.changeUser(false));
-      dispatch(chatActions.setChatDeleted());
+      
     }
 
 

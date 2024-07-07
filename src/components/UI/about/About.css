@@ -63,27 +63,28 @@
     overflow: auto;
 }
 
-.aboutAbout,
+.aboutLinkName,
 .aboutName {
     display: flex;
     justify-content: space-between;
 }
 
-.aboutAbout > div > p:nth-child(1),
+.aboutLinkName > div > p:nth-child(1),
 .aboutName > div > p:nth-child(1){
     font-size: 14px;
     font-weight: 500;
 }
 
-.aboutAbout > div > p:nth-child(2),
-.aboutAbout > div > input:nth-child(2),
+.aboutLinkName > div > p:nth-child(2),
+.aboutLinkName > div > input:nth-child(2),
 .aboutName > div > p:nth-child(2),
 .aboutName > div > input:nth-child(2){
     font-size: 25px;
 }
 
-.aboutAbout > div > input:nth-child(2),
+.aboutLinkName > div > input:nth-child(2),
 .aboutName > div > input:nth-child(2){
+    width: 100%;
     font-size: 25px;
     border: none;
     background-color: transparent;
@@ -103,12 +104,12 @@
     animation: spinn .5s linear infinite;
 }
 
-.aboutAbout > div > input:nth-child(2):focus,
+.aboutLinkName > div > input:nth-child(2):focus,
 .aboutName > div > input:nth-child(2):focus{
     outline: none;
 }
 
-.aboutAbout > .icoN,
+.aboutLinkName > .icoN,
 .aboutName > .icoN{
     height: 100%;
     font-size: 20px;

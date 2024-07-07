@@ -15,6 +15,7 @@
 .listContext > div {
   width: 100%;
   padding: 10px;
+  
 }
 
 .listContext > div:nth-last-child(1) {
@@ -23,6 +24,34 @@
 
 .listContext > div:hover {
   background-color: #f1f1f1;
+}
+
+.listContextNight {
+  display: flex;
+  flex-direction: column;
+  width: 130px;
+  background-color: white;
+  box-shadow: 0 0px 10px black;
+  outline: none;
+  border: none;
+  position: absolute;
+  z-index: 2;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.listContextNight > div {
+  width: 100%;
+  padding: 10px;
+  color: black;  
+}
+
+.listContextNight > div:nth-last-child(1) {
+  color: red;
+}
+
+.listContextNight > div:hover {
+  background-color: rgb(225, 224, 224);
 }
 
 .messageContext {

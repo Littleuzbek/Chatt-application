@@ -14,7 +14,7 @@ export default function AboutMedia({
 
   return (
     <Fragment>
-      <FaAngleDown className="toInfo" onClick={() => onSetSection(false)} />
+      <FaAngleDown className={nightMode? 'toInfoNight' : "toInfo"} onClick={() => onSetSection(false)} />
       <div className={nightMode ? 'sectioNNight' : "sectioN"}>
         <div
           onClick={() => onSetCatogry("img")}

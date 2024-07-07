@@ -1,11 +1,13 @@
 import { auth } from "../../../firebase";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import defaultUser from "../../../images/defaultUser.png";
+import defaultUsers from "../../../images/defaultUsers.jpg";
 import Media from "./MediaMessage/Media";
 import Files from "./MediaMessage/Files";
 import { useSelector } from "react-redux";
 
 export default function Message({ message, onContextMenu }) {
+  const [imgError, setImgError] = useState(false);
   const currentUser = auth.currentUser;
   const owner = message.senderId === currentUser?.uid;
   const user = useSelector((state) => state.chat.user);
@@ -24,12 +26,10 @@ export default function Message({ message, onContextMenu }) {
     const text = document.getElementsByName(searchResult[0]?.text);
 
     if (searchResult) {
-        text[0]?.scrollIntoView({
-          behavior: "smooth",
-          
-        });
+      text[0]?.scrollIntoView({
+        behavior: "smooth",
+      });
     }
-    
   }, [searchResult]);
 
   useEffect(() => {
@@ -40,18 +40,30 @@ export default function Message({ message, onContextMenu }) {
 
   return (
     <div
-      className={user.type === 'channel' ? 'message owner' : `message ${ owner && "owner"}`}
+      className={
+        user.type === "channel"
+          ? "message owner"
+          : `message ${owner && "owner"}`
+      }
       ref={ref}
       name={message?.text}
     >
       <img
         src={
-          user.type === 'channel' ? user?.value?.photoURL :
-          (message?.senderId === currentUser?.uid
+          imgError
+            ? user.type === "channel"
+              ? defaultUsers
+              : defaultUser
+            : user.type === "channel"
+            ? user?.value?.photoURL
+            : message?.senderId === currentUser?.uid
             ? currentUser?.photoURL || defaultUser
-            : message?.senderPic || defaultUser)
+            : message?.senderPic || defaultUser
         }
         alt=""
+        onError={() => {
+          setImgError(true);
+        }}
       />
       <div
         style={owner ? { flexDirection: "row" } : {}}

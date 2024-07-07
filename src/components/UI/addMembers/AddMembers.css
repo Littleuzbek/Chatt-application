@@ -63,10 +63,6 @@
     object-fit: cover;
 }
 
-.addingMember > input{
-    size: 50px;
-}
-
 .addingMemberName{
     width: 75%;
 }
@@ -164,6 +160,7 @@
 
   .addMemberBtn > button:nth-child(1){
     cursor: pointer;
+    color: red;
   }
 
   .addMembers > .Loader {

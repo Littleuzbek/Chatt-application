@@ -16,29 +16,31 @@ export default function AboutGroup({
   existingMembers,
 }) {
   const [changeName, setChangeName] = useState(false);
-  const [changeAbout, setChangeAbout] = useState(false);
+  const [changeLinkName, setChangeLinkName] = useState(false);
   const [loadingName, setLoadingName] = useState(false);
-  const [loadingAbout, setLoadingAbout] = useState(false);
+  const [loadingLinkName, setLoadingLinkName] = useState(false);
   const user = useSelector((state) => state.chat.user);
+  const nightMode = useSelector((state) => state.menu.nightMode);
   const nameText = useRef();
-  const aboutText = useRef();
+  const linkName = useRef();
   const currentUser = auth.currentUser;
   const areYouAdmin =
     (chosenUserVal?.groupInfo?.admin || chosenUserVal?.channelInfo?.admin) ===
     currentUser.uid;
 
-  const aboutChangeHandler = async () => {
+  const linkNameChangeHandler = async () => {
     const documentID = user.value.uid;
     const members = existingMembers ? existingMembers : user.members;
     const collection = user.type === "group" ? "userGroups" : "userChannels";
     const infoType = user.type === "group" ? "groupInfo" : "channelInfo";
+    const linkNameInLowerCase = linkName?.current?.value.toLowerCase();
 
-    if (aboutText?.current?.value !== "") {
-      setLoadingAbout(true);
+    if (linkName?.current?.value !== "") {
+      setLoadingLinkName(true);
       for (let i = 0; i < members.length; i++) {
         await updateDoc(doc(db, collection, members[i].uid), {
           [documentID + `.${infoType}`]: {
-            about: aboutText?.current?.value,
+            linkName: linkNameInLowerCase,
             admin: user.value.admin,
             displayName: user.value.displayName,
             photoURL: user.value.photoURL,
@@ -47,10 +49,10 @@ export default function AboutGroup({
         });
       }
 
-      setLoadingAbout(false);
-      setChangeAbout(false);
+      setLoadingLinkName(false);
+      setChangeLinkName(false);
     } else {
-      setChangeAbout(false);
+      setChangeLinkName(false);
     }
   };
 
@@ -65,7 +67,7 @@ export default function AboutGroup({
       for (let i = 0; i < members.length; i++) {
         await updateDoc(doc(db, collection, members[i].uid), {
           [documentID + `.${infoType}`]: {
-            about: user.value.about,
+            linkName: user.value.linkName,
             admin: user.value.admin,
             displayName: nameText?.current?.value,
             photoURL: user.value.photoURL,
@@ -83,7 +85,7 @@ export default function AboutGroup({
 
   return (
     <Fragment>
-      <div className="aboutName">
+      <div className={nightMode? 'aboutNameNight' : "aboutName"}>
         <div>
           <p>Name</p>
           {changeName ? (
@@ -138,34 +140,34 @@ export default function AboutGroup({
           ))}
         </div>
       )}
-      <div className="aboutAbout">
+      <div className={nightMode? 'aboutLinkNameNight' : "aboutLinkName"}>
         <div>
-          <p>About</p>
-          {changeAbout ? (
-            <input type="text" ref={aboutText} />
+          <p>{user.type === 'group'? 'About' : 'Linkname'}</p>
+          {changeLinkName ? (
+            <input type="text" ref={linkName} />
           ) : (
             <p>
               {chosenUserVal?.groupInfo?.about ||
-              chosenUserVal?.channelInfo?.about
+              chosenUserVal?.channelInfo?.linkName
                 ? chosenUserVal?.groupInfo?.about ||
-                  chosenUserVal?.channelInfo?.about
+                  chosenUserVal?.channelInfo?.linkName
                 : "..."}
             </p>
           )}
         </div>
         {areYouAdmin && (
           <div className="changeAboutBtn">
-            {changeAbout ? (
-              loadingAbout ? (
+            {changeLinkName ? (
+              loadingLinkName ? (
                 <AiOutlineLoading className="loader" />
               ) : (
                 <GrStatusGood
                   className="icoN"
-                  onClick={() => aboutChangeHandler()}
+                  onClick={() => linkNameChangeHandler()}
                 />
               )
             ) : (
-              <FaPencil className="icoN" onClick={() => setChangeAbout(true)} />
+              <FaPencil className="icoN" onClick={() => setChangeLinkName(true)} />
             )}
           </div>
         )}

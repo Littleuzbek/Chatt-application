@@ -2,7 +2,7 @@ import React from "react";
 import ClearHistory from "./ClearHistory";
 import DeleteUserFromList from "./DeleteUserFromList";
 import "../Oncontext.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../redux/uiSlice";
 
 export default function ListContext({
@@ -11,10 +11,11 @@ export default function ListContext({
   selectedUser,
   onSetTimeOff,
 }) {
+  const nightMode = useSelector((state) => state.menu.nightMode);
   const dispatch = useDispatch();
   return (
     <div
-      className="listContext"
+      className={nightMode? 'listContextNight' : "listContext"}
       style={{ left: leftVal + "px", top: topVal + "px" }}
       onClick={()=>{onSetTimeOff(false);
         dispatch(

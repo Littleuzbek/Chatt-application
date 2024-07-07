@@ -1,14 +1,13 @@
 @media only screen and (max-width: 425px) {
     .List{
         width: 100%;
-        position: absolute;
-        bottom: 0;
-        left: 0;
+        overflow: auto;
     }
     .ListNight{
         width: 100%;
+        overflow: auto;
     }
     .user:hover{
-        background-color: none;
+        background-color: transparent;
     }
 }

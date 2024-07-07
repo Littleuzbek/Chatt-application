@@ -2,6 +2,7 @@
   .chatSection {
     width: 100%;
     position: absolute;
+    animation: opening .3s ease forwards;    
   }
   .noChatSection {
     display: none;
@@ -13,10 +14,27 @@
     width: 17%;
     margin: 0 0 0 1%;
   }
-  .header > div {
+  .headerNight > div {
     width: 60%;
   }
+  .headerNight {
+    height: 10%;
+  }
+  .headerNight > img {
+    width: 17%;
+    margin: 0 0 0 1%;
+  }
+  .headerNight > div {
+    width: 60%;
+  }
+  .headerOption{
+    top: 7%;
+  }
+  .headerOption > div {
+    padding: 10px;
+  }
   .backToChat {
+    display: block;
     width: 10%;
     font-size: 25px;
   }
@@ -54,5 +72,15 @@
   }
   .beforeSendItem > .btns > button:hover {
     border-radius: 0px;
+  }
+
+  @keyframes opening {
+    from{
+      top: 0;
+      left: 100%;
+    }to{
+      top: 0;
+      left: 0;
+    }
   }
 }

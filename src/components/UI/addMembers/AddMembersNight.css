@@ -1,0 +1,123 @@
+.addMembersNight{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    z-index: 1;
+    gap: 5px;
+}
+
+
+.addMembersNight::before{
+    z-index: -1;
+    content: '';
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    position: absolute;
+}
+
+.addMembersNight > div:nth-child(1){
+    width: 30%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(55, 54, 54);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    gap: 5px;
+    overflow-y: auto;
+}
+
+.addMembersNight > .Loader {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    transform: rotateZ(45deg);
+    perspective: 1000px;
+    border-radius: 50%;
+    color: rgb(0, 0, 244);
+  }
+  
+  .addMembersNight > .Loader::before,
+  .addMembersNight > .Loader::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    border-radius: 50%;
+    transform: rotateX(70deg);
+    animation: 1s spin linear infinite;
+  }
+  
+  .addMembersNight > .Loader::after {
+    color: #ff3d00;
+    transform: rotateY(70deg);
+    animation-delay: 0.4s;
+  }
+
+.addMemberBtnNight{
+    background-color: rgb(55, 54, 54);
+    width: 30%;
+    height: 8%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 10px;
+  }
+
+  .addMemberBtnNight > button{
+    width: 30%;
+    height: 60%;
+    border-radius: 20px;
+    color: white;
+    border: 0.5px solid white;
+    background-color: transparent;
+    transition: 0.5s;
+  }
+
+  .addMemberBtnNight > button:nth-child(1){
+    cursor: pointer;
+    background-color: white;
+    color: red;
+  }
+
+  .addingMemberNight{
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    transition: .5s;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.addingMemberNight::after{
+    content: '';
+    z-index: 1;
+    position: absolute;
+    height: 60px;
+    width: 29%;
+}
+
+.addingMemberNight:hover{
+    background-color:#414141 ;
+}
+
+.addingMemberNight > img {
+    width: 15%;
+    height: 100%;
+    border-radius: 50%;
+    margin: 0 5px;
+    object-fit: cover;
+}
+

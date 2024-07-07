@@ -3,6 +3,7 @@ import { IoMdSearch } from "react-icons/io";
 import { CiMenuKebab } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import defaultUser from "../../../images/defaultUser.png";
+import defaultUsers from "../../../images/defaultUsers.jpg";
 import { uiActions } from "../../../redux/uiSlice";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
@@ -17,12 +18,14 @@ export default function Header() {
   const [options, setOptions] = useState(false);
   const [timeOff, setTimeOff] = useState(false);
   const [toggleSearche, setToggleSearche] = useState(false);
+  const [imgError,setImgError] = useState(false)
   const user = useSelector((state) => state.chat.user);
   const chatId = useSelector((state) => state.chat.chatId);
   const messages = useSelector((state) => state.chat.messages);
   const nightMode = useSelector((state) => state.menu.nightMode);
   const currentUser = auth.currentUser;
   const displayName = user && user?.value.displayName;
+  const headerImg = user.type === 'user'? defaultUser : defaultUsers
   const timeOut = useRef();
   const dispatch = useDispatch();
 
@@ -66,7 +69,7 @@ export default function Header() {
     setOptions(false);
     dispatch(uiActions.setAddMembers(true));
   };
-
+  
   const deleteHandler = () => {
     dispatch(
       chatActions.setDeletingChat({
@@ -97,8 +100,9 @@ export default function Header() {
           }}
         />
         <img
-          src={chosenUser?.photoURL ? chosenUser?.photoURL : defaultUser}
+          src={imgError? headerImg : chosenUser?.photoURL ? chosenUser?.photoURL : headerImg}
           alt=""
+          onError={()=>setImgError(true)}
         />
         <div style={toggleSearche ? { width: "60%" } : {}}>
           <p>{displayName}</p>

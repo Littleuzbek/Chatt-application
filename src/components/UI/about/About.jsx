@@ -9,6 +9,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { chatActions } from "../../../redux/ChatSlice";
 import AboutMedia from "./AboutMedia";
 import defaultUser from "../../../images/defaultUser.png";
+import defaultUsers from "../../../images/defaultUsers.jpg";
 import { v4 as uuid } from "uuid";
 import "./About.css";
 import "./AboutNight.css";
@@ -21,10 +22,12 @@ export default function About() {
   const [catogory, setCatogory] = useState("img");
   const [section, setSection] = useState(false);
   const [toggleMember, setToggleMember] = useState(false);
+  const [imgError,setImgError] = useState(false)
   const user = useSelector((state) => state.chat.user);
   const nightMode = useSelector(state => state.menu.nightMode);
   const dispatch = useDispatch();
   const currentUser = auth.currentUser;
+  const aboutImg = user.type === 'user'? defaultUser : defaultUsers;
 
   useEffect(() => {
     const FetchUserData = () => {
@@ -109,11 +112,11 @@ export default function About() {
           <div className={section ? 'noImg' : `${toggleMember ? "smallContainer" : ''}`}>
             <img
             className={toggleMember ? "smallImg" : ''}
-              src={
+              src={imgError ? aboutImg :
                 chosenChat?.groupInfo?.photoURL ||
                 chosenChat?.channelInfo?.photoURL ||
                 chosenChat?.photoURL ||
-                defaultUser
+                aboutImg
               }
               alt=""
               onClick={() =>
@@ -124,6 +127,7 @@ export default function About() {
                   "header"
                 )
               }
+              onError={()=>setImgError(true)}
             />
           <CgClose
             className={toggleMember? "closeAboutt relocation" : 'closeAboutt'}
@@ -138,12 +142,12 @@ export default function About() {
                     onSetToggleMember={setToggleMember}
                     toggleMemberVal={toggleMember}
                     existingMembers={chosenChat?.members}
-                  />
+                    />
               ) : (
                 <AboutUser chosenUserVal={chosenChat} />
               )}
               <FaAngleDown
-                className="toMedia"
+                className={nightMode? 'toMediaNight' : "toMedia"}
                 onClick={() => {
                   setToggleMember(false);
                   setSection(true);

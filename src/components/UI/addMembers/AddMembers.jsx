@@ -1,5 +1,6 @@
 import React from "react";
 import "./AddMembers.css";
+import "./AddMembersNight.css";
 import "./AddMembersMini.css";
 import { useEffect, useState } from "react";
 import {
@@ -22,68 +23,38 @@ export default function AddMembers() {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [spinner, setSpinner] = useState(false);
   const user = useSelector((state) => state.chat.user);
+  const nightMode = useSelector((state) => state.menu.nightMode);
   const currentUser = auth.currentUser;
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getChats = async () => {
-      if (user.type === "group") {
-        onSnapshot(doc(db, "userGroups", currentUser.uid), async (res) => {
-          const groups = Object.entries(res.data());
-          for (let i = 0; i < groups.length; i++) {
-            if (user.value.uid === groups[i][0]) {
-              setExistingMembers(groups[i]?.[1]?.members);
-              setLastMessage(groups[i]?.[1]?.lastMessage.text);
-              // getting users from my list from server
-              await getDoc(doc(db, "userChats", currentUser.uid)).then(
-                (doc) => {
-                  if (doc.data()) {
-                    const userList = Object.entries(doc.data());
-                    // removing existing members from list
-                    const groupMemberIds = new Set(
-                      groups[i][1].members.map((member) => member.uid)
-                    );
-                    const nonMember = userList.filter(
-                      (user) => !groupMemberIds.has(user?.[1]?.userInfo?.uid)
-                    );
-                    // setting filtered list
-                    setNonMembers(nonMember);
-                  }
-                }
-              );
-            }
-          }
-        });
-      }
+      const collection = user?.type === "group" ? "userGroups" : "userChannels";
 
-      if (user.type === "channel") {
-        onSnapshot(doc(db, "userChannels", currentUser.uid), async (res) => {
-          const channels = Object.entries(res.data());
-          for (let i = 0; i < channels.length; i++) {
-            if (user.value.uid === channels[i][0]) {
-              setExistingMembers(channels[i]?.[1]?.members);
-              setLastMessage(channels[i]?.[1]?.lastMessage.text);
-              // getting users from my list from server
-              await getDoc(doc(db, "userChats", currentUser.uid)).then(
-                (doc) => {
-                  if (doc.data()) {
-                    const userList = Object.entries(doc.data());
-                    // removing existing members from list
-                    const channelMemberIds = new Set(
-                      channels[i][1].members.map((member) => member.uid)
-                    );
-                    const nonMember = userList.filter(
-                      (user) => !channelMemberIds.has(user?.[1]?.userInfo?.uid)
-                    );
-                    // setting filtered list
-                    setNonMembers(nonMember);
-                  }
-                }
-              );
-            }
+      onSnapshot(doc(db, collection, currentUser.uid), async (res) => {
+        const groupsOrChannels = Object.entries(res.data());
+        for (let i = 0; i < groupsOrChannels.length; i++) {
+          if (user.value.uid === groupsOrChannels[i][0]) {
+            setExistingMembers(groupsOrChannels[i]?.[1]?.members);
+            setLastMessage(groupsOrChannels[i]?.[1]?.lastMessage.text);
+            // getting users from my list from server
+            await getDoc(doc(db, "userChats", currentUser.uid)).then((doc) => {
+              if (doc.data()) {
+                const userList = Object.entries(doc.data());
+                // removing existing members from list
+                const MemberIds = new Set(
+                  groupsOrChannels[i][1].members.map((member) => member.uid)
+                );
+                const nonMember = userList.filter(
+                  (user) => !MemberIds.has(user?.[1]?.userInfo?.uid)
+                );
+                // setting filtered list
+                setNonMembers(nonMember);
+              }
+            });
           }
-        });
-      }
+        }
+      });
     };
     currentUser.uid && getChats();
   }, [currentUser.uid, user]);
@@ -111,6 +82,7 @@ export default function AddMembers() {
       const Members = [...existingMembers, ...selectedUsers];
       const collestion = user.type === "group" ? "userGroups" : "userChannels";
       const infoType = user.type === "group" ? "groupInfo" : "channelInfo";
+      const linkOrAbout = user.type === 'group' ? 'about' : 'linkName';
 
       for (let i = 0; i < Members.length; i++) {
         await updateDoc(doc(db, collestion, Members[i].uid), {
@@ -119,7 +91,7 @@ export default function AddMembers() {
             displayName: user.value.displayName,
             photoURL: user.value.photoURL,
             admin: user?.value?.admin,
-            about: user?.value?.about || "",
+            [linkOrAbout]: user?.value?.linkName || user?.value?.about,
           },
           [documentID + ".members"]: [...Members],
           [documentID + ".lastMessage"]: {
@@ -147,7 +119,7 @@ export default function AddMembers() {
   };
 
   return (
-    <div className="addMembers">
+    <div className={nightMode ? "addMembersNight" : "addMembers"}>
       <div>
         {nonMembers
           ?.sort((a, b) => b[1].date - a[1].date)
@@ -162,7 +134,7 @@ export default function AddMembers() {
               )
           )}
       </div>
-      <div className="addMemberBtn">
+      <div className={nightMode ? "addMemberBtnNight" : "addMemberBtn"}>
         <button
           onClick={() => {
             dispatch(uiActions.setAddMembers(false));
@@ -175,7 +147,17 @@ export default function AddMembers() {
         <button
           style={
             selectedUsers.length !== 0
-              ? { backgroundColor: "black", cursor: "pointer", color: "white" }
+              ? nightMode
+                ? {
+                    backgroundColor: "white",
+                    cursor: "pointer",
+                    color: "black",
+                  }
+                : {
+                    backgroundColor: "black",
+                    cursor: "pointer",
+                    color: "white",
+                  }
               : {}
           }
           onClick={() => {

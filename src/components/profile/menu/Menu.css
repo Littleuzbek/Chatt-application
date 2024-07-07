@@ -240,7 +240,7 @@
   height: inherit;
   border-radius: 50%;
   transform: rotateX(70deg);
-  animation: 1s spin linear infinite;
+  animation: 1s n linear infinite;
 }
 .editProfile > .loader:after {
   color: #ff3d00;
@@ -349,14 +349,14 @@
   margin: 1px;
   object-fit: cover;
 }
-.tryWallpaper{
+.tryWallpaper {
   display: none;
 }
-.noWallpaper{
+.noWallpaper {
   display: none;
 }
 
-.saveORnot >.loader {
+.saveORnot > .loader {
   display: flex;
   justify-content: center;
   width: 60px;
@@ -371,7 +371,7 @@
   display: none;
 }
 
-.newGroupList{
+.newGroupList {
   width: 100%;
   height: 100%;
   display: flex;
@@ -382,7 +382,7 @@
   z-index: 100000000000000;
 }
 
-.newGroupList > div{
+.newGroupList > div {
   width: 30%;
   height: 80%;
   display: flex;
@@ -394,18 +394,18 @@
   overflow-y: auto;
 }
 
-.newGroupUser{
+.newGroupUser {
   width: 100%;
   height: 60px;
   display: flex;
   align-items: center;
-  transition: .5s;
+  transition: 0.5s;
   border-radius: 10px;
   cursor: pointer;
 }
 
-.newGroupUser:hover{
-  background-color:#f1f1f1 ;
+.newGroupUser:hover {
+  background-color: #f1f1f1;
 }
 
 .newGroupUser > img {
@@ -416,23 +416,23 @@
   object-fit: cover;
 }
 
-.newGroupUserName{
+.newGroupUserName {
   width: 75%;
 }
 
-.newGroupUserName > p:nth-child(1){
+.newGroupUserName > p:nth-child(1) {
   font-size: 20px;
   font-weight: 500;
 }
 
-.chosenMembers > p{
+.chosenMembers > p {
   width: 100%;
   font-size: 20px;
   text-align: center;
   font-weight: bold;
 }
 
-.newGroupUser:hover > .removeNewMember{
+.newGroupUser:hover > .removeNewMember {
   display: block;
 }
 
@@ -442,17 +442,17 @@
   display: none;
 }
 
-.newGroupDetails{
+.newGroupDetails {
   overflow: hidden;
 }
-.newGroupDetails > p:nth-child(1){
+.newGroupDetails > p:nth-child(1) {
   font-size: 20px;
   font-weight: bold;
   width: 100%;
   text-align: center;
 }
 
-.newGroupDetails > div:nth-of-type(1){
+.newGroupDetails > div:nth-of-type(1) {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -461,24 +461,24 @@
   gap: 10px;
 }
 
-.newGroupDetails > div:nth-of-type(1) > label{
+.newGroupDetails > div:nth-of-type(1) > label {
   display: flex;
   align-items: center;
   gap: 10px;
   font-weight: 500;
-  transition: .1s;
+  transition: 0.1s;
   cursor: pointer;
 }
 
-.newGroupDetails > div:nth-of-type(1) > label:hover{
+.newGroupDetails > div:nth-of-type(1) > label:hover {
   font-weight: bold;
 }
 
-#newGroupImg{
+#newGroupImg {
   display: none;
 }
 
-.newGroupDetails > div:nth-of-type(1) > img{
+.newGroupDetails > div:nth-of-type(1) > img {
   background-color: pink;
   width: 50%;
   height: 200px;
@@ -488,7 +488,7 @@
   background-position: center;
 }
 
-.newGroupDetails > div:nth-last-of-type(1) {
+.newGroupDetails > div:nth-last-of-type(2) {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -498,10 +498,14 @@
   gap: 5px;
 }
 
-.newGroupDetails > div > p{
+.newGroupDetails > div:nth-last-of-type(1) {
+  display: none ;
+}
+
+.newGroupDetails > div > p {
   font-size: 18px;
 }
-.newGroupDetails > div:nth-last-of-type(1) > input{
+.newGroupDetails > div:nth-last-of-type(2) > input {
   width: 80%;
   height: 40px;
   border-radius: 20px;
@@ -511,7 +515,7 @@
   outline: none;
   box-shadow: 0 0 10px black;
 }
-  
+
 .newGroupDetails > button {
   width: 30%;
   padding: 5px;
@@ -521,26 +525,25 @@
   border: 1px solid black;
 }
 
-.newGroupDetails > button:nth-of-type(2) {
+.newGroupDetails > button:nth-last-of-type(1) {
   background-color: transparent;
   color: red;
   cursor: pointer;
   border: 1px solid black;
 }
 
-.newChannelDetails{
+.newChannelDetails {
   overflow: hidden;
-  
 }
 
-.newChannelDetails > p:nth-child(1){
-    font-size: 20px;
-    font-weight: bold;
-    width: 100%;
-    text-align: center;
+.newChannelDetails > p:nth-child(1) {
+  font-size: 20px;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
 }
 
-.newChannelPictureContainer{
+.newChannelPictureContainer {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -549,24 +552,24 @@
   gap: 10px;
 }
 
-.newChannelPictureContainer > label{
+.newChannelPictureContainer > label {
   display: flex;
   align-items: center;
   gap: 10px;
   font-weight: 500;
-  transition: .1s;
+  transition: 0.1s;
   cursor: pointer;
 }
 
-.newChannelPictureContainer > label:hover{
+.newChannelPictureContainer > label:hover {
   font-weight: bold;
 }
 
-#newChannelImg{
+#newChannelImg {
   display: none;
 }
 
-.newChannelPictureContainer > img{
+.newChannelPictureContainer > img {
   background-color: pink;
   width: 50%;
   height: 200px;
@@ -576,7 +579,7 @@
   background-position: center;
 }
 
-.newChannelNaming{
+.newChannelNaming {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -586,7 +589,7 @@
   gap: 5px;
 }
 
-.newChannelNaming > input{
+.newChannelNaming > input {
   width: 80%;
   height: 40px;
   border-radius: 20px;
@@ -597,8 +600,9 @@
   box-shadow: 0 0 10px black;
 }
 
-.newChannelBtn {
+ .newChannelBtn {
   display: flex !important;
+  align-items: center;
   width: 100% !important;
   flex-direction: row !important;
   margin: 10px 0 0 0;
@@ -617,6 +621,23 @@
   background-color: transparent;
   color: red;
   cursor: pointer;
+  border: 1px solid black;
+}
+
+.newChannelBtn > div{
+  width: 30%;
+  height: 100%;
+  margin: 0 auto;
+  border-radius: 20px;
+  border: .5px solid black;
+}
+
+.newGroupDetails > .saveORnot {
+  width: 30%;
+  padding: 5px;
+  border-radius: 20px;
+  margin: 0 auto;
+  background-color: white;
   border: 1px solid black;
 }
 

@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import defaultUser from "../../../images/defaultUser.png";
+import defaultUsers from "../../../images/defaultUsers.jpg";
 
 export default function User({ chatVal, onSelect, onGetPosition }) {
+  const [imgError,setImgError] = useState(false)
+  const chatImg = chatVal[1]?.userInfo?.photoURL ? defaultUser : defaultUsers
   return (
     <div
       className="user"
@@ -11,12 +14,13 @@ export default function User({ chatVal, onSelect, onGetPosition }) {
       }}
     >
       <img
-        src={
+        src={ imgError? chatImg :
           chatVal[1]?.userInfo?.photoURL || chatVal[1]?.groupInfo?.photoURL || chatVal[1]?.channelInfo?.photoURL
             ? chatVal[1]?.userInfo?.photoURL || chatVal[1]?.groupInfo?.photoURL || chatVal[1]?.channelInfo?.photoURL
-            : defaultUser
+            : chatImg
         }
         alt=""
+        onError={()=>setImgError(true)}
       />
       <div className="textSection">
         <p className="nameOfChat">

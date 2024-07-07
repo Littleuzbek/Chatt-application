@@ -89,7 +89,7 @@ export default function ChatTheme() {
       console.log(err);
     }
   };
-console.log(chatThemeValue);
+
   return (
     <div className={nightMode? "chatThemeNight" : "chatTheme"}>
       <div>
@@ -149,7 +149,6 @@ console.log(chatThemeValue);
                 alt="..."
                 key={wallPapers?.id}
                 onClick={() => {
-                  console.log('hello');
                   setNewWallPaper(false);
                   dispatch(
                     menuActions.onSetChatThemeValue(wallPapers?.wallPaperURL)

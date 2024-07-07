@@ -12,7 +12,7 @@ import {
 import { auth, db } from "../../../firebase";
 import { MdOutlineMenu } from "react-icons/md";
 import "./Search.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import defaultUser from "../../../images/defaultUser.png";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../redux/uiSlice";
@@ -94,6 +94,14 @@ export default function Search() {
     setUser(null);
     setUsername("");
   };
+
+  useEffect(()=>{
+    if(error){
+      setTimeout(() => {
+        setError(false)
+      }, 1000);
+    }
+  },[error])
 
   return (
     <div className="searchSection">

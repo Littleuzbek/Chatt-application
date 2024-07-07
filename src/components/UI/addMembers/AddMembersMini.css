@@ -2,10 +2,22 @@
   .addMembers > div:nth-child(1) {
     width: 90%;
   }
-.addingMember > img {
-    width: 18%;
-}
-.addMemberBtn{
+  .addMembersNight > div:nth-child(1) {
     width: 90%;
-}
+  }
+  .addingMember > img {
+    width: 18%;
+  }
+  .addingMemberNight > img {
+    width: 18%;
+  }
+  .addMemberBtn {
+    width: 90%;
+  }
+  .addMemberBtnNight {
+    width: 90%;
+  }
+  .addMemberBtn > button {
+    color: black;
+  }
 }

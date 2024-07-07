@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./ListSection.css";
-import "./ListSectionNight.css";
 import './ListSectionMini.css'
 import Search from "../Search/Search";
 import { auth, db } from "../../../firebase";
@@ -19,7 +18,6 @@ export default function ListSection() {
   const [selectedUser, setSelectedUser] = useState();
   const [timeOff, setTimeOff] = useState(false);
   const rightClick = useSelector((state) => state.ui.listClick);
-  const triggerForChatDeleted = useSelector((state) => state.chat.chatDeleted);
   const nightMode = useSelector(state => state.menu.nightMode);
   const user = useSelector((state) => state.chat.user);
   const currentUser = auth.currentUser;
@@ -64,11 +62,12 @@ export default function ListSection() {
       };
     };
     currentUser.uid && getChats();
-  }, [currentUser.uid, triggerForChatDeleted]);
+  }, [currentUser.uid]);
 
   const selectHandler = (user) => {
     dispatch(
       chatActions.changeUser({
+        members: user.members,
         value: user.userInfo || user.groupInfo || user.channelInfo,
         type:
           (user.userInfo && "user") ||

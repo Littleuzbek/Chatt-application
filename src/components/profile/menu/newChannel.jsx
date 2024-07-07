@@ -9,20 +9,25 @@ import {
 import { auth, db, storage } from "../../../firebase";
 import Backdrop from "../../UI/Backdrop";
 import defaultUser from "../../../images/defaultUser.png";
+import defaultUsers from "../../../images/defaultUsers.jpg";
 import { CgClose } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import { menuActions } from "../../../redux/menuSlice";
 import { LuImagePlus } from "react-icons/lu";
 import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import Users from "./Users";
+import { uiActions } from "../../../redux/uiSlice";
 
 export default function ForwardList() {
   const [chats, setChats] = useState([]);
   const [channelImg, setChannelImg] = useState(false);
   const [imgFile, setImgFile] = useState();
+  const [spinner, setSpinner] = useState(false);
   const newChannelMembers = useSelector(
     (state) => state.menu.newChannelMembers
   );
+  const nightMode = useSelector((state) => state.menu.nightMode);
   const currentUser = auth.currentUser;
   const dispatch = useDispatch();
   const name = useRef();
@@ -46,12 +51,24 @@ export default function ForwardList() {
   const newMemberHandler = (e, type) => {
     try {
       if (type === "add") {
-        dispatch(
-          menuActions.onSetNewChannelMembers({
-            type: "add",
-            value: e[1]?.userInfo,
-          })
+        const userExist = newChannelMembers.find(
+          (elem) => elem?.uid === e[1]?.userInfo?.uid
         );
+        if (userExist) {
+          dispatch(
+            menuActions.onSetNewChannelMembers({
+              type: "remove",
+              value: e[1]?.userInfo,
+            })
+          );
+        } else {
+          dispatch(
+            menuActions.onSetNewChannelMembers({
+              type: "add",
+              value: e[1]?.userInfo,
+            })
+          );
+        }
       }
 
       if (type === "remove") {
@@ -75,20 +92,22 @@ export default function ForwardList() {
   };
 
   const createChannel = async () => {
+    setSpinner(true)
     const channelId = uuid();
     const channelName = name.current.value;
     const storageRef = ref(storage, uuid());
+    const LinkNameInLowerCase = link?.current?.value.toLowerCase()
     try {
+      await setDoc(doc(db, "chats", channelId),{});
       await uploadBytesResumable(storageRef, imgFile).then(async (snapshot) => {
         await getDownloadURL(snapshot.ref).then(async (res) => {
           await updateDoc(doc(db, "userChannels", currentUser.uid), {
             [channelId + ".channelInfo"]: {
               uid: channelId,
-              displayName: channelName,
+              displayName: channelName === ''? 'Nameless channel' : channelName,
               photoURL: res,
               admin: currentUser.uid,
-              about: "",
-              linkName: link.current.value,
+              linkName: LinkNameInLowerCase,
             },
             [channelId + ".members"]: [
               ...newChannelMembers,
@@ -111,11 +130,10 @@ export default function ForwardList() {
                 {
                   [channelId + ".channelInfo"]: {
                     uid: channelId,
-                    displayName: channelName,
+                    displayName: channelName === ''? 'nameless channel' : channelName,
                     photoURL: res,
-                    admin: [currentUser.uid],
-                    about: "",
-                    linkName: link.current.value,
+                    admin: currentUser.uid,
+                    linkName: LinkNameInLowerCase || '',
                   },
                   [channelId + ".members"]: [
                     ...newChannelMembers,
@@ -131,50 +149,47 @@ export default function ForwardList() {
                   },
                   [channelId + ".date"]: serverTimestamp(),
                 }
-                ).catch((err) => console.log(err));
+              ).then(()=>{
+                dispatch(menuActions.onSetNewChannelMembers("clear"));
+                setSpinner(false)})
+                .catch((err) => console.log(err));
               }
-              await setDoc(doc(db, "chats", channelId));
           });
-
         });
+       
       });
     } catch (err) {
+      dispatch(menuActions.onSetNewChannelMembers("clear"));
+      setSpinner(false)
       console.log(err);
     }
   };
   return (
     <Fragment>
       <Backdrop />
-      <div className="newGroupList">
+      <div className={nightMode ? "newGroupListNight" : "newGroupList"}>
         <div>
           {Object.entries(chats)
             ?.sort((a, b) => b[1].date - a[1].date)
-            ?.map((chat) => (
-              <div
-                className="newGroupUser"
-                key={chat?.[0]}
-                onClick={() => newMemberHandler(chat, "add")}
-              >
-                <img
-                  src={
-                    chat[1]?.userInfo?.photoURL
-                      ? chat[1]?.userInfo?.photoURL
-                      : defaultUser
-                  }
-                  alt=""
-                />
-                <div className="newGroupUserName">
-                  <p>{chat[1]?.userInfo?.displayName}</p>
-                  <p>Online</p>
-                </div>
-              </div>
-            ))}
+            ?.map(
+              (chat) =>
+                chat?.[1]?.userInfo && (
+                  <Users
+                    onNewMemberHandler={newMemberHandler}
+                    chatVal={chat}
+                    key={chat?.[1]?.userInfo?.uid}
+                  />
+                )
+            )}
         </div>
         <div className="chosenMembers">
           <p>Chosen Users</p>
           {newChannelMembers !== "" &&
             newChannelMembers.map((newMember) => (
-              <div className="newGroupUser" key={newMember?.uid}>
+              <div
+                className={nightMode ? `newGroupUserNight ` : `newGroupUser`}
+                key={newMember?.uid}
+              >
                 <img
                   src={newMember?.photoURL ? newMember?.photoURL : defaultUser}
                   alt=""
@@ -195,14 +210,24 @@ export default function ForwardList() {
 
           <div className="newChannelPictureContainer">
             <p>Channel picture</p>
-            <img src={channelImg ? channelImg : ""} alt="" accept="image/*" />
+            <img
+              src={channelImg ? channelImg : defaultUsers}
+              alt=""
+              accept="image/*"
+              className={channelImg || "miniImg"}
+            />
             <input
               type="file"
               name=""
               id="newChannelImg"
+              accept="image/*"
               onChange={(e) => {
-                if(e.target.files[0].type.split('/').at(0) === 'image'){
-                  channelImgHandler(e.target.files[0])
+                if (e?.target?.files[0]?.type.split("/").at(0) !== "image") {
+                  dispatch(
+                    uiActions.setCondition("Please enter only image file")
+                  );
+                } else {
+                  e?.target?.files[0] && channelImgHandler(e.target.files[0]);
                 }
               }}
             />
@@ -235,19 +260,30 @@ export default function ForwardList() {
             />
           </div>
 
-          <div className="newChannelBtn">
+          <div className={nightMode? 'newChannelBtnNight' : "newChannelBtn"}>
             <button
-              onClick={() => {
+              onClick={() => {spinner ||
                 dispatch(menuActions.onSetNewChannel(false));
                 dispatch(menuActions.onSetNewChannelMembers("clear"));
               }}
             >
-              Cancel
+              {spinner? 'Waiting' : 'Cancel'}
             </button>
-            <button
+            
+            {spinner? 
+            <div className="saveORnot">
+          <div className="loader"></div>
+        </div> 
+        : <button
               style={
                 newChannelMembers.length === 0
-                  ? { backgroundColor: "white" }
+                  ? {}
+                  : nightMode
+                  ? {
+                      backgroundColor: "white",
+                      color: "black",
+                      cursor: "pointer",
+                    }
                   : {
                       backgroundColor: "black",
                       color: "white",
@@ -255,13 +291,12 @@ export default function ForwardList() {
                     }
               }
               onClick={() => {
-                name.current.value !== "" &&
-                  link.current.value !== "" &&
+                  newChannelMembers?.length !== 0 && 
                   createChannel();
               }}
             >
               Create
-            </button>
+            </button>}
           </div>
         </div>
       </div>
