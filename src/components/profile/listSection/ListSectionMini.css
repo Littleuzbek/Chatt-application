@@ -1,4 +1,4 @@
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 768px) {
     .List{
         width: 100%;
         overflow: auto;
@@ -9,5 +9,25 @@
     }
     .user:hover{
         background-color: transparent;
+    }
+}
+
+@media only screen and (min-width: 600px) and (max-width:768px) {
+    .user{
+        min-height: 90px !important;
+        max-height: 90px !important;
+    }
+    .user > img{
+        width: 90px;
+    }
+    .textSection{
+        margin: 0 0 0 10px !important;
+    }
+    .nameOfChat{
+        font-size: 25px !important;
+    }
+    .lastMessage{
+        font-size: 20px;
+        font-weight: 500;
     }
 }

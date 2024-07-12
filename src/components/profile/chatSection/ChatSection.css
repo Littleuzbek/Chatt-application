@@ -96,14 +96,9 @@
   height: 40px;
   border-radius: 50%;
   margin: 0 5px;
-  -webkit-user-drag: none;
+  object-fit: cover;
 }
-/* .message > img::after {
-  position: absolute;
-  width: 5%;
-  height: ;
-  background-color: black;
-} */
+
 .message > div{
   max-width: 50%;
   word-break: break-word;
@@ -122,16 +117,13 @@
 .message > div > video {
   border-radius: 10px;
   overflow: hidden;
+  max-width: 400px;
+  max-height: 400px;
+  -webkit-user-drag: none;
 }
 
 .owner {
   flex-direction: row;
-}
-
-.message > div > img,
-.message > div > video {
-  max-width: 400px;
-  max-height: 400px;
 }
 
 .sendMessage {

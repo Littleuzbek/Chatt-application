@@ -31,7 +31,6 @@ export default function AddingMembers({ chat, onSelect }) {
       />
       <div className="addingMemberName">
         <p>{chat[1]?.userInfo?.displayName}</p>
-        <p>Online</p>
       </div>
     </div>
   );

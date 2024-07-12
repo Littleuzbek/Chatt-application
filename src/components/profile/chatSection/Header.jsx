@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { CiMenuKebab } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,18 +15,16 @@ import { chatActions } from "../../../redux/ChatSlice";
 
 export default function Header() {
   const [chosenUser, setChosenUser] = useState();
-  const [options, setOptions] = useState(false);
-  const [timeOff, setTimeOff] = useState(false);
   const [toggleSearche, setToggleSearche] = useState(false);
   const [imgError,setImgError] = useState(false)
   const user = useSelector((state) => state.chat.user);
+  const headerMenu = useSelector(state => state.chat.headerMenu);
   const chatId = useSelector((state) => state.chat.chatId);
   const messages = useSelector((state) => state.chat.messages);
   const nightMode = useSelector((state) => state.menu.nightMode);
   const currentUser = auth.currentUser;
   const displayName = user && user?.value.displayName;
   const headerImg = user.type === 'user'? defaultUser : defaultUsers
-  const timeOut = useRef();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,16 +46,6 @@ export default function Header() {
     user?.value.uid && FetchUserData();
   }, [user, currentUser.uid]);
 
-  useEffect(() => {
-    clearTimeout(timeOut.current);
-
-    if (!timeOff) {
-      timeOut.current = setTimeout(() => {
-        setOptions(false);
-      }, 600);
-    }
-  }, [options, timeOff]);
-
   const SearcheHandler = (text) => {
     const a = messages.filter(
       (m) => m.text.toLowerCase() === text.toLowerCase()
@@ -66,7 +54,7 @@ export default function Header() {
   };
 
   const addMemberHandler = () => {
-    setOptions(false);
+    dispatch(chatActions.setHeaderMenu(false))
     dispatch(uiActions.setAddMembers(true));
   };
   
@@ -83,13 +71,22 @@ export default function Header() {
       })
     );
     dispatch(uiActions.setDoubleDelete(true));
+    dispatch(chatActions.setHeaderMenu(false))
   };
 
   return (
     <Fragment>
       <div
         className={nightMode ? "headerNight" : "header"}
-        onClick={() => dispatch(uiActions.setAbout(true))}
+        onClick={() => {
+          dispatch(uiActions.setClickValue({
+            type: 'message',
+            value: false
+          }));
+          dispatch(chatActions.setHeaderMenu(false));
+          dispatch(uiActions.setAbout(true));
+        }}
+          
       >
         <FaArrowLeft
           className="backToChat"
@@ -97,6 +94,11 @@ export default function Header() {
             e.stopPropagation();
             dispatch(chatActions.changeUser(false));
             dispatch(chatActions.setSelected(false));
+            dispatch(chatActions.setHeaderMenu(false))
+            dispatch(uiActions.setClickValue({
+              type: 'message',
+              value: false
+            }))
           }}
         />
         <img
@@ -120,7 +122,9 @@ export default function Header() {
                 e.stopPropagation();
                 setToggleSearche(false);
                 dispatch(chatActions.setSearchResult(""));
-              }}
+                dispatch(chatActions.setHeaderMenu(false))
+               
+            }}
             />
           </Fragment>
         ) : (
@@ -129,6 +133,8 @@ export default function Header() {
             onClick={(e) => {
               e.stopPropagation();
               setToggleSearche(true);
+              dispatch(chatActions.setHeaderMenu(false))
+              
             }}
           />
         )}
@@ -136,20 +142,25 @@ export default function Header() {
           className="btn"
           onClick={(e) => {
             e.stopPropagation();
-            setOptions(true);
+            dispatch(chatActions.setHeaderMenu(!headerMenu))
             dispatch(chatActions.setSearchResult(false));
+            dispatch(
+              uiActions.setClickValue({
+                type: "list",
+                value: false,
+              })
+            );
+            dispatch(
+              uiActions.setClickValue({
+                type: "message",
+                value: false,
+              })
+            );
           }}
         />
       </div>
-      {options && (
-        <div
-          className="headerOption"
-          onMouseEnter={() => setTimeOff(true)}
-          onMouseLeave={() => {
-            setOptions(false);
-            setTimeOff(false);
-          }}
-        >
+      {headerMenu && (
+        <div className="headerOption" >
           {(user.type === "group" || user.type === "channel") && (
             <div
               onClick={() => {
@@ -160,11 +171,7 @@ export default function Header() {
               <p>Add member</p>
             </div>
           )}
-          <div
-            onClick={() => {
-              deleteHandler();
-            }}
-          >
+          <div onClick={() => deleteHandler()}>
             <AiOutlineDelete />
             <p>
               {user.type === "user"

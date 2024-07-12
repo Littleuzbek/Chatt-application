@@ -3,11 +3,13 @@ import { useSelector } from "react-redux";
 import { CgZoomIn } from "react-icons/cg";
 import { BiZoomOut } from "react-icons/bi";
 import Backdrop from "../../../UI/Backdrop";
+import defaultUser from '../../../../images/defaultUser.png'
 
 
 export default function ZoomContent() {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [prev, setPrev] = useState({ x: 0, y: 0 });
   const [imgHeight, setImgHeight] = useState(false);
   const viewContnetValue = useSelector((state) => state.chat.viewContentValue);
   const imgRef = useRef(null);
@@ -83,15 +85,30 @@ export default function ZoomContent() {
     };
   }, [imgRef, scale]);
 
+  const dbClick =()=>{
+    if(scale > 1){
+      setScale(1)
+    }
+    if(scale === 1){
+      setScale(3)
+    }
+  }
+
   return (
     <Fragment>
       <Backdrop />
       <div className={imgHeight ? "normalSize" : "overSize"}>
         <img
-          src={viewContnetValue}
+          src={viewContnetValue ? viewContnetValue : defaultUser}
           alt=""
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {e.stopPropagation()}}
           onWheel={(wheelValue) => ZoomInOut(wheelValue)}
+          onDoubleClick={()=> dbClick()}
+          onTouchStart={(e)=>{setPrev({x: e.touches?.[0].clientX, y: e.touches?.[0].clientY })}}
+          onTouchMove={(e)=>{
+            setPosition({x: e.touches?.[0].clientX - prev.x, y: e.touches?.[0].clientY - prev.y});
+          }
+        }
           style={{
             scale: `${scale}`,
             transform: `translate(${position.x}px, ${position.y}px)`,
@@ -116,6 +133,8 @@ export default function ZoomContent() {
             value={Number(scale)}
             onChange={(e) => setScale(Number(e.target.value))}
             onClick={(e) => setScale(Number(e.target.value))}
+            onTouchMove={(e)=>setScale(Number(e.target.value))}
+            onTouchStart={(e)=>setScale(Number(e.target.value))}
             step={0.1}
           />
           <CgZoomIn className="zoomIn" onClick={() => ZoomControl("+")} />

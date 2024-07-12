@@ -1,10 +1,56 @@
 @media only screen and (max-width: 450px) {
     .Auth{
         width: 75%;
+        color: black;
      
     }
 
     .register{
+        color: black;
         width: 75%;
+    }
+}
+
+@media only screen and (min-width: 600px) and (max-width:768px) {
+    .register{
+        color: black;
+        width: 60%;
+        height: 50%;
+    }
+    .login > p:nth-of-type(1), .signUp > p:nth-of-type(1){
+        font-size: 20px;
+    }
+    .signUp > input::placeholder,
+    .login > input::placeholder,
+   .password > input::placeholder{
+       font-size: 20px;
+    font-weight: 600;
+    }
+    .btnContainer > button{
+        font-size: 20px;
+    }
+    .hidePassword, .showPassword{
+        width: 11%;
+    }
+    .password > input{
+        width: 89%;
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1168px) {
+    .register{
+        width: 25%;
+        height: 50%;
+    }
+    .password > input{
+        width: 85%;
+    }
+    .signUp > input::placeholder,
+     .login > input::placeholder,
+    .password > input::placeholder{
+        font-size: 16px;
+    }
+    .hidePassword, .showPassword{
+        width: 15%;
     }
 }

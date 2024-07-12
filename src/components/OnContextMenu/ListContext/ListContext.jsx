@@ -9,7 +9,6 @@ export default function ListContext({
   leftVal,
   topVal,
   selectedUser,
-  onSetTimeOff,
 }) {
   const nightMode = useSelector((state) => state.menu.nightMode);
   const dispatch = useDispatch();
@@ -17,23 +16,13 @@ export default function ListContext({
     <div
       className={nightMode? 'listContextNight' : "listContext"}
       style={{ left: leftVal + "px", top: topVal + "px" }}
-      onClick={()=>{onSetTimeOff(false);
+      onClick={()=>{
         dispatch(
           uiActions.setClickValue({
             type: "list",
             value: false,
           })
-        );}}
-      onMouseEnter={() => onSetTimeOff(true)}
-      onMouseLeave={() => {
-        onSetTimeOff(false);
-        dispatch(
-          uiActions.setClickValue({
-            type: "list",
-            value: false,
-          })
-        );
-      }}
+        )}}
     >
       <ClearHistory selectedUser={selectedUser} />
       <DeleteUserFromList selectedUser={selectedUser}/>

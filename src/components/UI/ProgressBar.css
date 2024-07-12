@@ -36,3 +36,9 @@
   font-size: 40px;
   transform: rotateZ(45deg);
 }
+
+@media only screen and (max-width: 450px) {
+  .unloaded > img:nth-of-type(2) {
+    max-width: 350px;
+  }
+  }

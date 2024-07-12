@@ -17,6 +17,12 @@ export default function SignUp({ onChange, onChangeValue }) {
   const passAttr = togglePassword ? "password" : "text";
   const dispatch = useDispatch()
 
+  const EnterHandler = (e) => {
+    if (e === "NumpadEnter" || e === "Enter") {
+      createNewUser(newEmail.current.value, newPassword.current.value, displayName.current.value)
+    }
+  };
+
   const createNewUser = async (email, password, displayName) => {
     if (email !== "" && password !== "") {
     createUserWithEmailAndPassword(auth, email, password)
@@ -53,7 +59,7 @@ export default function SignUp({ onChange, onChangeValue }) {
   };
 
   return (
-    <div className="signUp">
+    <div className="signUp" onKeyDown={(e) => EnterHandler(e.code)}>
       <h1>Sign Up</h1>
       <input type="text" placeholder="Enter name" ref={displayName} />
       <input type="email" placeholder="Enter email" ref={newEmail} />

@@ -84,7 +84,7 @@ export default function Menu() {
           />
           <div>
             <p className="userName">{`Name: ${currentUser?.displayName}`}</p>
-            <p className="userName" style={{ fontSize: "16px" }}>
+            <p className="userName" >
               {userInfo?.username
                 ? `Username: ${userInfo?.username}`
                 : "No username"}

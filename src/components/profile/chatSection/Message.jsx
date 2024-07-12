@@ -4,7 +4,8 @@ import defaultUser from "../../../images/defaultUser.png";
 import defaultUsers from "../../../images/defaultUsers.jpg";
 import Media from "./MediaMessage/Media";
 import Files from "./MediaMessage/Files";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { chatActions } from "../../../redux/ChatSlice";
 
 export default function Message({ message, onContextMenu }) {
   const [imgError, setImgError] = useState(false);
@@ -13,6 +14,8 @@ export default function Message({ message, onContextMenu }) {
   const user = useSelector((state) => state.chat.user);
   const searchResult = useSelector((state) => state.chat.searchResult);
   const ref = useRef();
+  const contextRef = useRef()
+  const dispatch = useDispatch();
 
   const style = owner
     ? {
@@ -37,6 +40,19 @@ export default function Message({ message, onContextMenu }) {
       behavior: "smooth",
     });
   }, [ref]);
+
+  const touchContextMenu = (cmd,e)=>{
+    if(cmd === 'start'){
+      contextRef.current = setInterval(() => {
+        onContextMenu(e, message);
+        dispatch(chatActions.setHeaderMenu(false))
+      }, 1000);
+    }
+
+    if(cmd === 'stop'){
+      clearInterval(contextRef.current)
+    }
+}
   
   return (
     <div
@@ -46,7 +62,17 @@ export default function Message({ message, onContextMenu }) {
       : `message ${owner && "owner"}`
     }
     ref={ref}
-    name={message?.text}
+    name={message?.text}  
+    onClick={()=>dispatch(chatActions.setHeaderMenu(false))}  
+    onTouchStart={(e)=>{
+      touchContextMenu('start', e)
+    }}
+    onTouchEnd={(e)=>{
+      touchContextMenu('stop')
+    }}
+    onTouchCancel={(e)=>{
+      touchContextMenu('stop')
+    }}
     >
       <img
         src={
@@ -67,7 +93,12 @@ export default function Message({ message, onContextMenu }) {
       />
       <div
         style={owner ? { flexDirection: "row" } : {}}
-        onContextMenu={(e) => onContextMenu(e, message)}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          onContextMenu(e, message)
+          dispatch(chatActions.setHeaderMenu(false))
+        }}
+          
       >
         {message?.img || message?.video ? (
           <Media src={message} />

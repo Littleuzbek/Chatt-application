@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, {  useRef, useState } from "react";
 import rewind from "../../../../images/rewind.png";
 import rewindForward from "../../../../images/rewindforward.png";
 import { CiPause1 } from "react-icons/ci";
@@ -10,6 +10,7 @@ import { RxEnterFullScreen } from "react-icons/rx";
 import { RxExitFullScreen } from "react-icons/rx";
 import { CgMiniPlayer } from "react-icons/cg";
 import { SlSpeedometer } from "react-icons/sl";
+import { CiMenuKebab } from "react-icons/ci";
 import { useDispatch} from "react-redux";
 import { chatActions } from "../../../../redux/ChatSlice";
 import { uiActions } from "../../../../redux/uiSlice";
@@ -24,6 +25,7 @@ export default function Controller({
   const [mute, setMute] = useState(false);
   const [volume, setVolume] = useState(10);
   const [showSpeed, setShowSpeed] = useState(false);
+  const [sideFn,setSideFn] = useState(false);
   const dispatch = useDispatch();
 
   const Rewind = (e) => {
@@ -102,8 +104,6 @@ export default function Controller({
   document.addEventListener("leavepictureinpicture", () => {
     dispatch(uiActions.setViewContent(false));
   });
-
-
   return (
     <div className="controllers" onClick={(e) => e.stopPropagation()}>
       <div className="volume">
@@ -125,21 +125,24 @@ export default function Controller({
       </div>
       <img
         src={rewind}
-        className={"ctrlBtn"}
+        className="ctrlBtn rwnd"
         onClick={() => Rewind("backword")}
         alt=""
       />
+      {sideFn || <div className="ctrlBtn rwndMini" onClick={() => Rewind("backword")}>-10</div>}
       {pausePlayVal ? (
-        <CiPlay1 onClick={() => onPausPlay()} className={"ctrlBtn"} />
+        <CiPlay1 onClick={() => onPausPlay()} className={`ctrlBtn ${sideFn && 'ctrlBtnOff'}`} />
       ) : (
-        <CiPause1 onClick={() => onPausPlay()} className={"ctrlBtn"} />
+        <CiPause1 onClick={() => onPausPlay()} className={`ctrlBtn ${sideFn && 'ctrlBtnOff'}`} />
       )}
       <img
         src={rewindForward}
-        className={"ctrlBtn"}
+        className="ctrlBtn rwnd"
         onClick={() => Rewind("forward")}
         alt=""
       />
+      {sideFn || <div className="ctrlBtn rwndMini" onClick={() => Rewind("forward")}>+10</div>}
+      {/* side function for pc */}
       <div className="sideFn">
         {fullScreenModeVal ? (
           <RxExitFullScreen
@@ -156,12 +159,32 @@ export default function Controller({
         <SlSpeedometer
           className="sideBtn"
           onClick={() => SpeedHandler()}
-        ></SlSpeedometer>
+        />
       </div>
+      {/* side function for mobile */}
+      {sideFn && <div className={`sideFnMenu ${fullScreenModeVal && 'fullScreenSideMenu'}`}>
+      {fullScreenModeVal ? (
+          <RxExitFullScreen
+            className="sideBtn"
+            onClick={() => requestFullscreen()}
+          />
+        ) : (
+          <RxEnterFullScreen
+            className="sideBtn"
+            onClick={() => requestFullscreen()}
+          />
+        )}
+        <CgMiniPlayer className="sideBtn" onClick={() => PictureInPicture()} />
+        <SlSpeedometer
+          className="sideBtn"
+          onClick={() => SpeedHandler()}
+
+        />
+      </div>}
+      <CiMenuKebab className="sideFnMenuBtn" onClick={()=>setSideFn(!sideFn)}/>
       {showSpeed && (
         <div
-          className="speedBtn"
-          style={fullScreenModeVal ? { right: "0", bottom: "30px" } : {}}
+          className={`speedBtn ${fullScreenModeVal && 'fullScreenSpeedBtn'}`}
         >
           <p onClick={() => SpeedHandler("0.5")}>0.5x</p>
           <p onClick={() => SpeedHandler("1")}>Normal</p>

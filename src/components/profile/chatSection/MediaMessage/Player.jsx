@@ -10,6 +10,7 @@ import React, {
 import Backdrop from "../../../UI/Backdrop";
 import { FaChevronDown } from "react-icons/fa";
 import "./Player.css";
+import "./PlayerMini.css";
 import { useSelector } from "react-redux";
 const Controller = lazy(() => import("./Controller"));
 
@@ -19,12 +20,13 @@ export default function Player() {
   const [fullScreenMode, setFullScreenMode] = useState(false);
   const [controlBtn, setControlBtn] = useState({ up: false, down: false });
   const [control, setControl] = useState(false);
+  const [progress, setProgress] = useState(0);
   const changedProgress = useSelector(
     (state) => state.chat.videoChangedProgress
   );
-  const [progress, setProgress] = useState(0);
-  const intervalRef = useRef();
   const viewContnetValue = useSelector((state) => state.chat.viewContentValue);
+  const intervalRef = useRef();
+  
 
   useEffect(() => {
     videoRef?.target.play();
@@ -115,7 +117,6 @@ export default function Player() {
       console.log(err);
     }
   };
-
   return (
     <Fragment>
       <Backdrop />
@@ -125,7 +126,6 @@ export default function Player() {
           style={fullScreenMode ? { width: "100%", height: "100%" } : {}}
         >
           <video
-            // autoPlay={true}
             src={viewContnetValue}
             onLoadedData={(e) => GetRef(e)}
             onClick={(e) => {
@@ -173,17 +173,7 @@ export default function Player() {
           )}
           {control || (
             <div
-              className="controlRoom"
-              style={
-                fullScreenMode
-                  ? {
-                      position: "absolute",
-                      bottom: "5px",
-                      width: "30%",
-                      height: "8%",
-                    }
-                  : {}
-              }
+              className={`controlRoom ${fullScreenMode && 'ctrlRoomFull'}`}
             >
               <div className="timeLine" onClick={(e) => e.stopPropagation()}>
                 <p>
@@ -201,10 +191,6 @@ export default function Player() {
                   onChange={(e) => {
                     changeTime(e.target.value);
                   }}
-                  // onTouchMove={
-                  //   (e) => {
-                  //     changeTime(e.target.value);
-                  //   }}
                 />
                 <p>
                   {maxHours >= 1 ? maxHours : ""}

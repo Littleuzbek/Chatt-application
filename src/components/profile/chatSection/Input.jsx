@@ -12,10 +12,11 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { v4 as uuid } from "uuid";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import BeforeSend from "./BeforeSend";
 import EmojiPicker from "emoji-picker-react";
 import { EmojiStyle } from "emoji-picker-react";
+import {chatActions} from '../../../redux/ChatSlice'
 
 export default function Input({ onProgress }) {
   const chatId = useSelector((state) => state.chat.chatId);
@@ -27,6 +28,7 @@ export default function Input({ onProgress }) {
   const currentUser = auth.currentUser;
   const ID = user.type === "user" ? chatId : user.value.uid;
   const timeOff = useRef();
+  const dispatch = useDispatch()
 
   const UpdateUserListMessage = async (text) => {
       const collection = user?.type === 'group' ? 'userGroups' : 'userChannels';
@@ -250,9 +252,8 @@ export default function Input({ onProgress }) {
   //         }
   //       );
   // }
-
   return (
-    <div className="sendMessage">
+    <div className="sendMessage" onFocus={()=>dispatch(chatActions.setHeaderMenu(false))}>
       <div>
         <GrEmoji
           className="emojI"
@@ -269,6 +270,7 @@ export default function Input({ onProgress }) {
           onChange={(e) => setText(e.target.value)}
           value={text}
           onKeyDown={(e) => handler(e.code)}
+          autoFocus
         />
         <input
           type="file"
@@ -279,7 +281,7 @@ export default function Input({ onProgress }) {
             setMedia(e.target.files[0]);
           }}
           value={""}
-          accept="image/*"
+          accept="video/*,image/*,application/pdf"
         />
         <label htmlFor="fileRecieve">
           <GoPaperclip className="clip" />

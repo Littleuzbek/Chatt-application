@@ -57,8 +57,36 @@
     font-weight: 500;
 }
 
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 768px) {
 .forwardList > div{
     width: 90%;
 }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 768px) {
+    .forwardList > div{
+        width: 80%;
+    }
+    .forwardingUser{
+        height: 80px;
+    } 
+    .forwardingUser > img{
+        height: 95%;
+        width: 85px;
+    }
+    .forwardingName > p:nth-child(1){
+        font-size: 25px;
+    }
+    .forwardingName > p:nth-child(2){
+        display: none;
+    }
+    .forwardingUser:hover{
+        background-color: transparent;
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1168px) {
+    .forwardList > div {
+        width: 35%;
+    }
 }

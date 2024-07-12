@@ -1,4 +1,4 @@
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 600px) {
   .menu {
     width: 100%;
     animation: openAnimationMini 0.6s ease forwards;
@@ -53,11 +53,11 @@
     border-radius: 20px;
     font-weight: bold;
     margin: 10px;
+    color: black;
   }
   .noWallpaper {
     display: none;
   }
-
   .newGroupList {
     flex-direction: column-reverse;
     justify-content: flex-end;
@@ -105,14 +105,14 @@
   .newChannelPictureContainer {
     height: 160px !important;
   }
-  .newChannelPictureContainer > p{
+  .newChannelPictureContainer > p {
     display: none;
   }
-  .newChannelPictureContainer > img{
+  .newChannelPictureContainer > img {
     width: 40%;
     height: 80%;
   }
-  .newChannelNaming > input{
+  .newChannelNaming > input {
     height: 35px;
   }
   .newGroupList > .newGroupDetails > div > .miniImg,
@@ -178,26 +178,26 @@
     display: none;
   }
 
-  .newGroupList > .newGroupDetails > p{
+  .newGroupList > .newGroupDetails > p {
     height: auto;
   }
 
-  .newChannelBtn > button{
+  .newChannelBtn > button {
     color: black;
   }
-  .newChannelBtnNight > button{
+  .newChannelBtnNight > button {
     color: white;
-    border: .5px solid white;
+    border: 0.5px solid white;
   }
 
-.newGroupDetails > .saveORnot ,
+  .newGroupDetails > .saveORnot,
   .newGroupDetailsNight > .saveORnot {
-  display: none;
-}
-.newGroupDetails > .newGroupDetailsBtn > .saveORnot ,
+    display: none;
+  }
+  .newGroupDetails > .newGroupDetailsBtn > .saveORnot,
   .newGroupDetailsNight > .newGroupDetailsBtn > .saveORnot {
-  height: 80%;
-}
+    height: 80%;
+  }
 }
 
 @keyframes openAnimationMini {
@@ -224,8 +224,8 @@
     left: 5%;
     top: 15%;
     max-height: 85%;
+    /* height: 60%; */
     width: 90%;
-    height: auto;
     border-radius: 20px;
     background-color: white;
     overflow-y: auto;
@@ -275,4 +275,482 @@
   100% {
     opacity: 1;
   }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 768px) {
+  .menu {
+    width: 100%;
+    animation: openAnimationMid 0.6s ease forwards;
+  }
+  .menuNight {
+    width: 100%;
+    animation: openAnimationMidNight 0.6s ease forwards;
+  }
+  .menuu {
+    width: 90%;
+    max-width: 100%;
+    left: 5%;
+    top: 15%;
+  }
+  .menuuNight {
+    width: 90%;
+    max-width: 100%;
+    left: 5%;
+    top: 15%;
+  }
+  .menu > .userInfo,
+  .menuNight > .userInfo {
+    height: 30%;
+  }
+  .userInfo > img {
+    height: 90%;
+    max-height: 100%;
+  }
+  .userName {
+    font-size: 25px;
+  }
+  .options,
+  .optionsNight {
+    height: 70%;
+  }
+  .options > div,
+  .optionsNight div {
+    height: 20%;
+    font-size: 25px;
+  }
+  .options > div:hover,
+  .optionsNight > div:hover {
+    background-color: transparent;
+  }
+  .optionsInSettings,
+  .optionsInSettingsNight {
+    height: 14%;
+    font-size: 20px;
+  }
+  .optionBtn {
+    font-size: 35px;
+  }
+  .chatTheme,
+  .chatThemeNight {
+    width: 100%;
+  }
+  .chatTheme > .ChooseWallpaper > div{
+    max-height:  85% !important;
+    overflow: auto;
+  }
+  .chatTheme > .ChooseWallpaper > div > img,
+  .chatThemeNight > .ChooseWallpaper > div > img{
+    height: 250px;
+  }
+  .tryWallpaper {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+  }
+  .tryWallpaper > button {
+    width: 30%;
+    height: 6%;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 10px;
+    color: black;
+  }
+  .noWallpaper {
+    display: none;
+  }
+  .themeIcon {
+    font-size: 35px;
+  }
+  .editProfile > div > p,
+  .editProfileNight > div > p,
+  .editProfile > button,
+  .editProfileNight > button{
+    font-size: 20px;
+  }
+  .editProfile > div > input ,
+  .editProfileNight > div > input  {
+    font-size: 30px;
+  }
+
+  .newGroupList {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    background-color: black;
+  }
+  .newGroupListNight {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    background-color: white;
+  }
+  .newGroupList > div,
+  .newGroupListNight > div {
+    width: 90%;
+    height: auto;
+  }
+  .newGroupList > .newGroupDetails,
+  .newGroupListNight > .newGroupDetailsNight {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+  }
+  .newGroupList > .newGroupDetails > p,
+  .newGroupList > .newChannelDetail > p,
+  .newGroupListNight > .newChannelDetails > p,
+  .newGroupListNight > .newGroupDetailsNight > p {
+    display: none;
+  }
+  .newGroupList > .newGroupDetails > div > p,
+  .newGroupList > .newGroupDetails > div > label,
+  .newGroupList > .newChannelDetails > div > p,
+  .newGroupList > .newChannelDetails > div > label,
+  .newGroupListNight > .newChannelDetails > div > p,
+  .newGroupListNight > .newChannelDetails > div > label,
+  .newGroupListNight > .newGroupDetailsNight > div > p,
+  .newGroupListNight > .newGroupDetailsNight > div > label {
+    font-size: 20px !important;
+  }
+  .newGroupList > .newGroupDetails > div > img,
+  .newGroupListNight > .newGroupDetailsNight > div > img {
+    width: 40%;
+    height: 100px;
+  }
+  .newChannelPictureContainer {
+    height: 250px !important;
+  }
+  .newChannelPictureContainer > p {
+    display: none;
+  }
+  .newChannelPictureContainer > img {
+    width: 40%;
+    height: 80%;
+  }
+  .newChannelNaming > input {
+    height: 35px;
+  }
+  .newGroupList > .newGroupDetails > div > .miniImg,
+  .newGroupList > .newChannelDetails > div > .miniImg,
+  .newGroupListNight > .newGroupDetailsNight > div > .miniImg {
+    height: 200px !important;
+    object-fit: fill !important;
+  }
+  .newGroupList > .newGroupDetails > div > input,
+  .newGroupListNight > .newGroupDetailsNight > div > input {
+    height: 50px;
+    font-size: 23px;
+  }
+  .newGroupList > .chosenMembers,
+  .newGroupListNight > .chosenMembers {
+    display: none;
+  }
+  .newGroupList > div:nth-child(1),
+  .newGroupListNight > div:nth-child(1) {
+    height: auto;
+  }
+  .newGroupUser,
+  .newGroupUserNight {
+    height: 90px;
+  }
+  .newGroupUser > img,
+  .newGroupUserNight > img {
+    width: 16%;
+    height: 90%;
+  }
+  .newGroupUserName > p:nth-child(1) {
+    font-size: 30px;
+  }
+  .newGroupUserName > p:nth-child(2) {
+    font-size: 22px;
+    font-weight: 500;
+  }
+  .checked,
+  .checked:hover {
+    background-color: black;
+    color: white;
+  }
+  .checkedNight,
+  .checkedNight:hover {
+    background-color: white;
+    color: black;
+  }
+  .newGroupDetails > div:nth-last-of-type(1),
+  .newGroupDetailsNight > div:nth-last-of-type(1) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    gap: 10px;
+  }
+  .newGroupDetails > div:nth-last-of-type(1) > *,
+  .newGroupDetailsNight > div:nth-last-of-type(1) > * {
+    border-radius: 20px;
+    width: 30%;
+    height: 80%;
+    font-size: 20px;
+    font-weight: 500;
+    color: black;
+    background-color: white;
+    border: 0.5px solid black;
+  }
+  .newGroupDetailsNight > div:nth-last-of-type(1) > button:nth-child(2) {
+    background-color: transparent;
+    color: white;
+    border: 0.5px solid white;
+  }
+  .newGroupDetails > div:nth-last-of-type(1) > button:nth-child(1),
+  .newGroupDetailsNight > div:nth-last-of-type(1) > button:nth-child(1) {
+    color: red;
+  }
+  .newGroupDetails > button,
+  .newGroupDetailsNight > button {
+    display: none;
+  }
+
+  .newGroupList > .newGroupDetails > p {
+    height: auto;
+  }
+
+  .newChannelBtn > button {
+    color: black;
+  }
+  .newChannelBtnNight > button {
+    color: white;
+    border: 0.5px solid white;
+  }
+  .newGroupDetails > .saveORnot,
+  .newGroupDetailsNight > .saveORnot {
+    display: none;
+  }
+  .newGroupDetails > .newGroupDetailsBtn > .saveORnot,
+  .newGroupDetailsNight > .newGroupDetailsBtn > .saveORnot {
+    height: 80%;
+  }
+  .newChannelDetails {
+    height: 55% !important;
+  }
+  .newChannelDetails > p:nth-child(1) {
+    display: none;
+  }
+  .newChannelNaming > input {
+    height: 50px !important;
+  }
+  .newChannelBtn > button ,
+    .newChannelBtnNight > button {
+    height: 40px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  @keyframes openAnimationMid {
+    0% {
+      left: 0;
+      top: 15%;
+      width: 10%;
+      height: 10%;
+      border-radius: 20px;
+      background-color: white;
+      overflow: hidden;
+    }
+    99% {
+      left: 5%;
+      top: 15%;
+      max-height: 85%;
+      width: 90%;
+      height: 50%;
+      border-radius: 20px;
+    }
+    100% {
+      left: 5%;
+      top: 15%;
+      max-height: 85%;
+      height: 500px;
+      width: 90%;
+      border-radius: 20px;
+      background-color: white;
+      overflow-y: auto;
+    }
+  }
+  @keyframes openAnimationMidNight {
+    0% {
+      left: 0;
+      top: 15%;
+      width: 10%;
+      height: 10%;
+      border-radius: 20px;
+      background-color: rgb(55, 54, 54);
+      overflow: hidden;
+    }
+    99% {
+      left: 5%;
+      top: 15%;
+      max-height: 85%;
+      width: 90%;
+      height: 50%;
+      border-radius: 20px;
+    }
+    100% {
+      left: 5%;
+      top: 15%;
+      max-height: 85%;
+      height: 500px;
+      width: 90%;
+      border-radius: 20px;
+      background-color: rgb(55, 54, 54);
+      color: white;
+      overflow-y: auto;
+    }
+  }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1168px) {
+  .menu{
+    width: 50% !important;
+    animation: openAnimationBig 0.6s ease forwards;
+  }
+  .menuNight{
+    width: 50% !important;
+    animation: openAnimationBigNight 0.6s ease forwards;
+  }
+  .menuu,
+  .menuuNight{
+    left: 35%;
+    width: 35%;
+    max-width: 35%;
+  }
+  .userInfo {
+    height: 30%;
+  }
+  .options{
+    height: 70%;
+  }
+  .chatTheme > .ChooseWallpaper > div,
+    .chatThemeNight > .ChooseWallpaper > div{
+    align-content: flex-start;
+  }
+  .chatTheme > .ChooseWallpaper > div > img,
+    .chatThemeNight > .ChooseWallpaper > div > img{
+    width: 32%;
+  }
+  .saveORnot > button{
+    width: 25%;
+    font-size: 16px;
+  }
+  .newGroupList{
+    background-color: black;
+  }
+  .newGroupListNight{
+    background-color: white;
+  }
+  .newGroupList > div ,
+    .newGroupListNight > div {
+    width: 33%;
+  }
+  .newGroupDetails > div:nth-of-type(1) > img,
+  .newChannelPictureContainer  > img,
+  .newGroupDetailsNight > div:nth-of-type(1) > img,
+  .newChannelPictureContainer  > img{
+    height: 150px;
+  }
+  .newGroupUser > img,
+    .newGroupUserNight > img {
+    width: 17%;
+  }
+  .newChannelPictureContainer > p,
+  .newChannelNaming > p{
+    font-size: 15px;
+  }
+  .newChannelNaming > input{
+    height: 35px;
+  }
+  .newChannelNaming > p{
+    font-size: 15px;
+  }
+  .newChannelBtn > button,
+  .newChannelBtnNight > button{
+    height: 30px;
+  }
+
+  @keyframes openAnimationBig {
+    0% {
+      left: 0;
+      top: 40%;
+      max-width: 5%;
+      height: 5%;
+      border-radius: 20px;
+      background-color: white;
+      overflow: hidden;
+    }
+    50% {
+      left: 40%;
+      top: 40%;
+      max-width: 5%;
+      height: 5%;
+      background-color: white;
+      overflow: hidden;
+    }
+    90% {
+      left: 35%;
+      top: 40%;
+      max-width: 35%;
+      height: 5%;
+      background-color: white;
+      overflow: hidden;
+    }
+    100% {
+      left: 35%;
+      top: 15%;
+      max-width: 35%;
+      max-height: 85%;
+      border-radius: 20px;
+      background-color: white;
+      overflow-y: auto;
+    }
+}
+@keyframes openAnimationBigNight {
+  0% {
+    left: 0;
+    top: 40%;
+    max-width: 5%;
+    height: 5%;
+    border-radius: 20px;
+    background-color: rgb(55, 54, 54);
+    overflow: hidden;
+  }
+  50% {
+    left: 40%;
+    top: 40%;
+    max-width: 5%;
+    height: 5%;
+    background-color: rgb(55, 54, 54);
+    overflow: hidden;
+  }
+  90% {
+    left: 35%;
+    top: 40%;
+    max-width: 35%;
+    height: 5%;
+    background-color: rgb(55, 54, 54);
+    overflow: hidden;
+  }
+  100% {
+    left: 35%;
+    top: 15%;
+    max-width: 35%;
+    max-height: 85%;
+    border-radius: 20px;
+    background-color: rgb(55, 54, 54);
+    color: white;
+    overflow-y: auto;
+  }
+}
 }

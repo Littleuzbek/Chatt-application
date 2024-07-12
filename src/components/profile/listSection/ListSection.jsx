@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ListSection.css";
 import './ListSectionMini.css'
 import Search from "../Search/Search";
@@ -16,12 +16,10 @@ export default function ListSection() {
   const [channels, setChannels] = useState([]);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [selectedUser, setSelectedUser] = useState();
-  const [timeOff, setTimeOff] = useState(false);
   const rightClick = useSelector((state) => state.ui.listClick);
   const nightMode = useSelector(state => state.menu.nightMode);
   const user = useSelector((state) => state.chat.user);
   const currentUser = auth.currentUser;
-  const timeOut = useRef();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,12 +36,9 @@ export default function ListSection() {
       const fetchGroups = onSnapshot(
         doc(db, "userGroups", currentUser.uid),
         (doc) => {
-          const arrr = Object.entries(doc.data());
-          if (arrr.length !== 0) {
+          if (doc.data()) {
             setGroups(doc.data());
-          } else {
-            setGroups([]);
-          }
+          } 
         }
       );
 
@@ -76,6 +71,7 @@ export default function ListSection() {
       })
     );
     dispatch(chatActions.setSelected(true))
+    dispatch(chatActions.setHeaderMenu(false))
   };
 
   const getPositionHandler = (e, user) => {
@@ -91,7 +87,11 @@ export default function ListSection() {
         (user?.[1]?.groupInfo && "group") ||
         (user?.[1]?.userInfo && "user"),
     });
-    setPosition(() => ({ x: e.clientX, y: e.clientY }));
+    if(e?.clientX){
+      setPosition(() => ({ x: e.clientX, y: e.clientY }));
+    }else{
+      setPosition(()=>({x: e?.touches[0]?.clientX, y: e?.touches[0]?.clientY }));
+    }
     dispatch(
       uiActions.setClickValue({
         type: "list",
@@ -100,27 +100,10 @@ export default function ListSection() {
     );
   };
 
-  useEffect(() => {
-    if (!timeOff) {
-      timeOut.current = setTimeout(() => {
-        dispatch(
-          uiActions.setClickValue({
-            type: "list",
-            value: false,
-          })
-        );
-      }, 1000);
-    }
-
-    return () => {
-      clearTimeout(timeOut.current);
-    };
-  }, [dispatch, timeOff, rightClick]);
-
-  const all = Object.entries({
-    ...chats,
-    ...groups,
-    ...channels,
+  const all = Object?.entries({
+    ...chats || {},
+    ...groups || {},
+    ...channels || {},
   });
 
   useEffect(() => {
@@ -141,14 +124,18 @@ export default function ListSection() {
   }, [user?.value, dispatch,all]);
 
   return (
-    <div className={nightMode? 'ListNight' : "List"}>
+    <div className={nightMode? 'ListNight' : "List"} onClick={() => {
+      dispatch(
+        uiActions.setClickValue({
+          type: "list",
+          value: false,
+        }))}}>
       <Search />
       {rightClick && (
         <ListContext
           leftVal={position.x}
           topVal={position.y}
           selectedUser={selectedUser}
-          onSetTimeOff={setTimeOff}
         />
       )}
       {all

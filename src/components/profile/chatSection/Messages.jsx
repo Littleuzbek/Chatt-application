@@ -47,22 +47,24 @@ export default function Messages({ progressVal, onProgress }) {
     e.preventDefault();
 
     setMessagesId(user);
-    setPosition(() => ({ x: e.clientX, y: e.clientY }));
+    if(e?.clientX){
+      setPosition(() => ({ x: e.clientX + 20, y: e.clientY }));
+    }else{
+      setPosition(()=>({x: e?.touches[0]?.clientX + 20, y: e?.touches[0]?.clientY}));
+    }
     dispatch(uiActions.setClickValue({
       type: 'message',
       value: true
     }))
   };
 
-  document.onclick = () => {
-    dispatch(uiActions.setClickValue({
-      type: 'message',
-      value: false
-    }))
-  };
-
   return (
-    <div className="messages">
+    <div className="messages" onClick={()=>{
+      dispatch(uiActions.setClickValue({
+        type: 'message',
+        value: false
+      }))}
+    }>
       {messages?.map((m) => (
         <Suspense fallback={'...'} key={m?.id}>
         <Message message={m} key={m?.id} onContextMenu={getPositionHandler} />

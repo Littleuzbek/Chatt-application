@@ -35,69 +35,75 @@ export default function DoubleDelete() {
   }, [deletingChat,stopLoop,currentUser.uid]);
 
   const DeleteChat = async () => {
-    if (deletingChat.type === "user") {
-      const userId = deletingChat?.info?.uid;
-      const combinedId = deletingChat?.chatId;
-      dispatch(uiActions.setDoubleDelete(false));
-      dispatch(chatActions.changeUser(false));
-      dispatch(chatActions.setSelected(false));
-
-      if (checked) {
-        await updateDoc(doc(db, "userChats", currentUser.uid), {
-          [combinedId]: deleteField(combinedId),
-        });
-
-        await updateDoc(doc(db, "userChats", userId), {
-          [combinedId]: deleteField(combinedId),
-        });
-
-        await deleteDoc(doc(db, "chats", combinedId));
-      } else {
-        await updateDoc(doc(db, "userChats", currentUser.uid), {
-          [combinedId]: deleteField(combinedId),
-        });
-      }
-    }
-
-    if (deletingChat.type === "group" || deletingChat.type === "channel") {
-      const chatID = deletingChat?.chatId
-      const deletingMember = deletingChat?.members;
-      const admin = deletingChat.info.admin === currentUser.uid ? newAdmin : deletingChat.info.admin;
-      const collection = deletingChat.type === 'group' ? 'userGroups': 'userChannels';
-      const infoType = deletingChat.type === 'group' ? 'groupInfo': 'channelInfo';
-      const linkOrAbout = deletingChat.type === 'group' ? 'about' : 'linkName';
-      dispatch(uiActions.setDoubleDelete(false));
-      dispatch(chatActions.changeUser(false));
-      dispatch(chatActions.setSelected(false));
-
-      for (let i = 0; i < deletingMember?.length; i++) {
-        if (deletingMember[i]?.uid !== currentUser.uid) {
-          await updateDoc(doc(db, collection, deletingMember[i]?.uid), {
-            [chatID + ".members"]: arrayRemove({
-              displayName: currentUser.displayName,
-              photoURL: currentUser.photoURL,
-              uid: currentUser.uid,
-            }),
-            [chatID + `.${infoType}`]: {
-              [linkOrAbout]: deletingChat.info.about || deletingChat.info.linkName,
-              admin: admin,
-              displayName: deletingChat.info.displayName,
-              photoURL: deletingChat.info.photoURL,
-              uid: deletingChat.info.uid
-            }
+    try{
+      if (deletingChat.type === "user") {
+        const userId = deletingChat?.info?.uid;
+        const combinedId = deletingChat?.chatId;
+        dispatch(uiActions.setDoubleDelete(false));
+        dispatch(chatActions.changeUser(false));
+        dispatch(chatActions.setSelected(false));
+        
+        if (checked) {
+          await updateDoc(doc(db, "userChats", currentUser.uid), {
+            [combinedId]: deleteField(combinedId),
           });
+          
+          await updateDoc(doc(db, "userChats", userId), {
+            [combinedId]: deleteField(combinedId),
+          });
+          
+          await deleteDoc(doc(db, "chats", combinedId));
         } else {
-          await updateDoc(doc(db, collection, currentUser.uid), {
-            [chatID]: deleteField(chatID),
+          await updateDoc(doc(db, "userChats", currentUser.uid), {
+            [combinedId]: deleteField(combinedId),
           });
         }
       }
       
+      if (deletingChat.type === "group" || deletingChat.type === "channel") {
+        const chatID = deletingChat?.chatId
+        const deletingMember = deletingChat?.members;
+        const admin = deletingChat.info.admin === currentUser.uid ? newAdmin : deletingChat.info.admin;
+        const collection = deletingChat.type === 'group' ? 'userGroups': 'userChannels';
+        const infoType = deletingChat.type === 'group' ? 'groupInfo': 'channelInfo';
+        const linkOrAbout = deletingChat.type === 'group' ? 'about' : 'linkName';
+        dispatch(uiActions.setDoubleDelete(false));
+        dispatch(chatActions.changeUser(false));
+        dispatch(chatActions.setSelected(false));
+        
+        for (let i = 0; i < deletingMember?.length; i++) {
+          if (deletingMember[i]?.uid !== currentUser.uid) {
+            await updateDoc(doc(db, collection, deletingMember[i]?.uid), {
+              [chatID + ".members"]: arrayRemove({
+                displayName: currentUser.displayName,
+                photoURL: currentUser.photoURL,
+                uid: currentUser.uid,
+              }),
+              [chatID + `.${infoType}`]: {
+                [linkOrAbout]: deletingChat.info.about || deletingChat.info.linkName,
+                admin: admin,
+                displayName: deletingChat.info.displayName,
+                photoURL: deletingChat.info.photoURL,
+                uid: deletingChat.info.uid
+              }
+            });
+          } else {
+            await updateDoc(doc(db, collection, currentUser.uid), {
+              [chatID]: deleteField(chatID),
+            });
+          }
+        }
+        
+      }
+      
+      
+      setStop(true)
+      setNewAdmin('')
+    }catch(err){
+      setStop(true)
+      setNewAdmin('')
+      console.log(err);
     }
-
-
-    setStop(true)
-    setNewAdmin('')
   };
 
   return (

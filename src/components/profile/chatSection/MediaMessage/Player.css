@@ -42,6 +42,13 @@
   .controlRoom > div {
     width: 100%;
   }
+
+  .ctrlRoomFull{
+    position: absolute !important;
+    bottom: 5px !important;
+    width: 30% !important;
+    height: 8% !important;
+  }
   
   .controllers{
     display: flex;
@@ -141,6 +148,18 @@
     background-color: white;
     border-radius: 0 0 10px 10px ;
     rotate: 180deg;
+  }
+
+  .sideFnMenu,
+  .sideFnMenuBtn{
+   display: none;
+  }
+
+  .rwnd{
+    object-fit: cover;
+  }
+  .rwndMini{
+    display: none;
   }
   
   @keyframes spinBack {

@@ -1,0 +1,174 @@
+@media only screen and (max-width: 450px) {
+  .playeR {
+    width: 70%;
+  }
+  .controlRoom {
+    width: 100%;
+  }
+  .volume {
+    display: none;
+  }
+  .sideFn {
+    display: none;
+  }
+  .sideFnMenu {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 20px;
+    height: 100%;
+    width: 80%;
+  }
+  .ctrlRoomFull {
+    position: absolute !important;
+    bottom: 5px !important;
+    width: 100% !important;
+    height: 8% !important;
+  }
+  .fullScreenSideMenu {
+    right: 0 !important;
+    bottom: 70px !important;
+  }
+  .hidePlayerCtrl {
+    width: 20%;
+    left: 41%;
+    bottom: 8.4%;
+  }
+  .showPlayerCtrl {
+    width: 20%;
+    left: 41%;
+  }
+  .ctrlBtn {
+    width: 10%;
+  }
+  .ctrlBtn:nth-of-type(1):active {
+    animation: none;
+  }
+  .ctrlBtn:nth-child(4):active {
+    animation: none;
+  }
+  .rwnd {
+    display: none;
+  }
+  .rwndMini {
+    display: flex;
+    align-items: center;
+  }
+  .ctrlBtnOff{
+    display: none;
+  }
+  .sideFnMenuBtn {
+    display: block;
+  }
+  .fullScreenSpeedBtn{
+    bottom: 100% !important;
+    right: 0%;
+  }
+  .speedBtn {
+    bottom: 16%;
+    right: 15%;
+  }
+}
+
+@media only screen and (min-height: 700px) and (max-height:800px){
+  .speedBtn {
+    bottom: 20%;
+    right: 15%;
+  }
+}
+
+@media only screen and (min-height: 801px) and (max-height:900px){
+  .speedBtn {
+    bottom: 25%;
+    right: 15%;
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width:768px) {
+  .playeR {
+    width: 75%;
+  }
+  .controlRoom {
+    width: 100%;
+  }
+  .volume {
+    display: none;
+  }
+  .sideFn {
+    display: none;
+  }
+  .sideFnMenu {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 20px;
+    height: 100%;
+    width: 80%;
+  }
+  .ctrlRoomFull {
+    position: absolute !important;
+    bottom: 5px !important;
+    width: 100% !important;
+    height: 8% !important;
+  }
+  .fullScreenSideMenu {
+    right: 0 !important;
+    bottom: 70px !important;
+  }
+  .hidePlayerCtrl {
+    width: 20%;
+    left: 41%;
+    bottom: 8.4%;
+  }
+  .showPlayerCtrl {
+    width: 20%;
+    left: 41%;
+  }
+  .ctrlBtn {
+    width: 10%;
+  }
+  .ctrlBtn:nth-of-type(1):active {
+    animation: none;
+  }
+  .ctrlBtn:nth-child(4):active {
+    animation: none;
+  }
+  .rwnd {
+    display: none;
+  }
+  .rwndMini {
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+  }
+  .ctrlBtnOff{
+    display: none;
+  }
+  .sideFnMenuBtn {
+    display: block;
+    font-size: 25px;
+  }
+  .timeLine > input[type='range']{
+    width: 80%;
+  }
+  
+  .timeLine > p {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .fullScreenSpeedBtn{
+    bottom: 100% !important;
+    right: 0%;
+  }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1168px) {
+  .fullScreenSpeedBtn{
+    bottom: 100% !important;
+    right: 0%;
+  }
+  .ctrlBtn{
+    width: 7%;
+    margin: 0 5px;
+  }
+}

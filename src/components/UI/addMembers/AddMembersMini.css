@@ -21,3 +21,35 @@
     color: black;
   }
 }
+
+@media only screen and (min-width: 600px) and (max-width: 768px) {
+  .addMembers > div:nth-child(1),
+  .addMembersNight > div:nth-child(1),
+  .addMemberBtn,
+  .addMemberBtnNight {
+    width: 80%;
+  }
+  .addMemberBtn > button,
+  .addMemberBtnNight > button {
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .addingMember,
+  .addingMemberNight {
+    height: 90px !important;
+  }
+  .addingMember:hover,
+  .addingMemberNight:hover {
+    background-color: transparent;
+  }
+  .addingMember::after,
+  .addingMemberNight::after {
+    display: none;
+  }
+  .addingMemberName > p:nth-child(1) {
+    font-size: 30px !important;
+  }
+  .addingMemberName > p:nth-child(2) {
+    font-size: 20px !important;
+  }
+}

@@ -10,7 +10,7 @@
     height: 45%;
   }
   .chosenUserInfo > div:nth-child(1) > img {
-    width: 70%;
+    width: 90%;
     height: 100%;
     position: relative;
     left: 5%;
@@ -26,7 +26,7 @@
     height: 45%;
   }
   .chosenUserInfoNight > div:nth-child(1) > img {
-    width: 70%;
+    width: 90%;
     height: 100%;
     position: relative;
     left: 5%;
@@ -55,14 +55,14 @@
   .changeAboutBtn {
     align-self: center;
   }
-  .memberlist{
+  .memberlist {
     height: 10% !important;
     max-height: 100%;
     overflow: auto;
   }
-  .member:hover{
+  .member:hover {
     background-color: transparent;
-}
+  }
   .mediA {
     width: 100%;
   }
@@ -94,5 +94,56 @@
   }
   .closeAbout {
     display: none;
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 768px) {
+  .chosenUserInfo ,
+    .chosenUserInfoNight {
+    width: 90%;
+    height: 40%;
+  }
+  .chosenUserInfo > div:nth-child(1) > img,
+    .chosenUserInfoNight > div:nth-child(1) > img{
+    width: 90%;
+  }
+  .aboutLinkName > div > p:nth-child(1),
+  .aboutLinkNameNight > div > p:nth-child(1),
+  .aboutName > div > p:nth-child(1),
+  .aboutMembers > div > p:nth-child(1),
+  .aboutNameNight > div > p:nth-child(1){
+    font-size: 18px !important;
+  }
+  .aboutLinkName > div > p:nth-child(2),
+  .aboutLinkNameNight > div > p:nth-child(2),
+  .aboutLinkName > div > input:nth-child(2),
+  .aboutLinkNameNight > div > input:nth-child(2),
+  .aboutName > div > p:nth-child(2),
+  .aboutName > div > input:nth-child(2),
+  .aboutMembers > div > p:nth-child(2),
+  .aboutNameNight > div > p:nth-child(2),
+  .aboutNameNight > div > input:nth-child(2){
+    font-size: 30px !important;
+  }
+  .smallImg{
+    height: 25% !important;
+  }
+  .itemS{
+    align-content: flex-start;
+  }
+  .sectioN > div,
+    .sectioNNight > div{
+    font-size: 20px;
+  }
+  .member > p{
+    font-size: 22px;
+  }
+ 
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1168px) {
+  .infO > div > p:nth-child(even),
+    .infONight > div > p:nth-child(even){
+    font-size: 20px;
   }
 }

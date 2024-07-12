@@ -56,8 +56,24 @@
     background-color: #ffa2a2;
 }
 
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 450px) {
 .doubleDelete > div {
     width: 70%;
 }
+}
+
+@media only screen and (min-width: 600px) and (max-width:768px) {
+    .doubleDelete > div {
+        width: 70%;
+        font-size: 25px;
+    }
+    .doubleDelete > div > div:nth-last-child(1) > button{
+        font-size: 25px;
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1168px) {
+    .doubleDelete > div{
+        width: 30%;
+    }
 }

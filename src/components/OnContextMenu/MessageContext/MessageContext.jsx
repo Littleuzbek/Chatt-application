@@ -8,10 +8,11 @@ import { auth } from "../../../firebase";
 
 export default function MessageContext({ leftVal, topVal, messagesId }) {
   const user = useSelector((state) => state.chat.user);
+  const nightMode = useSelector((state) => state.menu.nightMode);
   const currentUser = auth.currentUser;
   return (
     <div
-      className="messageContext"
+      className={nightMode? 'messageContextNight' : "messageContext"}
       style={{ left: leftVal + "px", top: topVal + "px" }}
     >
       <Copy copiyingText={messagesId?.text} />

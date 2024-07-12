@@ -5,9 +5,10 @@ import Input from "./Input";
 import Messages from "./Messages";
 import Header from "./Header";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
+import { uiActions } from "../../../redux/uiSlice";
 
 export default function ChatSection() {
   const [progress, setProgress] = useState(null);
@@ -16,6 +17,7 @@ export default function ChatSection() {
   const user = useSelector((state) => state.chat.user);
   const chatThemeValue = useSelector((state) => state.menu.chatThemeValue);
   const selected = useSelector((state) => state.chat.selected);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchWallPaperInUse = async () => {
@@ -41,7 +43,12 @@ export default function ChatSection() {
       {user && (
         <>
           <Header />
-          <div className="body">
+          <div className="body" onScroll={()=>{
+             dispatch(uiActions.setClickValue({
+              type: 'message',
+              value: false
+            }))
+          }}>
             <Messages progressVal={progress} onProgress={setProgress} />
           </div>
           {user?.type === "channel" ? (

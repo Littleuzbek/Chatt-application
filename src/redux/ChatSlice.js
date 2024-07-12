@@ -15,7 +15,8 @@ const chatSlice = createSlice({
     searchResult: false,
     messages: [],
     chatDeleted: false,
-    selected: false
+    selected: false,
+    headerMenu: false
   },
   reducers: {
     changeUser(state, action) {
@@ -61,6 +62,9 @@ const chatSlice = createSlice({
     },
     setSelected(state,action){
       state.selected = action.payload
+    },
+    setHeaderMenu(state,action){
+      state.headerMenu = action.payload
     }
   },
 });

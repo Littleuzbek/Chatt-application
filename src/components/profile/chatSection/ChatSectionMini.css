@@ -1,4 +1,4 @@
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 768px) {
   .chatSection {
     width: 100%;
     position: absolute;
@@ -7,25 +7,14 @@
   .noChatSection {
     display: none;
   }
-  .header {
+  .header ,
+  .headerNight{
     height: 10%;
   }
-  .header > img {
-    width: 17%;
-    margin: 0 0 0 1%;
-  }
-  .headerNight > div {
-    width: 60%;
-  }
-  .headerNight {
-    height: 10%;
-  }
+  .header > img ,
   .headerNight > img {
-    width: 17%;
+    width: 16%;
     margin: 0 0 0 1%;
-  }
-  .headerNight > div {
-    width: 60%;
   }
   .headerOption{
     top: 7%;
@@ -46,7 +35,7 @@
     width: 10%;
   }
   .message > img {
-    width: 13%;
+    width: 45px;
   }
   .message > div > img,
   .message > div > video {
@@ -70,6 +59,9 @@
   .beforeSendItem {
     width: 95%;
   }
+  .beforeSendItem > video {
+    max-height: 300px;
+  }
   .beforeSendItem > .btns > button:hover {
     border-radius: 0px;
   }
@@ -82,5 +74,74 @@
       top: 0;
       left: 0;
     }
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width:768px) {
+  .backToChat,
+  .btn:nth-last-of-type(1){
+    font-size: 35px !important;
+  }
+  .header > div > p:nth-child(1),
+  .headerNight > div > p:nth-child(1),
+  .clip,
+  .send,
+  .sendMessage > div > input {
+    font-size: 30px;
+  } 
+  .header > div > p:nth-child(2) ,
+    .headerNight > div > p:nth-child(2) {
+    font-size: 20px;
+  }
+  .message > div > p{
+    font-size: 25px;
+  }
+  .message > div > img, .message > div > video{
+    max-height: 500px;
+  }
+  .headerOption > div{
+    font-size: 25px;
+  }
+  .message > img{
+    height: 60px;
+    width: 60px;
+  }
+  .pdfFile{
+    font-size: 20px;
+  }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1168px) {
+  .header,
+  .headerNight{
+    height: 10%;
+  }
+  .header > img,
+    .headerNight > img{
+    width: 7%;
+  }
+  .header > div,
+    .headerNight > div{
+    width: 79%;
+  }
+  .header > input,
+    .headerNight > input{
+    padding: 0 5px;
+  }
+  .message > div > img, .message > div > video{
+    max-width: 300px;
+    max-height: 300px;
+  }
+  .sendMessage{
+    height: 13%;
+  }
+  .sendMessage > div{
+    width: 60%;
+  }
+  .emojIBox{
+    bottom: 17%;
+  }
+  .member > img{
+    width: 15% !important;
   }
 }
