@@ -1,4 +1,4 @@
-import React, {  useRef, useState } from "react";
+import React, {   useState } from "react";
 import rewind from "../../../../images/rewind.png";
 import rewindForward from "../../../../images/rewindforward.png";
 import { CiPause1 } from "react-icons/ci";
