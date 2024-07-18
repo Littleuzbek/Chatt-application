@@ -270,7 +270,6 @@ export default function Input({ onProgress }) {
           onChange={(e) => setText(e.target.value)}
           value={text}
           onKeyDown={(e) => handler(e.code)}
-          autoFocus
         />
         <input
           type="file"
