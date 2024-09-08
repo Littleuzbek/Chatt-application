@@ -92,19 +92,20 @@ export default function ForwardList() {
   };
 
   const createChannel = async () => {
-    setSpinner(true)
+    setSpinner(true);
     const channelId = uuid();
     const channelName = name.current.value;
     const storageRef = ref(storage, uuid());
-    const LinkNameInLowerCase = link?.current?.value.toLowerCase()
+    const LinkNameInLowerCase = link?.current?.value.toLowerCase();
     try {
-      await setDoc(doc(db, "chats", channelId),{});
+      await setDoc(doc(db, "chats", channelId), {});
       await uploadBytesResumable(storageRef, imgFile).then(async (snapshot) => {
         await getDownloadURL(snapshot.ref).then(async (res) => {
           await updateDoc(doc(db, "userChannels", currentUser.uid), {
             [channelId + ".channelInfo"]: {
               uid: channelId,
-              displayName: channelName === ''? 'Nameless channel' : channelName,
+              displayName:
+                channelName === "" ? "Nameless channel" : channelName,
               photoURL: res,
               admin: currentUser.uid,
               linkName: LinkNameInLowerCase,
@@ -130,10 +131,11 @@ export default function ForwardList() {
                 {
                   [channelId + ".channelInfo"]: {
                     uid: channelId,
-                    displayName: channelName === ''? 'nameless channel' : channelName,
+                    displayName:
+                      channelName === "" ? "nameless channel" : channelName,
                     photoURL: res,
                     admin: currentUser.uid,
-                    linkName: LinkNameInLowerCase || '',
+                    linkName: LinkNameInLowerCase || "",
                   },
                   [channelId + ".members"]: [
                     ...newChannelMembers,
@@ -149,18 +151,19 @@ export default function ForwardList() {
                   },
                   [channelId + ".date"]: serverTimestamp(),
                 }
-              ).then(()=>{
-                dispatch(menuActions.onSetNewChannelMembers("clear"));
-                setSpinner(false)})
+              )
+                .then(() => {
+                  dispatch(menuActions.onSetNewChannelMembers("clear"));
+                  setSpinner(false);
+                })
                 .catch((err) => console.log(err));
-              }
+            }
           });
         });
-       
       });
     } catch (err) {
       dispatch(menuActions.onSetNewChannelMembers("clear"));
-      setSpinner(false)
+      setSpinner(false);
       console.log(err);
     }
   };
@@ -260,43 +263,44 @@ export default function ForwardList() {
             />
           </div>
 
-          <div className={nightMode? 'newChannelBtnNight' : "newChannelBtn"}>
+          <div className={nightMode ? "newChannelBtnNight" : "newChannelBtn"}>
             <button
-              onClick={() => {spinner ||
-                dispatch(menuActions.onSetNewChannel(false));
+              onClick={() => {
+                spinner || dispatch(menuActions.onSetNewChannel(false));
                 dispatch(menuActions.onSetNewChannelMembers("clear"));
               }}
             >
-              {spinner? 'Waiting' : 'Cancel'}
+              {spinner ? "Waiting" : "Cancel"}
             </button>
-            
-            {spinner? 
-            <div className="saveORnot">
-          <div className="loader"></div>
-        </div> 
-        : <button
-              style={
-                newChannelMembers.length === 0
-                  ? {}
-                  : nightMode
-                  ? {
-                      backgroundColor: "white",
-                      color: "black",
-                      cursor: "pointer",
-                    }
-                  : {
-                      backgroundColor: "black",
-                      color: "white",
-                      cursor: "pointer",
-                    }
-              }
-              onClick={() => {
-                  newChannelMembers?.length !== 0 && 
-                  createChannel();
-              }}
-            >
-              Create
-            </button>}
+
+            {spinner ? (
+              <div className="saveORnot">
+                <div className="loader"></div>
+              </div>
+            ) : (
+              <button
+                style={
+                  newChannelMembers.length === 0
+                    ? {}
+                    : nightMode
+                    ? {
+                        backgroundColor: "white",
+                        color: "black",
+                        cursor: "pointer",
+                      }
+                    : {
+                        backgroundColor: "black",
+                        color: "white",
+                        cursor: "pointer",
+                      }
+                }
+                onClick={() => {
+                  newChannelMembers?.length !== 0 && createChannel();
+                }}
+              >
+                Create
+              </button>
+            )}
           </div>
         </div>
       </div>

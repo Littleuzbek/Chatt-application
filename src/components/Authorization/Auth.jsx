@@ -27,7 +27,7 @@ export default function Auth() {
           onClick={() => dispatch(authActions.showSignInForm(false))}
         >
           <CiCirclePlus className="authButton" />
-          <p>CREATE A PROFILE</p>
+          <p>START THE CHAT</p>
         </div>
       )}
       {showSignInForm ||

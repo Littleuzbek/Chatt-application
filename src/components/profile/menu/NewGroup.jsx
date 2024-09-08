@@ -265,8 +265,8 @@ export default function ForwardList() {
           )}
           
           <button
-            onClick={() => {spinner ||
-              dispatch(menuActions.onSetNewGroup(false));
+            onClick={() => {
+              spinner || dispatch(menuActions.onSetNewGroup(false));
               dispatch(menuActions.onSetNewGroupMembers("clear"));
             }}
           >

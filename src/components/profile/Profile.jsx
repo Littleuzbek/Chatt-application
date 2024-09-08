@@ -1,17 +1,17 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import "./Profile.css";
 import ListSection from "./listSection/ListSection";
 import ChatSection from "./chatSection/ChatSection";
-import Menu from "./menu/Menu";
-import ViewContent from "./chatSection/MediaMessage/ViewContent";
 import { useSelector } from "react-redux";
-import ForwardList from "../UI/ForwardList";
-import DoubleDelete from "../UI/DoubleDelete";
-import About from "../UI/about/About";
-import ChatTheme from "./menu/ChatTheme";
-import NewGroup from './menu/NewGroup'
-import AddMembers from "../UI/addMembers/AddMembers";
-import NewChannel from './menu/newChannel'
+const Menu = lazy(()=>import('./menu/Menu'))
+const ViewContent = lazy(()=>import('./chatSection/MediaMessage/ViewContent'))
+const ForwardList = lazy(()=>import('../UI/ForwardList'))
+const DoubleDelete = lazy(()=>import('../UI/DoubleDelete'))
+const About = lazy(()=>import('../UI/about/About'))
+const ChatTheme = lazy(()=>import('./menu/ChatTheme'))
+const NewGroup = lazy(()=>import('./menu/NewGroup'))
+const AddMembers = lazy(()=>import('../UI/addMembers/AddMembers'))
+const NewChannel = lazy(()=>import('./menu/newChannel'))
 
 export default function Profile() {
   const backDrop = useSelector((state) => state.ui.backDrop);
@@ -26,17 +26,17 @@ export default function Profile() {
 
   return (
     <div className="mainPage">
-      {backDrop && <Menu />}
+      {backDrop && <Suspense><Menu /></Suspense>}
       <ListSection />
       <ChatSection />
-      {about && <About />}
-      {viewContnet && <ViewContent />}
-      {forwardList && <ForwardList />}
-      {doubleDelete && <DoubleDelete />}
-      {chatTheme && <ChatTheme />}
-      {newGroup && <NewGroup />}
-      {addMembers && <AddMembers />}
-      {newChannel && <NewChannel />}
+      {about && <Suspense fallback='...'><About /></Suspense>}
+      {viewContnet && <Suspense fallback='...'><ViewContent /></Suspense>}
+      {forwardList && <Suspense fallback='...'><ForwardList /></Suspense>}
+      {doubleDelete && <Suspense fallback='...'><DoubleDelete /></Suspense>}
+      {chatTheme && <Suspense fallback='...'><ChatTheme /></Suspense>}
+      {newGroup && <Suspense fallback='...'><NewGroup /></Suspense>}
+      {addMembers && <Suspense fallback='...'><AddMembers /></Suspense>}
+      {newChannel && <Suspense fallback='...'><NewChannel /></Suspense>}
     </div>
   );
 }
