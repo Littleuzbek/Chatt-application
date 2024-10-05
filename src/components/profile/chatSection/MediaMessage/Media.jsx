@@ -34,6 +34,7 @@ export default function Media({src }) {
           alt=""
           id={src?.id}
           onClick={(e) => ViewContentHandler(e)}
+          style={{cursor: 'pointer'}}
         />
       ) : (
         <video
@@ -43,6 +44,8 @@ export default function Media({src }) {
           muted
           autoPlay
           loop
+          style={{cursor: 'pointer'}}
+          playsInline
         ></video>
       )}
     </Fragment>

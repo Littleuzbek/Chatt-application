@@ -46,10 +46,11 @@
 }
 
 .listContextNight > div:nth-last-child(1) {
-  color: red;
+  color: red !important;
 }
 
 .listContextNight > div:hover {
+  color: black;
   background-color: rgb(225, 224, 224);
 }
 
@@ -79,7 +80,12 @@
   overflow: hidden;
 }
 
-.messageContext > div ,
+.messageContext > div{
+  padding: 10px;
+  width: 100%;
+  color: black;
+}
+
 .messageContextNight > div{
   padding: 10px;
   width: 100%;
@@ -88,11 +94,16 @@
 
 .messageContext > div:nth-last-child(1) ,
   .messageContextNight > div:nth-last-child(1) {
-  color: red;
+  color: red !important;
 }
 
 .messageContext > div:hover {
   background-color: #f1f1f1;
+}
+
+.messageContextNight > div:hover {
+  background-color: #f1f1f1;
+  color: black;
 }
 
 @media only screen and (min-width: 600px) and (max-width: 768px) {

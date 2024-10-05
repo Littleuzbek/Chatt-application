@@ -9,6 +9,7 @@ export default function Files({ files }) {
     target="_blank"
     rel='noreferrer'
     className="pdfFile"
+    title={files?.nameOf}
     >
       <p>{files?.nameOf}</p>
       <FaRegFilePdf className="fileIcon"/>

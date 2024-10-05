@@ -79,10 +79,6 @@ export default function Header() {
       <div
         className={nightMode ? "headerNight" : "header"}
         onClick={() => {
-          dispatch(uiActions.setClickValue({
-            type: 'message',
-            value: false
-          }));
           dispatch(chatActions.setHeaderMenu(false));
           dispatch(uiActions.setAbout(true));
         }}
@@ -95,10 +91,6 @@ export default function Header() {
             dispatch(chatActions.changeUser(false));
             dispatch(chatActions.setSelected(false));
             dispatch(chatActions.setHeaderMenu(false))
-            dispatch(uiActions.setClickValue({
-              type: 'message',
-              value: false
-            }))
           }}
         />
         <img

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { uiActions } from "../../../redux/uiSlice";
+import { chatActions } from "../../../redux/ChatSlice";
 
 export default function ChatSection() {
   const [progress, setProgress] = useState(null);
@@ -31,6 +32,18 @@ export default function ChatSection() {
     currentUser.uid && fetchWallPaperInUse();
   }, [chatThemeValue, currentUser.uid]);
 
+  const closeContextMenu = () =>{
+    dispatch(uiActions.setClickValue({
+      type: 'message',
+      value: false
+    }))
+    dispatch(uiActions.setClickValue({
+      type: 'list',
+      value: false
+    }))
+    dispatch(chatActions.setHeaderMenu(false))
+  }
+
   return (
     <div
       className={selected? 'chatSection' : "noChatSection"}
@@ -39,16 +52,12 @@ export default function ChatSection() {
           chatThemeValue === "" ? wallPaper?.inUse : chatThemeValue
         })`,
       }}
+      onClick={()=>closeContextMenu()}
     >
       {user && (
         <>
           <Header />
-          <div className="body" onScroll={()=>{
-             dispatch(uiActions.setClickValue({
-              type: 'message',
-              value: false
-            }))
-          }}>
+          <div className="body" onScroll={()=>{closeContextMenu()}}>
             <Messages progressVal={progress} onProgress={setProgress} />
           </div>
           {user?.type === "channel" ? (

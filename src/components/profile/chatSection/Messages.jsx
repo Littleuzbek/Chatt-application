@@ -1,39 +1,40 @@
-import React, {  Suspense, lazy, useEffect, useState } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "../../../firebase";
+import { auth, db } from "../../../firebase";
 import ProgressBar from "../../UI/ProgressBar";
 import SoloStatue from "../../../images/soloStatue.jpg";
 import { uiActions } from "../../../redux/uiSlice";
 import { chatActions } from "../../../redux/ChatSlice";
 import MessageContext from "../../OnContextMenu/MessageContext/MessageContext";
 
-const Message = lazy(()=> import('./Message'))
+const Message = lazy(() => import("./Message"));
 
 export default function Messages({ progressVal, onProgress }) {
   const [messages, setMessages] = useState([]);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [messagesId, setMessagesId] = useState();
-  const rightClick = useSelector(state=>state.ui.messageClick)
+  const rightClick = useSelector((state) => state.ui.messageClick);
   const user = useSelector((state) => state.chat.user);
   const chatId = useSelector((state) => state.chat.chatId);
-  const dispatch = useDispatch()
+  const currentUser = auth.currentUser;
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const ID = user.type === 'user' ? chatId : user.value.uid;
+    const ID = user.type === "user" ? chatId : user.value.uid;
     try {
-        const unSub = onSnapshot(doc(db, "chats", ID), (doc) => {
-          doc.exists() && setMessages(doc.data().messages);
-          doc.exists() && dispatch(chatActions.setMessages(doc.data().messages))
-        });
-        
-        return () => {
-          unSub();
-        };
+      const unSub = onSnapshot(doc(db, "chats", ID), (doc) => {
+        doc.exists() && setMessages(doc.data().messages);
+        doc.exists() && dispatch(chatActions.setMessages(doc.data().messages));
+      });
+
+      return () => {
+        unSub();
+      };
     } catch (err) {
       console.log(err);
     }
-  }, [chatId,user,dispatch]);
+  }, [chatId, user, dispatch]);
 
   useEffect(() => {
     if (progressVal === 100) {
@@ -47,43 +48,43 @@ export default function Messages({ progressVal, onProgress }) {
     e.preventDefault();
 
     setMessagesId(user);
-    if(e?.clientX){
+    if (e?.clientX) {
       setPosition(() => ({ x: e.clientX + 20, y: e.clientY }));
-    }else{
-      setPosition(()=>({x: e?.touches[0]?.clientX + 20, y: e?.touches[0]?.clientY}));
+    } else {
+      setPosition(() => ({
+        x: e?.touches[0]?.clientX + 20,
+        y: e?.touches[0]?.clientY,
+      }));
     }
-    dispatch(uiActions.setClickValue({
-      type: 'message',
-      value: true
-    }))
+    dispatch(
+      uiActions.setClickValue({
+        type: "message",
+        value: true,
+      })
+    );
   };
 
   return (
-    <div className="messages" onClick={()=>{
-      dispatch(uiActions.setClickValue({
-        type: 'message',
-        value: false
-      }))}
-    }>
+    <div className="messages">
       {messages?.map((m) => (
-        <Suspense fallback={'...'} key={m?.id}>
-        <Message message={m} key={m?.id} onContextMenu={getPositionHandler} />
+        <Suspense fallback={"..."} key={m?.id}>
+          <Message message={m} key={m?.id} onContextMenu={getPositionHandler} />
         </Suspense>
       ))}
       {progressVal && (
         <div className="unloaded">
-          <img src="" alt="" />
+          <img src={currentUser?.photoURL} alt="" />
           <img src={SoloStatue} alt="" />
           <ProgressBar progress={progressVal} />
         </div>
       )}
-        {rightClick && (
-          <MessageContext
+      {rightClick && (
+        <MessageContext
           leftVal={position.x}
           topVal={position.y}
           messagesId={messagesId}
-          />
-          )}
+        />
+      )}
     </div>
   );
 }

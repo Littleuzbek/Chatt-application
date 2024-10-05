@@ -3,9 +3,8 @@
   flex-direction: column;
   justify-content: center;
   position: absolute;
-  background-color: white;
-  z-index: 99;
   animation: openAnimation 0.8s ease forwards;
+  z-index: 99;
 }
 
 .menuu {
@@ -651,6 +650,7 @@
     border-radius: 20px;
     background-color: white;
     overflow: hidden;
+
   }
   50% {
     left: 40%;
@@ -674,11 +674,12 @@
     left: 40%;
     top: 15%;
     max-width: 25%;
+    height: auto;
     max-height: 85%;
     width: 25%;
     border-radius: 20px;
     background-color: white;
-    overflow-y: auto;
+    overflow: auto;
   }
 }
 @keyframes oppa {

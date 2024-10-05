@@ -1,14 +1,11 @@
 import React, { useRef, useState } from "react";
 import defaultUser from "../../../images/defaultUser.png";
 import defaultUsers from "../../../images/defaultUsers.jpg";
-import { useDispatch } from "react-redux";
-import { uiActions } from "../../../redux/uiSlice";
 
 export default function User({ chatVal, onSelect, onGetPosition }) {
   const [imgError, setImgError] = useState(false);
   const chatImg = chatVal[1]?.userInfo?.photoURL ? defaultUser : defaultUsers;
   const contextRef = useRef();
-  const dispatch = useDispatch();
 
     const touchContextMenu = (cmd,e)=>{
       if(cmd === 'start'){
@@ -26,11 +23,6 @@ export default function User({ chatVal, onSelect, onGetPosition }) {
     <div
       className="user"
       onClick={() => {
-        dispatch(
-          uiActions.setClickValue({
-            type: "list",
-            value: false,
-          }))
         onSelect(chatVal[1])}}
       onContextMenu={(e) => {
         onGetPosition(e, chatVal);

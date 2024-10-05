@@ -44,7 +44,8 @@ const uiSlice = createSlice({
 
             if(actions.type === 'list'){
                 state.listClick = actions.value
-            }else if(actions.type === 'message'){
+            }
+            if(actions.type === 'message'){
                 state.messageClick = actions.value
             }
         },

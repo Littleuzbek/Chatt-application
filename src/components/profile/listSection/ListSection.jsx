@@ -123,13 +123,20 @@ export default function ListSection() {
     }
   }, [user?.value, dispatch,all]);
 
+  const closeContextMenu = () =>{
+    dispatch(uiActions.setClickValue({
+      type: 'message',
+      value: false
+    }))
+    dispatch(uiActions.setClickValue({
+      type: 'list',
+      value: false
+    }))
+    dispatch(chatActions.setHeaderMenu(false))
+  }
+
   return (
-    <div className={nightMode? 'ListNight' : "List"} onClick={() => {
-      dispatch(
-        uiActions.setClickValue({
-          type: "list",
-          value: false,
-        }))}}>
+    <div className={nightMode? 'ListNight' : "List"} onClick={() => {closeContextMenu()}}>
       <Search />
       {rightClick && (
         <ListContext
